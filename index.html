@@ -7,8 +7,8 @@
   <title>Shophub Microstock Pro AI</title>
   <!-- Load Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google Fonts dengan karakter ampersand yang telah di-escape untuk kepatuhan parser XML -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
   <!-- Load Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
@@ -141,15 +141,15 @@
                   <label class="block text-[10px] font-bold text-neutral-500 mb-1">Model Prioritas Gemini</label>
                   <div class="space-y-1.5 bg-neutral-50 p-2.5 rounded-xl border border-neutral-100">
                     <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g3" checked class="accent-orange-500 rounded">
+                      <input type="checkbox" id="model-g3" checked="checked" class="accent-orange-500 rounded" />
                       <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-1 py-0.5 rounded ml-1 font-extrabold">Baru</span></span>
                     </label>
                     <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g25" checked class="accent-orange-500 rounded">
+                      <input type="checkbox" id="model-g25" checked="checked" class="accent-orange-500 rounded" />
                       <span>gemini-2.5-flash <span class="text-[8px] bg-green-100 text-green-700 px-1 py-0.5 rounded ml-1 font-extrabold">Utama</span></span>
                     </label>
                     <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g20" checked class="accent-orange-500 rounded">
+                      <input type="checkbox" id="model-g20" checked="checked" class="accent-orange-500 rounded" />
                       <span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-1 py-0.5 rounded ml-1 font-extrabold">Cadangan</span></span>
                     </label>
                   </div>
@@ -189,7 +189,7 @@
                   <p id="accept-label" class="text-[10px] text-neutral-400 mt-1 font-semibold">Format JPG, PNG, WEBP</p>
                 </div>
               </div>
-              <input type="file" id="file-input" class="hidden" multiple onchange="handleBatchFiles(event)">
+              <input type="file" id="file-input" class="hidden" multiple="multiple" onchange="handleBatchFiles(event)" />
             </div>
 
             <!-- 4. Preferensi AI -->
@@ -205,7 +205,7 @@
                   <span class="text-neutral-600">Panjang Judul SEO</span>
                   <span id="title-val" class="text-orange-600">80 Karakter (ch)</span>
                 </div>
-                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none">
+                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Slider Panjang Deskripsi -->
@@ -214,7 +214,7 @@
                   <span class="text-neutral-600">Panjang Deskripsi</span>
                   <span id="desc-val" class="text-orange-600">200 Karakter (ch)</span>
                 </div>
-                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none">
+                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Slider Jumlah Keywords -->
@@ -223,13 +223,13 @@
                   <span class="text-neutral-600">Target Keywords</span>
                   <span id="keywords-val" class="text-orange-600">40 Kata</span>
                 </div>
-                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none">
+                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Key Concepts -->
               <div class="space-y-1.5">
                 <label class="text-xs font-bold text-neutral-600">Prioritas Konsep (Key Concept)</label>
-                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-neutral-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 transition-colors">
+                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-neutral-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 transition-colors" />
               </div>
             </div>
 
@@ -311,7 +311,7 @@
       <div class="flex justify-center space-x-4 text-neutral-500 font-medium">
         <span>Aman Terenkripsi</span>
         <span>•</span>
-        <span>Didukung Model Vision Gemini 3.0 & 2.5 Flash</span>
+        <span>Didukung Model Vision Gemini 3.0 &amp; 2.5 Flash</span>
       </div>
     </footer>
   </div>
@@ -743,20 +743,41 @@
 
       const seoMetrics = measureSEOQuality(item);
 
-      // Render Kategori Per Platform yang dipilih
+      // Render Kategori Per Platform yang dipilih dengan penyesuaian multi-kategori Shutterstock secara eksplisit
       let categoriesHTML = '';
       if (item.metadata.categories && Object.keys(item.metadata.categories).length > 0) {
         let cards = '';
+        
         Object.entries(item.metadata.categories).forEach(([platform, val]) => {
-          if (targetPlatforms[platform]) {
+          if (!val) return;
+          let displayPlatformName = platform;
+          let shouldRender = false;
+
+          // Memisahkan penayangan Kategori 1 dan Kategori 2 Shutterstock secara eksplisit di UI
+          if (platform === 'shutterstock1' && targetPlatforms.shutterstock) {
+            displayPlatformName = 'Shutterstock Cat 1';
+            shouldRender = true;
+          } else if (platform === 'shutterstock2' && targetPlatforms.shutterstock) {
+            displayPlatformName = 'Shutterstock Cat 2';
+            shouldRender = true;
+          } else if (platform === 'adobeStock' && targetPlatforms.adobeStock) {
+            displayPlatformName = 'Adobe Stock';
+            shouldRender = true;
+          } else if (platform !== 'shutterstock1' && platform !== 'shutterstock2' && targetPlatforms[platform]) {
+            displayPlatformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+            shouldRender = true;
+          }
+
+          if (shouldRender) {
             cards += `
               <div class="bg-white border border-amber-100 p-3 rounded-2xl text-left shadow-sm">
-                <span class="block text-[8px] font-bold text-amber-700 capitalize tracking-wider">${platform}</span>
-                <span class="block text-[10px] font-extrabold text-neutral-800 truncate mt-1">${val}</span>
+                <span class="block text-[8px] font-bold text-amber-700 capitalize tracking-wider">${displayPlatformName}</span>
+                <span class="block text-[10px] font-extrabold text-neutral-800 truncate mt-1" title="${val}">${val}</span>
               </div>
             `;
           }
         });
+
         if (cards) {
           categoriesHTML = `
             <div class="space-y-1.5 pt-3 border-t border-neutral-100">
@@ -971,13 +992,14 @@ PANDUAN STRUKTUR SEO HALAMAN PERTAMA (FIRST PAGE SEARCH ALGORITHM):
 3. Kata Kunci (Keywords):
    - Hasilkan tepat **${settings.keywordsCount}** kata kunci unik yang dipisahkan dengan koma.
    - Urutan kata kunci sangat penting! Letakkan kata kunci yang paling relevan dengan subjek inti di urutan pertama (Core Keywords).
-4. Klasifikasi Kategori Resmi Berdasarkan Masing-Masing Platform:
+4. Klasifikasi Kategori Resmi Berdasarkan Masing-Masing Platform (DILARANG NGAWUR):
    Wajib memilih kategori yang paling akurat dari daftar taksonomi resmi di bawah ini:
-   - "adobeStock": "Animals", "Buildings and Architecture", "Business", "Drinks", "Environment", "States of Mind", "Food", "Graphic Resources", "Religions and Culture", "Science", "Social Issues", "Sports", "Technology", "Transport", "Travel", "Trendy", "Art", "Other".
-   - "shutterstock": "Abstract", "Animals/Wildlife", "Art", "Backgrounds/Textures", "Beauty/Fashion", "Buildings/Landmarks", "Business/Finance", "Education", "Food and Drink", "Healthcare/Medical", "Holidays", "Industrial", "Interiors", "Nature", "Parks/Outdoor", "People", "Religion", "Science", "Signs/Symbols", "Sports/Recreation", "Technology", "Transportation", "Vectors", "Vintage", "Miscellaneous".
-   - "dreamstime": "Abstract", "Animals", "Architecture", "Business", "Editorial", "Holiday", "Illustrations", "Industrial", "Landscapes", "Nature", "Objects", "People", "Technology", "Travel", "Vectors".
-   - "vecteezy": "Backgrounds", "Icons", "Patterns", "Banners", "Vectors", "Illustrations", "Templates", "UI/UX", "Elements".
-   - "canva": "Backgrounds", "Elements", "Illustrations", "Icons", "Social Media", "Graphics", "Templates", "Textured", "Minimalist".
+   - "adobeStock" (Pilih salah satu saja): "Animals", "Buildings and Architecture", "Business", "Drinks", "Environment", "States of Mind", "Food", "Graphic Resources", "Religions and Culture", "Science", "Social Issues", "Sports", "Technology", "Transport", "Travel", "Trendy", "Art", "Other".
+   - "shutterstock" (Wajib pilih tepat DUA kategori yang paling relevan dari daftar di bawah. Kategori ke-2 wajib berbeda dari kategori ke-1. Kembalikan secara terpisah di JSON sebagai "shutterstock1" dan "shutterstock2"):
+     Daftar Resmi Kategori Shutterstock: "Abstract", "Animals/Wildlife", "The Arts", "Backgrounds/Textures", "Beauty/Fashion", "Buildings/Landmarks", "Business/Finance", "Celebrities", "Education", "Food and Drink", "Healthcare/Medical", "Holidays", "Industrial", "Interiors", "Miscellaneous", "Nature", "Objects", "Parks/Outdoor", "People", "Religion", "Science", "Signs/Symbols", "Sports/Recreation", "Technology", "Transportation", "Vectors", "Vintage".
+   - "dreamstime" (Pilih salah satu saja): "Abstract", "Animals", "Architecture", "Business", "Editorial", "Holiday", "Illustrations", "Industrial", "Landscapes", "Nature", "Objects", "People", "Technology", "Travel", "Vectors".
+   - "vecteezy" (Pilih salah satu saja): "Backgrounds", "Icons", "Patterns", "Banners", "Vectors", "Illustrations", "Templates", "UI/UX", "Elements".
+   - "canva" (Pilih salah satu saja): "Backgrounds", "Elements", "Illustrations", "Icons", "Social Media", "Graphics", "Templates", "Textured", "Minimalist".
 
 ${settings.keyConcepts ? `- PRIORITAS UTAMA: Wajib menyertakan konsep prioritas berikut di dalam judul serta di urutan 5 kata kunci pertama: "${settings.keyConcepts}".` : ''}
 
@@ -987,7 +1009,8 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
   "description": "Deskripsi pemasaran yang ramah agensi dalam Bahasa Inggris",
   "keywords": ["tag1", "tag2", "tag3", "..."],
   "categories": {
-    "shutterstock": "Kategori Shutterstock resmi",
+    "shutterstock1": "Kategori Pertama dari daftar resmi Shutterstock",
+    "shutterstock2": "Kategori Kedua dari daftar resmi Shutterstock",
     "adobeStock": "Kategori Adobe Stock resmi",
     "dreamstime": "Kategori Dreamstime resmi",
     "vecteezy": "Kategori Vecteezy resmi",
@@ -1130,12 +1153,14 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
 
       switch (platformKey) {
         case 'shutterstock':
-          csvContent = "Filename,Description,Keywords,Categories\n" + 
+          // Shutterstock secara resmi mendukung kolom Category 1 dan Category 2
+          csvContent = "Filename,Description,Keywords,Category 1,Category 2\n" + 
             successItems.map(i => [
               i.name,
               `"${i.metadata.description.replace(/"/g, '""')}"`,
               `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
-              `"${(i.metadata.categories?.shutterstock || 'Abstract').replace(/"/g, '""')}"`
+              `"${(i.metadata.categories?.shutterstock1 || 'Abstract').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.shutterstock2 || '').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `shutterstock_batch_${Date.now()}.csv`;
           break;
