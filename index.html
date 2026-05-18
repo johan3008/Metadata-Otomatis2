@@ -267,8 +267,11 @@
                 </h3>
                 <p class="text-xs text-neutral-500">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
               </div>
-              <button onclick="clearAllQueue()" id="btn-clear-queue" class="hidden p-2.5 bg-red-50 hover:bg-red-100 rounded-xl text-red-600 transition-colors">
+              
+              <!-- Tombol Reset / Clear All Antrean -->
+              <button onclick="clearAllQueue()" id="btn-clear-queue" class="hidden p-2.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-600 transition-all flex items-center space-x-1.5" title="Kosongkan Antrean">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
+                <span class="text-[10px] font-bold">Clear All</span>
               </button>
             </div>
 
@@ -323,7 +326,6 @@
     let expandedItemId = null;
     let isProcessingAll = false;
     let currentAssetType = 'image'; // image, vector, video
-    let activeAuthProvider = 'gemini'; // 'gemini' atau 'helper'
 
     const targetPlatforms = {
       shutterstock: true,
@@ -634,6 +636,9 @@
       const container = document.getElementById("queue-list");
       document.getElementById("queue-count").innerText = items.length;
       
+      const clearQueueBtn = document.getElementById("btn-clear-queue");
+      const generateAllContainer = document.getElementById("generate-all-container");
+      
       if (items.length === 0) {
         container.innerHTML = `
           <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-neutral-400 border-2 border-dashed border-neutral-100 bg-neutral-50/5">
@@ -644,11 +649,16 @@
             </p>
           </div>
         `;
-        document.getElementById("generate-all-container").classList.add("hidden");
+        if (generateAllContainer) generateAllContainer.classList.add("hidden");
+        if (clearQueueBtn) clearQueueBtn.classList.add("hidden");
         document.getElementById("csv-download-panel").classList.add("hidden");
         lucide.createIcons();
         return;
       }
+
+      // Tampilkan tombol Clear All dan container jika antrean berisi item
+      if (clearQueueBtn) clearQueueBtn.classList.remove("hidden");
+      if (generateAllContainer) generateAllContainer.classList.remove("hidden");
 
       container.innerHTML = "";
       items.forEach(item => {
@@ -881,14 +891,15 @@
       }
     }
 
-    removeItem = (id) => {
-      items = items.filter(item => item.id !== id);
+    function removeItem(id) {
+      items = items.filter(i => i.id !== id);
       if (expandedItemId === id) {
         expandedItemId = items.length > 0 ? items[0].id : null;
       }
       renderQueueList();
     }
 
+    // Pembersihan Antrean / Reset Semua
     function clearAllQueue() {
       items = [];
       expandedItemId = null;
@@ -1089,58 +1100,6 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       }
 
       throw new Error(`Semua kunci API & skema fallback model gagal memproses. Kesalahan terakhir: ${lastError}`);
-    }
-
-    // Memicu seluruh antrean secara sequential menggunakan Direct Web Client Call
-    async function processAllPending() {
-      const pending = items.filter(i => i.status === 'pending' || i.status === 'error');
-      if (pending.length === 0) return;
-
-      isProcessingAll = true;
-      document.getElementById("btn-generate-all").disabled = true;
-      
-      const genIcon = document.getElementById("generate-all-icon");
-      const genText = document.getElementById("generate-all-text");
-      
-      if (genIcon) genIcon.classList.add("animate-spin");
-      if (genText) genText.innerText = "MENGANALISIS BATCH...";
-      
-      hideError();
-
-      for (let item of pending) {
-        // Proses item satu per satu secara sequential
-        await processSingleItem(item.id);
-      }
-
-      isProcessingAll = false;
-      document.getElementById("btn-generate-all").disabled = false;
-      if (genIcon) genIcon.classList.remove("animate-spin");
-      if (genText) genText.innerText = "GENERATE SEMUA METADATA (BATCH)";
-      renderQueueList();
-    }
-
-    function renderCSVDownloadPanel() {
-      const panel = document.getElementById("csv-download-panel");
-      const btnContainer = document.getElementById("csv-download-buttons");
-      const successItems = items.filter(i => i.status === 'success');
-      
-      if (successItems.length === 0) {
-        panel.classList.add("hidden");
-        return;
-      }
-
-      panel.classList.remove("hidden");
-      btnContainer.innerHTML = "";
-
-      Object.keys(targetPlatforms).forEach(platform => {
-        if (targetPlatforms[platform]) {
-          const btn = document.createElement("button");
-          btn.className = "px-3 py-2 bg-white hover:bg-neutral-50 text-neutral-800 text-[10px] font-extrabold rounded-xl border border-neutral-200 transition-all shadow-sm active:scale-95";
-          btn.innerText = platform === 'adobeStock' ? 'Adobe Stock CSV' : platform.toUpperCase() + ' CSV';
-          btn.onclick = () => downloadPlatformCSV(platform);
-          btnContainer.appendChild(btn);
-        }
-      });
     }
 
     // Ekspor CSV Sesuai Templat Masing-Masing Agensi
