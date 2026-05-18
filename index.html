@@ -114,9 +114,8 @@
               <div class="flex items-center justify-between mb-3">
                 <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
                   <i data-lucide="key-round" class="w-4 h-4 mr-2 text-orange-500"></i>
-                  Koneksi Gemini AI
+                  Koneksi Gemini AI (5 Kunci)
                 </h3>
-                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold animate-pulse">Mode Hemat Token</span>
               </div>
 
               <!-- Tab Pemilih Menu API -->
@@ -176,7 +175,7 @@
                     <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
                       <button type="button" onclick="testApiKey()" class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-extrabold transition-all flex items-center space-x-1.5">
                         <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i>
-                        <span>Uji Koneksi Kunci</span>
+                        <span>Uji Kunci Aktif</span>
                       </button>
                       <span id="gemini-test-status" class="text-[10px] font-bold text-slate-400">Belum diuji</span>
                     </div>
@@ -279,7 +278,7 @@
               <!-- Slider Jumlah Keywords -->
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
-                  <span class="text-slate-600">Target Keywords</span>
+                  <span class="text-neutral-600">Target Keywords</span>
                   <span id="keywords-val" class="text-orange-600">40 Kata</span>
                 </div>
                 <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
@@ -680,7 +679,7 @@
           type: detectedType,
           preview: null,
           base64: '',
-          videoFrames: [], // Array menyimpan 3 frame video hasil ekstraksi
+          videoFrames: [], // Array menyimpan 3 frame video hasil ekstraksi (Awal, Tengah, Akhir)
           status: 'pending',
           errorMsg: null,
           metadata: { title: '', description: '', keywords: [], categories: {} },
@@ -688,7 +687,7 @@
         };
 
         if (detectedType === 'video') {
-          // Ekstrak 3 frame video secara asinkron di frontend
+          // Ekstrak 3 frame video secara asinkron di frontend (Awal, Tengah, Akhir)
           extractVideoFrames(file).then(async (frames) => {
             // Kompresi ketiga frame video agar hemat token masukan
             const compressedFrames = [];
@@ -698,7 +697,7 @@
             }
             const matchIndex = items.findIndex(i => i.id === id);
             if (matchIndex !== -1) {
-              items[matchIndex].videoFrames = compressedFrames;
+              items[matchIndex].videoFrames = compressedFrames; // 3 Frame Awal, Tengah, Akhir disimpan
               items[matchIndex].preview = compressedFrames[1] ? `data:image/jpeg;base64,${compressedFrames[1]}` : null;
               renderQueueList();
             }
@@ -1078,6 +1077,7 @@
       renderQueueList();
 
       const base64ImagesPayload = [];
+      // Jika bertipe video, kirimkan secara penuh 3 frame (Awal, Tengah, Akhir) untuk dianalisis oleh AI
       if (targetItem.type === 'video' && targetItem.videoFrames && targetItem.videoFrames.length > 0) {
         targetItem.videoFrames.forEach(frame => base64ImagesPayload.push(frame));
       } else if (targetItem.base64) {
@@ -1128,7 +1128,7 @@
       if (settings.assetType === "video") {
         assetSpecificInstructions = `
 PANDUAN KURASI KHUSUS VIDEO SINEMATIK / FOOTAGE:
-1. Deskripsikan visual dari perspektif video komersial dinamis. Fokus pada gerakan subjek (movement), transisi adegan (cut, pan, tilt, zoom), pencahayaan (cinematic lighting, natural sun flare), sudut kamera (low angle, macro closeup, aerial drone shot), serta suasana hati / mood emosional (mood, atmosphere, cinematic feel).
+1. Deskripsikan visual dari perspektif video komersial dinamis berdasarkan ke-3 gambar frame yang Anda terima (awal, tengah, akhir dari video tersebut). Analisis alur waktu, transisi, pergerakan subjek, pergantian warna, pencahayaan (cinematic lighting, natural sun flare), sudut kamera (low angle, macro closeup, aerial drone shot), serta suasana hati / mood emosional (mood, atmosphere, cinematic feel).
 2. Gunakan kata kunci SEO video yang dicari editor profesional, seperti: "slow motion", "footage", "4k resolution", "real-time", "b-roll", "cinematic", "commercial video", "background loop", "establishing shot".
 3. DILARANG menggunakan kata kunci yang merujuk pada gambar diam statis, seperti "still photo", "illustration", "vector", "drawing".`;
       } else if (settings.assetType === "vector") {
@@ -1332,7 +1332,7 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
         Object.keys(targetPlatforms).forEach(platform => {
           if (targetPlatforms[platform]) {
             const btn = document.createElement("button");
-            btn.className = "px-3.5 py-2 bg-white hover:bg-neutral-50 text-neutral-800 text-[10px] font-extrabold rounded-xl border border-slate-200 transition-all shadow-sm active:scale-95";
+            btn.className = "px-3.5 py-2 bg-white hover:bg-slate-55 text-slate-800 text-[10px] font-extrabold rounded-xl border border-slate-200 transition-all shadow-sm active:scale-95";
             btn.innerText = platform === 'adobeStock' ? 'Adobe Stock CSV' : platform.toUpperCase() + ' CSV';
             btn.onclick = () => downloadPlatformCSV(platform);
             btnContainer.appendChild(btn);
@@ -1479,7 +1479,7 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
 
         video.onloadedmetadata = () => {
           const duration = video.duration;
-          const timestamps = [duration * 0.1, duration * 0.5, duration * 0.9];
+          const timestamps = [duration * 0.1, duration * duration > 1 ? 0.5 : 0.4, duration * 0.9];
           const frames = [];
           let index = 0;
 
