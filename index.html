@@ -127,19 +127,31 @@
                   <label class="block text-[10px] font-bold text-neutral-500 mb-1">Daftar API Key Gemini (Satu per Baris)</label>
                   <textarea id="api-keys-textarea" rows="3" placeholder="AIzaSyD-12345...&#10;AIzaSyD-67890..." class="w-full text-xs p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 resize-none font-mono" onchange="saveApiKeys()"></textarea>
                   
-                  <div class="flex items-center justify-between mt-2">
+                  <!-- Fitur Kecepatan & Rotasi Lanjutan -->
+                  <div class="flex items-center justify-between p-2.5 bg-neutral-100 rounded-xl mt-2 border border-neutral-200/50">
+                    <label class="flex items-center space-x-2 text-[10px] font-extrabold text-neutral-600 cursor-pointer">
+                      <input type="checkbox" id="speed-3x-toggle" checked="checked" class="accent-orange-500 rounded" />
+                      <span>Auto Rotate &amp; Speed 3x (Parallel)</span>
+                    </label>
+                  </div>
+
+                  <div class="flex items-center justify-between mt-2.5">
                     <button type="button" onclick="testApiKey()" class="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-700 rounded-lg text-[10px] font-bold transition-all">
                       ⚡ Uji Koneksi Gemini
                     </button>
                     <span id="gemini-test-status" class="text-[10px] font-bold text-neutral-400">Belum diuji</span>
                   </div>
-                  <p class="text-[9px] text-neutral-400 font-semibold mt-2 leading-relaxed">Rotasi otomatis berjalan jika Anda memasukkan lebih dari satu kunci API.</p>
+                  <p class="text-[9px] text-neutral-400 font-semibold mt-2 leading-relaxed">Rotasi otomatis terdistribusi berjalan jika Anda memasukkan lebih dari satu kunci API.</p>
                 </div>
 
                 <!-- Pilihan Model Gemini -->
                 <div>
                   <label class="block text-[10px] font-bold text-neutral-500 mb-1">Model Prioritas Gemini</label>
                   <div class="space-y-1.5 bg-neutral-50 p-2.5 rounded-xl border border-neutral-100">
+                    <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
+                      <input type="checkbox" id="model-g31" checked="checked" class="accent-orange-500 rounded" />
+                      <span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-1 py-0.5 rounded ml-1 font-extrabold">Ultra Baru</span></span>
+                    </label>
                     <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
                       <input type="checkbox" id="model-g3" checked="checked" class="accent-orange-500 rounded" />
                       <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-1 py-0.5 rounded ml-1 font-extrabold">Baru</span></span>
@@ -314,7 +326,7 @@
       <div class="flex justify-center space-x-4 text-neutral-500 font-medium">
         <span>Aman Terenkripsi</span>
         <span>•</span>
-        <span>Didukung Model Vision Gemini 3.0 &amp; 2.5 Flash</span>
+        <span>Didukung Model Vision Gemini 3.1, 3.0 &amp; 2.5 Flash</span>
       </div>
     </footer>
   </div>
@@ -326,6 +338,8 @@
     let expandedItemId = null;
     let isProcessingAll = false;
     let currentAssetType = 'image'; // image, vector, video
+    let activeAuthProvider = 'gemini'; // 'gemini' atau 'helper'
+    let currentApiKeyIndex = 0; // Mengoordinasikan rotasi kunci global antar pekerja paralel
 
     const targetPlatforms = {
       shutterstock: true,
@@ -431,6 +445,7 @@
 
     function getPrioritizedModels() {
       const models = [];
+      if (document.getElementById("model-g31").checked) models.push("gemini-3.1-flash");
       if (document.getElementById("model-g3").checked) models.push("gemini-3.0-flash");
       if (document.getElementById("model-g25").checked) models.push("gemini-2.5-flash");
       if (document.getElementById("model-g20").checked) models.push("gemini-2.0-flash");
@@ -958,7 +973,7 @@
       renderQueueList();
     }
 
-    // PROMPT SYSTEM UTAMA (SINKRON DENGAN DUA API)
+    // PROMPT SYSTEM UTAMA (SINKRON DENGAN API)
     function buildSystemPrompt(settings) {
       const targetPlatformsStr = Object.keys(settings.targetPlatforms || {}).filter(p => settings.targetPlatforms[p]).join(', ');
       
@@ -1071,7 +1086,9 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
         const modelName = activeModels[m];
 
         for (let k = 0; k < activeKeys.length; k++) {
-          const apiKey = activeKeys[k];
+          // Mendistribusikan rotasi kunci global secara asinkron di antara pekerja paralel
+          const keyIndex = (k + currentApiKeyIndex) % activeKeys.length;
+          const apiKey = activeKeys[keyIndex];
           const url = `${baseUrl}/${modelName}:generateContent?key=${apiKey}`;
           
           try {
@@ -1085,21 +1102,94 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
               const data = await response.json();
               const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
               if (resultText) {
+                // Simpan indeks kunci terakhir yang berhasil untuk mempercepat pekerja berikutnya
+                currentApiKeyIndex = keyIndex;
                 return resultText;
               }
             } else {
               const errBody = await response.json().catch(() => ({}));
-              lastError = `Model [${modelName}] - Key [${k}]: ${errBody.error?.message || response.statusText}`;
+              lastError = `Model [${modelName}] - Key [${keyIndex}]: ${errBody.error?.message || response.statusText}`;
             }
           } catch (err) {
-            lastError = `Model [${modelName}] - Key [${k}]: ${err.message}`;
+            lastError = `Model [${modelName}] - Key [${keyIndex}]: ${err.message}`;
           }
 
-          await new Promise(resolve => setTimeout(resolve, 200));
+          // Gunakan jeda failover super cepat dalam mode Speed 3x (50ms vs 200ms)
+          const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
+          await new Promise(resolve => setTimeout(resolve, useSpeed3x ? 50 : 200));
         }
       }
 
       throw new Error(`Semua kunci API & skema fallback model gagal memproses. Kesalahan terakhir: ${lastError}`);
+    }
+
+    // Memicu seluruh antrean secara sequential atau paralel menggunakan Direct Web Client Call
+    async function processAllPending() {
+      const pending = items.filter(i => i.status === 'pending' || i.status === 'error');
+      if (pending.length === 0) return;
+
+      isProcessingAll = true;
+      document.getElementById("btn-generate-all").disabled = true;
+      
+      const genIcon = document.getElementById("generate-all-icon");
+      const genText = document.getElementById("generate-all-text");
+      
+      if (genIcon) genIcon.classList.add("animate-spin");
+      if (genText) genText.innerText = "MENGANALISIS BATCH...";
+      
+      hideError();
+
+      const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
+      const concurrencyLimit = useSpeed3x ? 3 : 1;
+
+      // Inisialisasi pool pekerja paralel
+      let index = 0;
+      async function worker() {
+        while (index < pending.length) {
+          const currentIdx = index++;
+          const item = pending[currentIdx];
+          await processSingleItem(item.id);
+        }
+      }
+
+      // Jalankan pool pekerja sesuai batas konkurensi (3x lebih cepat)
+      const workers = [];
+      const activeWorkersCount = Math.min(concurrencyLimit, pending.length);
+      for (let i = 0; i < activeWorkersCount; i++) {
+        workers.push(worker());
+      }
+
+      await Promise.all(workers);
+
+      isProcessingAll = false;
+      document.getElementById("btn-generate-all").disabled = false;
+      if (genIcon) genIcon.classList.remove("animate-spin");
+      if (genText) genText.innerText = "GENERATE SEMUA METADATA (BATCH)";
+      renderQueueList();
+    }
+
+    function renderCSVDownloadPanel() {
+      const panel = document.getElementById("csv-download-panel");
+      const btnContainer = document.getElementById("csv-download-buttons");
+      const successItems = items.filter(i => i.status === 'success');
+      
+      if (successItems.length === 0) {
+        panel.classList.add("hidden");
+        return;
+      }
+
+      panel.classList.remove("hidden");
+      btnContainer.innerHTML = "";
+
+      Object.keys(targetPlatforms).forEach(platform => {
+        if (targetPlatforms[platform]) {
+          const btn = document.createElement("button");
+          btn.className = "px-3 py-2 bg-white hover:bg-neutral-50 text-neutral-800 text-[10px] font-extrabold rounded-xl border border-neutral-200 transition-all shadow-sm active:scale-95";
+          btn.innerText = platform === 'adobeStock' ? 'Adobe Stock CSV' : platform.toUpperCase() + ' CSV';
+          btn.onclick = () => downloadPlatformCSV(platform);
+          btnContainer.appendChild(btn);
+        }
+      });
     }
 
     // Ekspor CSV Sesuai Templat Masing-Masing Agensi
