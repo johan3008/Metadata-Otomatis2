@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Optimalisasi Viewport agar scaling berjalan sempurna di berbagai perangkat -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shophub Microstock Pro AI</title>
   <!-- Load Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,44 +24,49 @@
 
     * {
       box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     /* Scrollbar Custom */
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
       background: transparent;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background-color: #cbd5e1;
+      background-color: #e2e8f0;
       border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background-color: #cbd5e1;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-amber-50/20 via-orange-50/10 to-amber-100/20 text-neutral-800">
+<body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-orange-500/10 selection:text-orange-600">
 
   <!-- Penggunaan min-h-screen (min-height: 100vh) untuk fleksibilitas tinggi -->
   <div id="app" class="min-h-screen flex flex-col w-full">
     
     <!-- Header Utama Premium -->
-    <header class="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b border-amber-100/40 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-4">
-        <div class="flex items-center space-x-3.5">
-          <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-400 p-2.5 rounded-2xl text-white shadow-lg shadow-orange-500/20">
-            <i data-lucide="sparkles" class="w-5.5 h-5.5 animate-pulse"></i>
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/85 border-b border-slate-200/80 shadow-sm transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-500 p-2.5 rounded-2xl text-white shadow-lg shadow-orange-500/25 transform hover:scale-105 transition-all">
+            <i data-lucide="sparkles" class="w-6 h-6 animate-pulse"></i>
           </div>
           <div>
-            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-neutral-900 via-orange-600 to-amber-500 bg-clip-text text-transparent">
+            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-orange-600 to-amber-500 bg-clip-text text-transparent">
               Shophub Microstock Pro AI
             </h1>
-            <p class="text-[10px] font-semibold text-neutral-400 uppercase tracking-widest">Enterprise Suite • Standalone Client Mode</p>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Enterprise Suite • Standalone Client Mode</p>
           </div>
         </div>
         <div class="flex items-center space-x-3">
-          <span id="status-badge" class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 border border-emerald-200/50 text-emerald-800 shadow-sm">
-            <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-            Netlify App Active (Client Direct)
+          <span id="status-badge" class="inline-flex items-center px-4 py-2 rounded-full text-xs font-extrabold bg-emerald-50 border border-emerald-200/60 text-emerald-800 shadow-sm">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2.5 animate-pulse"></span>
+            Netlify App Active
           </span>
         </div>
       </div>
@@ -80,24 +85,24 @@
         
         <!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
         <div class="lg:col-span-4 space-y-6">
-          <div class="bg-white rounded-3xl p-6 shadow-sm border border-amber-100/40 space-y-6">
+          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 space-y-6">
             
             <!-- 1. Tipe Aset -->
             <div>
-              <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center mb-3 text-neutral-500">
+              <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center mb-3">
                 <i data-lucide="sliders" class="w-4 h-4 mr-2 text-orange-500"></i>
                 1. Pilih Tipe Aset
               </h3>
-              <div class="grid grid-cols-3 gap-2 bg-neutral-100/60 p-1.5 rounded-2xl" id="asset-type-container">
-                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-neutral-200">
+              <div class="grid grid-cols-3 gap-2 bg-slate-100/80 p-1.5 rounded-2xl" id="asset-type-container">
+                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200">
                   <i data-lucide="image" class="w-4 h-4"></i>
                   <span>Gambar</span>
                 </button>
-                <button onclick="setAssetType('vector')" id="btn-vector" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-neutral-500 hover:text-neutral-900">
+                <button onclick="setAssetType('vector')" id="btn-vector" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950">
                   <i data-lucide="pen-tool" class="w-4 h-4"></i>
                   <span>Vektor</span>
                 </button>
-                <button onclick="setAssetType('video')" id="btn-video" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-neutral-500 hover:text-neutral-900">
+                <button onclick="setAssetType('video')" id="btn-video" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950">
                   <i data-lucide="video" class="w-4 h-4"></i>
                   <span>Video</span>
                 </button>
@@ -105,95 +110,106 @@
             </div>
 
             <!-- 2. Pengaturan Multi API Key Gemini (5 Slot Visual) -->
-            <div class="pt-2 border-t border-neutral-100">
-              <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center mb-3 text-neutral-500">
-                <i data-lucide="key" class="w-4 h-4 mr-2 text-orange-500"></i>
-                Koneksi Gemini AI (5 Kunci)
-              </h3>
+            <div class="pt-2 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
+                  <i data-lucide="key-round" class="w-4 h-4 mr-2 text-orange-500"></i>
+                  Koneksi Gemini AI
+                </h3>
+                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold animate-pulse">Mode Hemat Token</span>
+              </div>
 
               <!-- Tab Pemilih Menu API -->
-              <div class="grid grid-cols-2 gap-1 bg-neutral-100 p-1 rounded-2xl mb-4 text-center">
-                <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2 rounded-xl text-[11px] font-bold transition-all bg-white text-orange-600 shadow-sm">
+              <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-2xl mb-4 text-center">
+                <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm">
                   Kunci API Gemini
                 </button>
-                <button onclick="switchAuthTab('helper')" id="tab-auth-helper" class="py-2 rounded-xl text-[11px] font-bold transition-all text-neutral-500 hover:text-neutral-900">
+                <button onclick="switchAuthTab('helper')" id="tab-auth-helper" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
                   Bantuan
                 </button>
               </div>
 
               <!-- Konten Tab 1: 5 Slot API Key Gemini secara Visual -->
               <div id="content-auth-gemini" class="space-y-4">
-                <div class="space-y-2.5">
-                  <div class="flex justify-between items-center">
-                    <label class="block text-[10px] font-extrabold text-neutral-400 uppercase tracking-wider">Masukkan Kunci API (Mencegah Limit):</label>
-                    <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold animate-pulse">Mode Hemat Token</span>
+                
+                <!-- Expandable Accordion Vault API Keys -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
+                  <div onclick="toggleAccordion('api-vault-content')" class="flex items-center justify-between p-3.5 bg-slate-100/50 hover:bg-slate-100 cursor-pointer transition-colors border-b border-slate-200">
+                    <span class="text-xs font-extrabold text-slate-700 flex items-center">
+                      <i data-lucide="shield-check" class="w-4 h-4 mr-2 text-emerald-500"></i>
+                      Brankas Kunci API (5 Slot)
+                    </span>
+                    <i data-lucide="chevron-down" id="api-vault-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-300"></i>
                   </div>
                   
-                  <!-- Slot 1 -->
-                  <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[10px] font-bold text-neutral-400">#1</span>
-                    <input type="password" id="api-key-1" placeholder="Masukkan API Key ke-1 (Utama)" class="w-full text-xs pl-8 pr-3 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 font-mono" onchange="saveApiKeys()" />
-                  </div>
+                  <div id="api-vault-content" class="p-4 space-y-3 bg-white">
+                    <!-- Slot 1 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
+                      <input type="password" id="api-key-1" placeholder="Masukkan API Key ke-1 (Utama)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
 
-                  <!-- Slot 2 -->
-                  <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[10px] font-bold text-neutral-400">#2</span>
-                    <input type="password" id="api-key-2" placeholder="Masukkan API Key ke-2 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 font-mono" onchange="saveApiKeys()" />
-                  </div>
+                    <!-- Slot 2 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#2</span>
+                      <input type="password" id="api-key-2" placeholder="Masukkan API Key ke-2 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
 
-                  <!-- Slot 3 -->
-                  <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[10px] font-bold text-neutral-400">#3</span>
-                    <input type="password" id="api-key-3" placeholder="Masukkan API Key ke-3 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 font-mono" onchange="saveApiKeys()" />
-                  </div>
+                    <!-- Slot 3 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#3</span>
+                      <input type="password" id="api-key-3" placeholder="Masukkan API Key ke-3 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
 
-                  <!-- Slot 4 -->
-                  <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[10px] font-bold text-neutral-400">#4</span>
-                    <input type="password" id="api-key-4" placeholder="Masukkan API Key ke-4 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 font-mono" onchange="saveApiKeys()" />
-                  </div>
+                    <!-- Slot 4 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#4</span>
+                      <input type="password" id="api-key-4" placeholder="Masukkan API Key ke-4 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
 
-                  <!-- Slot 5 -->
-                  <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[10px] font-bold text-neutral-400">#5</span>
-                    <input type="password" id="api-key-5" placeholder="Masukkan API Key ke-5 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 font-mono" onchange="saveApiKeys()" />
-                  </div>
-                  
-                  <div class="flex items-center justify-between mt-2.5 pt-1">
-                    <button type="button" onclick="testApiKey()" class="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-700 rounded-xl text-[10px] font-bold transition-all">
-                      ⚡ Uji Kunci Aktif
-                    </button>
-                    <span id="gemini-test-status" class="text-[10px] font-bold text-neutral-400">Belum diuji</span>
+                    <!-- Slot 5 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#5</span>
+                      <input type="password" id="api-key-5" placeholder="Masukkan API Key ke-5 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
+
+                    <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+                      <button type="button" onclick="testApiKey()" class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-extrabold transition-all flex items-center space-x-1.5">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i>
+                        <span>Uji Koneksi Kunci</span>
+                      </button>
+                      <span id="gemini-test-status" class="text-[10px] font-bold text-slate-400">Belum diuji</span>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Fitur Kecepatan & Rotasi Lanjutan -->
-                <div class="flex items-center justify-between p-2.5 bg-neutral-100 rounded-xl border border-neutral-200/50">
-                  <label class="flex items-center space-x-2 text-[10px] font-extrabold text-neutral-600 cursor-pointer">
-                    <input type="checkbox" id="speed-3x-toggle" checked="checked" class="accent-orange-500 rounded" />
+                <div class="flex items-center justify-between p-3 bg-[#f8fafc] rounded-2xl border border-slate-200">
+                  <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-600 cursor-pointer">
+                    <input type="checkbox" id="speed-3x-toggle" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
                     <span>Auto Rotate &amp; Speed 3x (Parallel)</span>
                   </label>
                 </div>
 
                 <!-- Pilihan Model Gemini -->
-                <div>
-                  <label class="block text-[10px] font-bold text-neutral-500 mb-1">Model Prioritas Gemini</label>
-                  <div class="space-y-1.5 bg-neutral-50 p-2.5 rounded-xl border border-neutral-100">
-                    <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g31" checked="checked" class="accent-orange-500 rounded" />
-                      <span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-1 py-0.5 rounded ml-1 font-extrabold">Ultra Baru</span></span>
+                <div class="space-y-2">
+                  <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
+                  <div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g31" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full ml-1 font-bold">Ultra Baru</span></span>
                     </label>
-                    <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g3" checked="checked" class="accent-orange-500 rounded" />
-                      <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-1 py-0.5 rounded ml-1 font-extrabold">Baru</span></span>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g3" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Baru</span></span>
                     </label>
-                    <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g25" checked="checked" class="accent-orange-500 rounded" />
-                      <span>gemini-2.5-flash <span class="text-[8px] bg-green-100 text-green-700 px-1 py-0.5 rounded ml-1 font-extrabold">Utama</span></span>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g25" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-2.5-flash <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1 font-bold">Utama</span></span>
                     </label>
-                    <label class="flex items-center space-x-2 text-[11px] font-bold text-neutral-700 cursor-pointer">
-                      <input type="checkbox" id="model-g20" checked="checked" class="accent-orange-500 rounded" />
-                      <span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-1 py-0.5 rounded ml-1 font-extrabold">Cadangan</span></span>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g20" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-1 font-bold">Cadangan</span></span>
                     </label>
                   </div>
                 </div>
@@ -201,14 +217,14 @@
 
               <!-- Konten Tab 2: Panduan Dapatkan API Key secara Gratis -->
               <div id="content-auth-helper" class="space-y-3 hidden">
-                <div class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 text-xs space-y-3">
-                  <p class="font-extrabold text-neutral-800 flex items-center">
+                <div class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 text-xs space-y-3 shadow-inner">
+                  <p class="font-extrabold text-slate-800 flex items-center">
                     🚀 Cara Dapatkan API Key Gratis (30 Detik):
                   </p>
-                  <div class="space-y-2 text-neutral-600 font-medium leading-relaxed">
+                  <div class="space-y-2 text-slate-600 font-medium leading-relaxed">
                     <p class="font-bold border-b border-orange-200/50 pb-1">Google Gemini Key:</p>
                     <ol class="list-decimal list-inside pl-1 space-y-1">
-                      <li>Kunjungi <a href="https://aistudio.google.com/" target="_blank" class="text-orange-600 underline font-bold">Google AI Studio ↗</a></li>
+                      <li>Kunjungi <a href="https://aistudio.google.com/" target="_blank" class="text-orange-600 underline font-bold hover:text-orange-700">Google AI Studio ↗</a></li>
                       <li>Klik <strong>"Create API Key"</strong> dan salin kodenya.</li>
                     </ol>
                   </div>
@@ -218,26 +234,26 @@
             </div>
 
             <!-- 3. Area Unggah Batch -->
-            <div class="pt-2 border-t border-neutral-100">
-              <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center mb-3 text-neutral-500">
+            <div class="pt-2 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center mb-3">
                 <i data-lucide="upload" class="w-4 h-4 mr-2 text-orange-500"></i>
                 2. Area Unggah Batch
               </h3>
-              <div onclick="triggerFileSelect()" class="border-2 border-dashed border-amber-200/80 hover:border-orange-500 rounded-2xl p-7 text-center cursor-pointer bg-amber-50/5 hover:bg-amber-50/40 transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-lg">
-                <div id="upload-icon-container" class="p-3 bg-amber-100/50 rounded-2xl text-amber-600 group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-300 shadow-sm">
+              <div onclick="triggerFileSelect()" class="border-2 border-dashed border-slate-200 hover:border-orange-500 hover:bg-orange-50/5 rounded-2xl p-7 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-md">
+                <div id="upload-icon-container" class="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:scale-110 group-hover:bg-orange-100 group-hover:text-orange-600 transition-all duration-300 shadow-sm border border-slate-200/50">
                   <i id="upload-icon" data-lucide="image" class="w-7 h-7"></i>
                 </div>
                 <div>
-                  <p class="text-xs font-bold text-neutral-800">Klik untuk memilih berkas Anda</p>
-                  <p id="accept-label" class="text-[10px] text-neutral-400 mt-1 font-semibold">Format JPG, PNG, WEBP</p>
+                  <p class="text-xs font-extrabold text-slate-800">Klik atau seret berkas Anda</p>
+                  <p id="accept-label" class="text-[10px] text-slate-400 mt-1 font-bold">Format JPG, PNG, WEBP</p>
                 </div>
               </div>
               <input type="file" id="file-input" class="hidden" multiple="multiple" onchange="handleBatchFiles(event)" />
             </div>
 
             <!-- 4. Preferensi AI -->
-            <div class="space-y-4 pt-4 border-t border-neutral-100">
-              <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center text-neutral-500">
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
                 <i data-lucide="settings" class="w-4 h-4 mr-2 text-orange-500"></i>
                 3. Preferensi Output AI
               </h3>
@@ -245,39 +261,39 @@
               <!-- Slider Panjang Judul -->
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
-                  <span class="text-neutral-600">Panjang Judul SEO</span>
+                  <span class="text-slate-600">Panjang Judul SEO</span>
                   <span id="title-val" class="text-orange-600">80 Karakter (ch)</span>
                 </div>
-                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none" />
+                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Slider Panjang Deskripsi -->
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
-                  <span class="text-neutral-600">Panjang Deskripsi</span>
+                  <span class="text-slate-600">Panjang Deskripsi</span>
                   <span id="desc-val" class="text-orange-600">200 Karakter (ch)</span>
                 </div>
-                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none" />
+                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Slider Jumlah Keywords -->
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
-                  <span class="text-neutral-600">Target Keywords</span>
+                  <span class="text-slate-600">Target Keywords</span>
                   <span id="keywords-val" class="text-orange-600">40 Kata</span>
                 </div>
-                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-neutral-200 rounded-lg appearance-none" />
+                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Key Concepts -->
               <div class="space-y-1.5">
-                <label class="text-xs font-bold text-neutral-600">Prioritas Konsep (Key Concept)</label>
-                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-neutral-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-neutral-50/50 transition-colors" />
+                <label class="text-xs font-bold text-slate-600">Prioritas Konsep (Key Concept)</label>
+                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 transition-colors" />
               </div>
             </div>
 
             <!-- Tombol Generate Utama -->
-            <div class="pt-4 border-t border-neutral-100 hidden" id="generate-all-container">
+            <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
               <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
                 <i id="generate-all-icon" data-lucide="sparkles" class="w-4 h-4 text-amber-200 animate-pulse"></i>
                 <span id="generate-all-text">GENERATE SEMUA METADATA (BATCH)</span>
@@ -285,8 +301,8 @@
             </div>
 
             <!-- 5. Target Platform -->
-            <div class="space-y-3 pt-4 border-t border-neutral-100">
-              <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center text-neutral-500">
+            <div class="space-y-3 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
                 <i data-lucide="check-square" class="w-4 h-4 mr-2 text-orange-500"></i>
                 4. Platform Target
               </h3>
@@ -300,20 +316,20 @@
 
         <!-- KOLOM KANAN: DAFTAR ANTREAN DAN EDITOR METADATA TERINTEGRASI -->
         <div class="lg:col-span-8 space-y-6">
-          <div class="bg-white rounded-3xl p-6 shadow-sm border border-amber-100/50 flex flex-col min-h-[670px]">
+          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 flex flex-col min-h-[670px]">
             
-            <div class="flex items-center justify-between pb-4 border-b border-neutral-100">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
-                <h3 class="text-base font-extrabold text-neutral-900 flex items-center">
+                <h3 class="text-base font-extrabold text-slate-950 flex items-center">
                   <i data-lucide="folder-open" class="w-5 h-5 mr-2 text-orange-500"></i>
-                  Daftar Antrean & Editor Metadata (<span id="queue-count">0</span>)
+                  Daftar Antrean &amp; Editor Metadata (<span id="queue-count">0</span>)
                 </h3>
-                <p class="text-xs text-neutral-500">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
+                <p class="text-xs text-slate-500 mt-0.5">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
               </div>
               
               <!-- Tombol Reset / Clear All Antrean -->
               <button onclick="clearAllQueue()" id="btn-clear-queue" class="hidden p-2.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-600 transition-all flex items-center space-x-1.5" title="Kosongkan Antrean">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
                 <span class="text-[10px] font-bold">Clear All</span>
               </button>
             </div>
@@ -321,12 +337,12 @@
             <!-- PANEL UNDUH CSV BATCH -->
             <div id="csv-download-panel" class="hidden mt-4 p-5 bg-gradient-to-r from-amber-50/30 to-orange-50/10 rounded-2xl border border-amber-100/40 flex flex-col lg:flex-row items-center justify-between gap-4">
               <div class="flex items-center space-x-2.5">
-                <div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg">
+                <div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg shadow-sm">
                   <i data-lucide="check" class="w-4 h-4"></i>
                 </div>
                 <div>
-                  <span class="block text-xs font-extrabold text-neutral-800">Metadata Batch Sukses Dibuat!</span>
-                  <span class="block text-[10px] text-neutral-400 font-semibold">Unduh CSV sesuai agensi target:</span>
+                  <span class="block text-xs font-extrabold text-slate-850">Metadata Batch Sukses Dibuat!</span>
+                  <span class="block text-[10px] text-slate-400 font-bold">Unduh CSV sesuai agensi target:</span>
                 </div>
               </div>
               <div class="flex flex-wrap gap-1.5" id="csv-download-buttons">
@@ -336,10 +352,10 @@
 
             <!-- AREA LIST ANTREAN -->
             <div id="queue-list" class="flex-1 overflow-y-auto mt-6 space-y-4 pr-1 custom-scrollbar">
-              <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-neutral-400 border-2 border-dashed border-neutral-100 bg-neutral-50/5">
+              <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
                 <i data-lucide="sparkles" class="w-12 h-12 text-orange-300 mb-3 animate-pulse"></i>
-                <h4 class="text-sm font-bold text-neutral-800">Antrean Aset Kosong</h4>
-                <p class="text-xs text-neutral-400 mt-1 max-w-[280px] leading-relaxed">
+                <h4 class="text-sm font-extrabold text-slate-800">Antrean Aset Kosong</h4>
+                <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
                   Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
                 </p>
               </div>
@@ -352,9 +368,9 @@
     </main>
 
     <!-- Footer Premium yang Selalu di Pojok Bawah -->
-    <footer class="mt-auto bg-neutral-900 text-neutral-400 py-12 border-t border-neutral-800 text-xs text-center space-y-3">
-      <p class="font-semibold text-neutral-300">© 2026 Shophub Microstock Pro AI. Sistem Berbasis Client Standalone.</p>
-      <div class="flex justify-center space-x-4 text-neutral-500 font-medium">
+    <footer class="mt-auto bg-slate-900 text-slate-400 py-12 border-t border-slate-850 text-xs text-center space-y-3">
+      <p class="font-bold text-slate-300">© 2026 Shophub Microstock Pro AI. Sistem Berbasis Client Standalone.</p>
+      <div class="flex justify-center space-x-4 text-slate-500 font-bold">
         <span>Aman Terenkripsi</span>
         <span>•</span>
         <span>Didukung Model Vision Gemini 3.1, 3.0 &amp; 2.5 Flash</span>
@@ -398,13 +414,27 @@
       for (let i = 1; i <= 5; i++) {
         const keyVal = localStorage.getItem(`shophub_api_key_${i}`);
         if (keyVal) {
-          document.getElementById(`api-key-${i}`).value = keyVal;
+          const inputEl = document.getElementById(`api-key-${i}`);
+          if (inputEl) inputEl.value = keyVal;
         }
       }
       
       switchAuthTab('gemini');
       renderPlatformCheckboxes();
     });
+
+    // Toggle Akordeon API Vault secara visual
+    function toggleAccordion(id) {
+      const el = document.getElementById(id);
+      const arrow = document.getElementById('api-vault-arrow');
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+      } else {
+        el.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+      }
+    }
 
     // Beralih Tab Autentikasi (Gemini vs Bantuan)
     function switchAuthTab(provider) {
@@ -417,20 +447,20 @@
 
       // Reset state tombol tab
       [tabGemini, tabHelper].forEach(t => {
-        t.className = "py-2 rounded-xl text-[11px] font-bold transition-all text-neutral-500 hover:text-neutral-900";
+        if (t) t.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900";
       });
 
       // Sembunyikan semua konten
-      contentGemini.classList.add('hidden');
-      contentHelper.classList.add('hidden');
+      if (contentGemini) contentGemini.classList.add('hidden');
+      if (contentHelper) contentHelper.classList.add('hidden');
 
       // Tampilkan yang dipilih
       if (provider === 'gemini') {
-        tabGemini.className = "py-2 rounded-xl text-[11px] font-bold transition-all bg-white text-orange-600 shadow-sm";
-        contentGemini.classList.remove('hidden');
+        if (tabGemini) tabGemini.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm";
+        if (contentGemini) contentGemini.classList.remove('hidden');
       } else {
-        tabHelper.className = "py-2 rounded-xl text-[11px] font-bold transition-all bg-white text-orange-600 shadow-sm";
-        contentHelper.classList.remove('hidden');
+        if (tabHelper) tabHelper.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm";
+        if (contentHelper) contentHelper.classList.remove('hidden');
       }
     }
 
@@ -438,7 +468,8 @@
     function getActiveApiKeys() {
       const keys = [];
       for (let i = 1; i <= 5; i++) {
-        const val = document.getElementById(`api-key-${i}`).value.trim();
+        const el = document.getElementById(`api-key-${i}`);
+        const val = el ? el.value.trim() : '';
         if (val && val.length > 5) {
           keys.push(val);
         }
@@ -498,29 +529,35 @@
     // Menyimpan kelima kunci API ke localStorage browser secara terpisah
     function saveApiKeys() {
       for (let i = 1; i <= 5; i++) {
-        const val = document.getElementById(`api-key-${i}`).value.trim();
+        const el = document.getElementById(`api-key-${i}`);
+        const val = el ? el.value.trim() : '';
         localStorage.setItem(`shophub_api_key_${i}`, val);
       }
     }
 
     function getPrioritizedModels() {
       const models = [];
-      if (document.getElementById("model-g31").checked) models.push("gemini-3.1-flash");
-      if (document.getElementById("model-g3").checked) models.push("gemini-3.0-flash");
-      if (document.getElementById("model-g25").checked) models.push("gemini-2.5-flash");
-      if (document.getElementById("model-g20").checked) models.push("gemini-2.0-flash");
+      const m31 = document.getElementById("model-g31");
+      const m3 = document.getElementById("model-g3");
+      const m25 = document.getElementById("model-g25");
+      const m20 = document.getElementById("model-g20");
+
+      if (m31 && m31.checked) models.push("gemini-3.1-flash");
+      if (m3 && m3.checked) models.push("gemini-3.0-flash");
+      if (m25 && m25.checked) models.push("gemini-2.5-flash");
+      if (m20 && m20.checked) models.push("gemini-2.0-flash");
       return models;
     }
 
     function setAssetType(type) {
       currentAssetType = type;
       document.querySelectorAll(".type-btn").forEach(btn => {
-        btn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-neutral-500 hover:text-neutral-900";
+        btn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950";
       });
       
       const activeBtn = document.getElementById(`btn-${type}`);
       if (activeBtn) {
-        activeBtn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-neutral-200";
+        activeBtn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200";
       }
 
       // Update placeholder area unggah
@@ -571,11 +608,11 @@
         btn.type = "button";
         btn.onclick = () => togglePlatform(platform);
         btn.className = `flex items-center space-x-2.5 p-3 border rounded-2xl text-left transition-all ${
-          checked ? 'border-orange-200 bg-orange-50/20 text-neutral-900 shadow-sm' : 'border-neutral-200 bg-white text-neutral-500 hover:bg-neutral-50'
+          checked ? 'border-orange-200 bg-orange-50/20 text-slate-900 shadow-sm' : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'
         }`;
         
         btn.innerHTML = `
-          <i data-lucide="${checked ? 'check-square' : 'square'}" class="w-3.5 h-3.5 ${checked ? 'text-orange-500' : 'text-neutral-300'} flex-shrink-0"></i>
+          <i data-lucide="${checked ? 'check-square' : 'square'}" class="w-3.5 h-3.5 ${checked ? 'text-orange-500' : 'text-slate-300'} flex-shrink-0"></i>
           <span class="text-[11px] font-bold capitalize truncate">${friendlyName}</span>
         `;
         container.appendChild(btn);
@@ -688,11 +725,8 @@
         items.push(item);
       });
 
-      if (!expandedItemId && items.length > 0) {
-        expandedItemId = items[0].id;
-      }
-
-      document.getElementById("generate-all-container").classList.remove("hidden");
+      const genAllContainer = document.getElementById("generate-all-container");
+      if (genAllContainer) genAllContainer.classList.remove("hidden");
       renderQueueList();
       e.target.value = '';
     }
@@ -756,24 +790,26 @@
 
     function renderQueueList() {
       const container = document.getElementById("queue-list");
-      document.getElementById("queue-count").innerText = items.length;
+      const countEl = document.getElementById("queue-count");
+      if (countEl) countEl.innerText = items.length;
       
       const clearQueueBtn = document.getElementById("btn-clear-queue");
       const generateAllContainer = document.getElementById("generate-all-container");
       
       if (items.length === 0) {
         container.innerHTML = `
-          <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-neutral-400 border-2 border-dashed border-neutral-100 bg-neutral-50/5">
+          <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
             <i data-lucide="sparkles" class="w-12 h-12 text-orange-300 mb-3 animate-pulse"></i>
-            <h4 class="text-sm font-bold text-neutral-800">Antrean Aset Kosong</h4>
-            <p class="text-xs text-neutral-400 mt-1 max-w-[280px] leading-relaxed">
+            <h4 class="text-sm font-extrabold text-slate-850">Antrean Aset Kosong</h4>
+            <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
               Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
             </p>
           </div>
         `;
         if (generateAllContainer) generateAllContainer.classList.add("hidden");
         if (clearQueueBtn) clearQueueBtn.classList.add("hidden");
-        document.getElementById("csv-download-panel").classList.add("hidden");
+        const downloadPanel = document.getElementById("csv-download-panel");
+        if (downloadPanel) downloadPanel.classList.add("hidden");
         lucide.createIcons();
         return;
       }
@@ -786,8 +822,8 @@
       items.forEach(item => {
         const isExpanded = expandedItemId === item.id;
         const itemCard = document.createElement("div");
-        itemCard.className = `border rounded-2xl transition-all duration-300 overflow-hidden ${
-          isExpanded ? 'border-orange-400 bg-orange-50/5 ring-1 ring-orange-500/10 shadow-lg' : 'border-neutral-200 bg-white hover:border-amber-300 shadow-sm'
+        itemCard.className = `border rounded-3xl transition-all duration-300 overflow-hidden ${
+          isExpanded ? 'border-orange-400 bg-orange-50/5 shadow-lg shadow-orange-100/30' : 'border-slate-200 bg-white hover:border-amber-300 shadow-sm'
         }`;
 
         let thumbnailHTML = '';
@@ -798,44 +834,48 @@
         } else if (item.preview) {
           thumbnailHTML = `<img src="${item.preview}" class="w-full h-full object-cover" />`;
         } else {
-          thumbnailHTML = `<i data-lucide="image" class="w-5 h-5 text-neutral-400"></i>`;
+          thumbnailHTML = `<i data-lucide="image" class="w-5 h-5 text-slate-400"></i>`;
         }
 
         let statusBadge = '';
         if (item.status === 'processing') {
-          statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-orange-50 border border-orange-100 text-orange-700 animate-pulse"><i data-lucide="refresh-cw" class="w-3 h-3 mr-1 animate-spin"></i>Proses AI...</span>`;
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-orange-50 border border-orange-100 text-orange-700 animate-pulse"><i data-lucide="refresh-cw" class="w-3.5 h-3.5 mr-1.5 animate-spin"></i>Proses AI...</span>`;
         } else if (item.status === 'success') {
-          statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 border border-emerald-100 text-emerald-800"><i data-lucide="check" class="w-3 h-3 mr-1"></i>Selesai</span>`;
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-emerald-50 border border-emerald-100 text-emerald-800"><i data-lucide="check" class="w-3.5 h-3.5 mr-1.5"></i>Selesai</span>`;
         } else if (item.status === 'error') {
-          statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 border border-red-100 text-red-700" title="${item.errorMsg}"><i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i>Error</span>`;
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-red-50 border border-red-100 text-red-700" title="${item.errorMsg}"><i data-lucide="alert-circle" class="w-3.5 h-3.5 mr-1.5"></i>Error</span>`;
         } else {
-          statusBadge = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-neutral-50 border border-neutral-200 text-neutral-600">Antrean</span>`;
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-slate-50 border border-slate-200 text-slate-600">Antrean</span>`;
         }
 
         itemCard.innerHTML = `
-          <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-neutral-50/35 transition-colors" onclick="toggleExpand('${item.id}')">
+          <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors" onclick="toggleExpand('${item.id}')">
             <div class="flex items-center space-x-3.5 min-w-0">
-              <div class="relative w-12 h-12 rounded-2xl overflow-hidden bg-neutral-100 flex-shrink-0 flex items-center justify-center border border-neutral-200 shadow-sm">
+              <div class="relative w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 flex items-center justify-center border border-slate-200 shadow-sm">
                 ${thumbnailHTML}
               </div>
               <div class="min-w-0">
                 <div class="flex items-center space-x-2">
-                  <span class="text-[9px] font-extrabold uppercase tracking-wider bg-neutral-100 border border-neutral-200 text-neutral-600 px-2 py-0.5 rounded-md">${item.type}</span>
-                  <p class="text-xs font-extrabold text-neutral-800 truncate max-w-[200px]">${item.name}</p>
+                  <span class="text-[9px] font-extrabold uppercase tracking-wider bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">
+                    ${item.type}
+                  </span>
+                  <p class="text-xs font-extrabold text-slate-800 truncate max-w-[180px] sm:max-w-[240px]">
+                    ${item.name}
+                  </p>
                 </div>
-                ${item.status === 'success' && item.metadata.title ? `<p class="text-[11px] text-neutral-500 truncate italic mt-0.5 max-w-[280px]">"${item.metadata.title}"</p>` : `<p class="text-[10px] text-neutral-400 mt-0.5 font-medium">Klik untuk merinci editor</p>`}
+                ${item.status === 'success' && item.metadata.title ? `<p class="text-[11px] text-slate-500 truncate italic mt-1.5 max-w-[280px]">"${item.metadata.title}"</p>` : `<p class="text-[10px] text-slate-400 mt-1 font-bold">Klik untuk merinci editor</p>`}
               </div>
             </div>
             <div class="flex items-center space-x-3" onclick="event.stopPropagation()">
               ${statusBadge}
-              <button onclick="processSingleItem('${item.id}')" ${item.status === 'processing' ? 'disabled' : ''} class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-xs font-bold flex items-center space-x-1 hover:shadow-md transition-all animate-pulse">
-                <i data-lucide="sparkles" class="w-3 h-3"></i>
+              <button onclick="processSingleItem('${item.id}')" ${item.status === 'processing' ? 'disabled' : ''} class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-extrabold flex items-center space-x-1 hover:shadow-md transition-all active:scale-95">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1"></i>
                 <span>Generate</span>
               </button>
-              <button onclick="removeItem('${item.id}')" class="p-1.5 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors">
+              <button onclick="removeItem('${item.id}')" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
-              <i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4 text-neutral-400 cursor-pointer" onclick="toggleExpand('${item.id}')"></i>
+              <i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-4.5 h-4.5 text-slate-400 cursor-pointer" onclick="toggleExpand('${item.id}')"></i>
             </div>
           </div>
           ${isExpanded ? renderEditorPanel(item) : ''}
@@ -850,19 +890,19 @@
     function renderEditorPanel(item) {
       if (item.status === 'pending') {
         return `
-          <div class="p-6 border-t border-neutral-100 bg-neutral-50/30 text-center text-neutral-500">
+          <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/50 text-center text-slate-500">
             <i data-lucide="sparkles" class="w-10 h-10 text-orange-400 mx-auto mb-2 animate-bounce"></i>
-            <p class="text-xs font-bold text-neutral-700">Metadata belum di-generate</p>
-            <p class="text-[10px] text-neutral-400 mt-1">Klik tombol "Generate" untuk membuat metadata komersial AI secara instan.</p>
+            <p class="text-xs font-extrabold text-slate-700">Metadata belum di-generate</p>
+            <p class="text-[10px] text-slate-400 mt-1 font-semibold">Klik tombol "Generate" untuk membuat metadata komersial AI secara instan.</p>
           </div>
         `;
       }
       if (item.status === 'error') {
         return `
-          <div class="p-6 border-t border-neutral-100 bg-neutral-50/30 text-center text-red-500">
-            <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-2"></i>
-            <p class="text-xs font-bold">Gagal Memproses Metadata</p>
-            <p class="text-[10px] text-neutral-400 mt-1">${item.errorMsg}</p>
+          <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/50 text-center text-red-500">
+            <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-2 text-red-500"></i>
+            <p class="text-xs font-extrabold">Gagal Memproses Metadata</p>
+            <p class="text-[10px] text-slate-400 mt-1 font-semibold">${item.errorMsg}</p>
           </div>
         `;
       }
@@ -902,9 +942,9 @@
 
           if (shouldRender) {
             cards += `
-              <div class="bg-white border border-amber-100 p-3 rounded-2xl text-left shadow-sm">
-                <span class="block text-[8px] font-bold text-amber-700 capitalize tracking-wider">${displayPlatformName}</span>
-                <span class="block text-[10px] font-extrabold text-neutral-800 truncate mt-1" title="${val}">${val}</span>
+              <div class="bg-white border border-amber-100/60 p-3.5 rounded-2xl text-left shadow-sm">
+                <span class="block text-[8px] font-extrabold text-amber-700 capitalize tracking-wider">${displayPlatformName}</span>
+                <span class="block text-[10px] font-extrabold text-slate-800 truncate mt-1.5" title="${val}">${val}</span>
               </div>
             `;
           }
@@ -912,11 +952,11 @@
 
         if (cards) {
           categoriesHTML = `
-            <div class="space-y-1.5 pt-3 border-t border-neutral-100">
-              <label class="text-[10px] font-bold text-neutral-400 uppercase tracking-wider flex items-center">
-                <i data-lucide="layers" class="w-3.5 h-3.5 mr-1.5 text-amber-500"></i> Kategori Berdasarkan Platform Terpilih
+            <div class="space-y-2 pt-4 border-t border-slate-100">
+              <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center">
+                <i data-lucide="layers" class="w-4 h-4 mr-2 text-amber-500"></i> Kategori Berdasarkan Platform Terpilih
               </label>
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">${cards}</div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${cards}</div>
             </div>
           `;
         }
@@ -926,7 +966,7 @@
       let keywordsHTML = '';
       item.metadata.keywords.forEach((kw, i) => {
         keywordsHTML += `
-          <span onclick="copyTextDirect('${kw}', 'kw-${item.id}-${i}')" id="kw-${item.id}-${i}" class="text-[10px] bg-neutral-50 hover:bg-amber-50/20 border border-neutral-200 hover:border-amber-300 text-neutral-700 hover:text-orange-600 font-bold px-2.5 py-1 rounded-xl transition-all shadow-sm cursor-pointer select-none">
+          <span onclick="copyTextDirect('${kw}', 'kw-${item.id}-${i}')" id="kw-${item.id}-${i}" class="text-[10px] bg-slate-50 hover:bg-orange-500/10 border border-slate-200 hover:border-orange-300 text-slate-600 hover:text-orange-600 font-extrabold px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer select-none">
             ${kw}
           </span>
         `;
@@ -937,23 +977,23 @@
         <div class="p-4 rounded-2xl border ${allIPViolations.length > 0 ? 'bg-red-50/50 border-red-200' : 'bg-emerald-50/20 border-emerald-100'} flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center space-x-2">
-              <span class="text-xs font-bold text-neutral-700">Kepatuhan IP & Trademark:</span>
+              <span class="text-xs font-bold text-slate-700">Kepatuhan IP &amp; Trademark:</span>
               ${allIPViolations.length > 0 
                 ? `<span class="px-2 py-0.5 text-[9px] font-extrabold bg-red-100 text-red-700 rounded-md">⚠️ Terdeteksi Pelanggaran (${allIPViolations.length})</span>`
-                : `<span class="px-2 py-0.5 text-[9px] font-extrabold bg-emerald-100 text-emerald-800 rounded-md">✓ Aman (Trademark Free)</span>`
+                : `<span class="px-2 py-0.5 text-[9px] font-extrabold bg-emerald-100 text-emerald-850 rounded-md">✓ Aman (Trademark Free)</span>`
               }
             </div>
             ${allIPViolations.length > 0 
-              ? `<p class="text-[10px] text-red-600 font-semibold">Segera hapus nama brand berikut sebelum unggah: <span class="underline">${allIPViolations.join(', ')}</span></p>`
-              : `<p class="text-[10px] text-neutral-400 font-semibold">Bebas hak cipta merek dagang. Lolos validasi Adobe Stock.</p>`
+              ? `<p class="text-[10px] text-red-600 font-bold">Segera hapus nama brand berikut sebelum unggah: <span class="underline">${allIPViolations.join(', ')}</span></p>`
+              : `<p class="text-[10px] text-slate-400 font-bold">Bebas hak cipta merek dagang. Lolos validasi Adobe Stock.</p>`
             }
           </div>
           <div class="flex items-center space-x-3 flex-shrink-0">
             <div class="text-right">
-              <span class="block text-[10px] font-bold text-neutral-400 uppercase">Kualitas SEO</span>
+              <span class="block text-[10px] font-extrabold text-slate-400 uppercase">Kualitas SEO</span>
               <span class="block text-sm font-extrabold ${seoMetrics.score > 80 ? 'text-emerald-600' : seoMetrics.score > 50 ? 'text-orange-500' : 'text-red-500'}">${seoMetrics.score}% / 100</span>
             </div>
-            <div class="w-16 h-2 bg-neutral-200 rounded-full overflow-hidden">
+            <div class="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
               <div class="h-full ${seoMetrics.score > 80 ? 'bg-emerald-500' : seoMetrics.score > 50 ? 'bg-orange-500' : 'bg-red-500'}" style="width: ${seoMetrics.score}%"></div>
             </div>
           </div>
@@ -961,35 +1001,35 @@
       `;
 
       return `
-        <div class="p-6 border-t border-neutral-100 bg-neutral-50/30 space-y-5">
+        <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/30 space-y-5">
           
           <!-- Metrik Evaluator Klien -->
           ${qualityIndicatorHTML}
 
           <div class="space-y-1.5">
             <div class="flex justify-between items-center text-xs font-bold">
-              <label class="text-neutral-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Judul SEO (Title)</label>
-              <button onclick="copyTextDirect('${item.metadata.title.replace(/'/g, "\\'")}', '${item.id}-copy-title')" id="${item.id}-copy-title" class="text-[10px] text-orange-600 flex items-center space-x-1 font-bold"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
+              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Judul SEO (Title)</label>
+              <button onclick="copyTextDirect('${item.metadata.title.replace(/'/g, "\\'")}', '${item.id}-copy-title')" id="${item.id}-copy-title" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
             </div>
-            <input type="text" value="${item.metadata.title}" onchange="updateItemField('${item.id}', 'title', this.value)" class="w-full text-xs p-3.5 bg-white border border-neutral-200 rounded-2xl focus:outline-none focus:border-orange-500 shadow-inner">
+            <input type="text" value="${item.metadata.title}" onchange="updateItemField('${item.id}', 'title', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 shadow-inner">
           </div>
 
           <div class="space-y-1.5">
             <div class="flex justify-between items-center text-xs font-bold">
-              <label class="text-neutral-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Deskripsi (Description)</label>
-              <button onclick="copyTextDirect('${item.metadata.description.replace(/'/g, "\\'")}', '${item.id}-copy-desc')" id="${item.id}-copy-desc" class="text-[10px] text-orange-600 flex items-center space-x-1 font-bold"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
+              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Deskripsi (Description)</label>
+              <button onclick="copyTextDirect('${item.metadata.description.replace(/'/g, "\\'")}', '${item.id}-copy-desc')" id="${item.id}-copy-desc" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
             </div>
-            <textarea rows="2" onchange="updateItemField('${item.id}', 'description', this.value)" class="w-full text-xs p-3.5 bg-white border border-neutral-200 rounded-2xl focus:outline-none focus:border-orange-500 resize-none shadow-inner">${item.metadata.description}</textarea>
+            <textarea rows="2" onchange="updateItemField('${item.id}', 'description', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 resize-none shadow-inner">${item.metadata.description}</textarea>
           </div>
 
           ${categoriesHTML}
 
-          <div class="space-y-1.5 pt-3 border-t border-neutral-100">
+          <div class="space-y-1.5 pt-3 border-t border-slate-100">
             <div class="flex justify-between items-center text-xs font-bold">
-              <label class="text-neutral-600 flex items-center"><i data-lucide="tag" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Keywords (${item.metadata.keywords.length})</label>
-              <button onclick="copyTextDirect('${item.metadata.keywords.join(', ').replace(/'/g, "\\'")}', '${item.id}-copy-kw')" id="${item.id}-copy-kw" class="text-[10px] text-orange-600 flex items-center space-x-1 font-bold"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin Semua (Koma)</span></button>
+              <label class="text-slate-600 flex items-center"><i data-lucide="tag" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Keywords (${item.metadata.keywords.length})</label>
+              <button onclick="copyTextDirect('${item.metadata.keywords.join(', ').replace(/'/g, "\\'")}', '${item.id}-copy-kw')" id="${item.id}-copy-kw" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin Semua (Koma)</span></button>
             </div>
-            <div class="p-3 bg-white rounded-2xl border border-neutral-200 max-h-32 overflow-y-auto shadow-inner">
+            <div class="p-3 bg-white rounded-2xl border border-slate-200 max-h-32 overflow-y-auto shadow-inner">
               <div class="flex flex-wrap gap-1.5">${keywordsHTML}</div>
             </div>
           </div>
@@ -1268,7 +1308,8 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       await Promise.all(workers);
 
       isProcessingAll = false;
-      document.getElementById("btn-generate-all").disabled = false;
+      const genAllBtn = document.getElementById("btn-generate-all");
+      if (genAllBtn) genAllBtn.disabled = false;
       if (genIcon) genIcon.classList.remove("animate-spin");
       if (genText) genText.innerText = "GENERATE SEMUA METADATA (BATCH)";
       renderQueueList();
@@ -1280,22 +1321,25 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       const successItems = items.filter(i => i.status === 'success');
       
       if (successItems.length === 0) {
-        panel.classList.add("hidden");
+        if (panel) panel.classList.add("hidden");
         return;
       }
 
-      panel.classList.remove("hidden");
-      btnContainer.innerHTML = "";
+      if (panel) panel.classList.remove("hidden");
+      if (btnContainer) {
+        btnContainer.innerHTML = "";
 
-      Object.keys(targetPlatforms).forEach(platform => {
-        if (targetPlatforms[platform]) {
-          const btn = document.createElement("button");
-          btn.className = "px-3 py-2 bg-white hover:bg-neutral-50 text-neutral-800 text-[10px] font-extrabold rounded-xl border border-neutral-200 transition-all shadow-sm active:scale-95";
-          btn.innerText = platform === 'adobeStock' ? 'Adobe Stock CSV' : platform.toUpperCase() + ' CSV';
-          btn.onclick = () => downloadPlatformCSV(platform);
-          btnContainer.appendChild(btn);
-        }
-      });
+        Object.keys(targetPlatforms).forEach(platform => {
+          if (targetPlatforms[platform]) {
+            const btn = document.createElement("button");
+            btn.className = "px-3.5 py-2 bg-white hover:bg-neutral-50 text-neutral-800 text-[10px] font-extrabold rounded-xl border border-slate-200 transition-all shadow-sm active:scale-95";
+            btn.innerText = platform === 'adobeStock' ? 'Adobe Stock CSV' : platform.toUpperCase() + ' CSV';
+            btn.onclick = () => downloadPlatformCSV(platform);
+            btnContainer.appendChild(btn);
+          }
+        });
+      }
+      lucide.createIcons();
     }
 
     // Ekspor CSV Sesuai Templat Masing-Masing Agensi
@@ -1416,10 +1460,10 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       if (targetBtn) {
         const prevHTML = targetBtn.innerHTML;
         targetBtn.innerHTML = `<span>Tersalin! ✓</span>`;
-        targetBtn.classList.add("text-emerald-500");
+        targetBtn.classList.add("text-emerald-600");
         setTimeout(() => {
           targetBtn.innerHTML = prevHTML;
-          targetBtn.classList.remove("text-emerald-500");
+          targetBtn.classList.remove("text-emerald-600");
         }, 1500);
       }
     }
@@ -1472,14 +1516,14 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
     function showError(msg) {
       const banner = document.getElementById("error-banner");
       const message = document.getElementById("error-message");
-      message.innerText = msg;
-      banner.classList.remove("hidden");
+      if (message) message.innerText = msg;
+      if (banner) banner.classList.remove("hidden");
     }
 
     // Menghilangkan banner error
     function hideError() {
       const banner = document.getElementById("error-banner");
-      banner.classList.add("hidden");
+      if (banner) banner.classList.add("hidden");
     }
   </script>
 </body>
