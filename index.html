@@ -1886,146 +1886,141 @@ INSTRUKSI AKHIR:
       
       // ✅ COUNTER UNTUK MEMBATASI RETRY SETELAH RATE LIMIT
       let globalRetryCount = 0;
-      const MAX_GLOBAL_RETRIES = 2; // Maksimal 2x retry global setelah semua key/model habis
+      const MAX_GLOBAL_RETRIES = 3; // Maksimal 3x retry global setelah semua key/model habis
+      
+      // ✅ DELAY AWAL UNTUK MENGHINDARI BURST REQUEST
+      const initialDelay = 1000 + Math.random() * 1000; // 1-2 detik random
+      await new Promise(r => setTimeout(r, initialDelay));
 
       // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
-      for (let m = 0; m < activeModels.length; m++) {
+      for (let attempt = 0; attempt < (activeModels.length * activeKeys.length * 2); attempt++) {
+        // Rotasi model dan key secara fair
+        const m = attempt % activeModels.length;
+        const k = Math.floor(attempt / activeModels.length) % activeKeys.length;
+        
         const modelName = activeModels[m];
+        const keyIndex = (k + currentGroqKeyIndex) % activeKeys.length;
+        const apiKey   = activeKeys[keyIndex];
 
-        for (let k = 0; k < activeKeys.length; k++) {
-          // Rotasi kunci global antar pekerja paralel — identik dengan Gemini
-          const keyIndex = (k + currentGroqKeyIndex) % activeKeys.length;
-          const apiKey   = activeKeys[keyIndex];
+        const reqBody = {
+          model: modelName,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user",   content: userContent }
+          ],
+          temperature: 0.25,
+          max_tokens: 2048, // ✅ REDUKSI TOKEN untuk menghindari rate limit
+          top_p: 0.9,
+          response_format: { type: "json_object" }
+        };
 
-          const reqBody = {
-            model: modelName,
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user",   content: userContent }
-            ],
-            temperature: 0.25,
-            max_tokens: 4096,
-            top_p: 0.9,
-            response_format: { type: "json_object" }
-          };
+        try {
+          const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(reqBody)
+          });
 
-          try {
-            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`
-              },
-              body: JSON.stringify(reqBody)
-            });
+          if (response.ok) {
+            const data    = await response.json();
+            const rawText = (data.choices?.[0]?.message?.content || "").trim();
 
-            if (response.ok) {
-              const data    = await response.json();
-              const rawText = (data.choices?.[0]?.message?.content || "").trim();
+            if (rawText) {
+              // JSON ROBUST EXTRACTOR
+              let jsonStr = rawText;
 
-              if (rawText) {
-                // JSON ROBUST EXTRACTOR
-                let jsonStr = rawText;
+              // 1. Hapus wrapper markdown ```json ... ``` jika ada
+              const mdMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+              if (mdMatch) jsonStr = mdMatch[1].trim();
 
-                // 1. Hapus wrapper markdown ```json ... ``` jika ada
-                const mdMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
-                if (mdMatch) jsonStr = mdMatch[1].trim();
+              // 2. Ekstrak objek {} pertama yang valid
+              const bStart = jsonStr.indexOf("{");
+              const bEnd   = jsonStr.lastIndexOf("}");
+              if (bStart !== -1 && bEnd > bStart) {
+                jsonStr = jsonStr.slice(bStart, bEnd + 1);
+              }
 
-                // 2. Ekstrak objek {} pertama yang valid
-                const bStart = jsonStr.indexOf("{");
-                const bEnd   = jsonStr.lastIndexOf("}");
-                if (bStart !== -1 && bEnd > bStart) {
-                  jsonStr = jsonStr.slice(bStart, bEnd + 1);
-                }
+              // 3. Parse — throws jika JSON invalid, langsung ke catch
+              const parsed = JSON.parse(jsonStr);
 
-                // 3. Parse — throws jika JSON invalid, langsung ke catch
-                const parsed = JSON.parse(jsonStr);
+              // 4. Validasi struktur output (identik ekspektasi Gemini)
+              if (!parsed.title || typeof parsed.title !== "string" || parsed.title.trim().length < 5) {
+                lastError = `Model [${modelName}] Key#${keyIndex+1}: field "title" kosong/tidak valid.`;
+                await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                continue;
+              }
+              // ✅ FIX: Validation lebih lenient — 50% dari keywordsCount adalah acceptable
+              // post-processing akan pad/trim sesuai preferensi user
+              const minAcceptableKeywords = Math.max(5, Math.floor((settings.keywordsCount || 40) * 0.5));
+              if (!Array.isArray(parsed.keywords) || parsed.keywords.length < minAcceptableKeywords) {
+                lastError = `Model [${modelName}] Key#${keyIndex+1}: keywords hanya ${parsed.keywords?.length || 0}, min ${minAcceptableKeywords} (target ${settings.keywordsCount}).`;
+                await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                continue;
+              }
+              // Also check description exists
+              if (!parsed.description || typeof parsed.description !== "string" || parsed.description.trim().length < 10) {
+                lastError = `Model [${modelName}] Key#${keyIndex+1}: description invalid/too short.`;
+                await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                continue;
+              }
 
-                // 4. Validasi struktur output (identik ekspektasi Gemini)
-                if (!parsed.title || typeof parsed.title !== "string" || parsed.title.trim().length < 5) {
-                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "title" kosong/tidak valid.`;
-                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
-                  continue;
-                }
-                // ✅ FIX: Validation lebih lenient — 50% dari keywordsCount adalah acceptable
-                // post-processing akan pad/trim sesuai preferensi user
-                const minAcceptableKeywords = Math.max(5, Math.floor((settings.keywordsCount || 40) * 0.5));
-                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < minAcceptableKeywords) {
-                  lastError = `Model [${modelName}] Key#${keyIndex+1}: keywords hanya ${parsed.keywords?.length || 0}, min ${minAcceptableKeywords} (target ${settings.keywordsCount}).`;
-                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
-                  continue;
-                }
-                // Also check description exists
-                if (!parsed.description || typeof parsed.description !== "string" || parsed.description.trim().length < 10) {
-                  lastError = `Model [${modelName}] Key#${keyIndex+1}: description invalid/too short.`;
-                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
-                  continue;
-                }
-
-                // 5. Simpan indeks kunci sukses untuk pekerja berikutnya
-                currentGroqKeyIndex = keyIndex;
-                return jsonStr;
+              // 5. Simpan indeks kunci sukses untuk pekerja berikutnya
+              currentGroqKeyIndex = keyIndex;
+              return jsonStr;
+            }
+          } else {
+            const errBody = await response.json().catch(() => ({}));
+            const errMsg = errBody?.error?.message || response.statusText;
+            
+            // ✅ DETEKSI RATE LIMIT ERROR
+            const isRateLimitError = errMsg.includes("Rate limit reached") || 
+                                     response.status === 429;
+            
+            if (isRateLimitError) {
+              lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit reached. ${errMsg}`;
+              
+              // ✅ EKSTRAK WAKTU TUNGGU DARI PESAN ERROR GROQ
+              // Contoh: "Please try again in 13.706s"
+              const waitTimeMatch = errMsg.match(/try again in ([\d.]+)s/i);
+              let waitSeconds = 15; // Default fallback lebih lama
+              
+              if (waitTimeMatch && waitTimeMatch[1]) {
+                waitSeconds = parseFloat(waitTimeMatch[1]);
+                // Tambahkan buffer 3 detik untuk keamanan
+                waitSeconds = Math.min(waitSeconds + 3, 60); // Max 60 detik
+              }
+              
+              console.warn(`⏳ Rate limit terdeteksi pada Model [${modelName}] Key#${keyIndex+1}. Menunggu ${waitSeconds.toFixed(1)} detik...`);
+              
+              // ✅ EXPONENTIAL BACKOFF: tunggu lebih lama setiap retry
+              const backoffMultiplier = Math.pow(1.5, globalRetryCount);
+              const actualWaitTime = waitSeconds * backoffMultiplier;
+              
+              globalRetryCount++;
+              
+              if (globalRetryCount <= MAX_GLOBAL_RETRIES) {
+                console.log(`🔄 Retry global ke-${globalRetryCount}/${MAX_GLOBAL_RETRIES}. Menunggu ${actualWaitTime.toFixed(1)} detik...`);
+                await new Promise(r => setTimeout(r, actualWaitTime * 1000));
+                continue; // Coba kombinasi model/key berikutnya
+              } else {
+                throw new Error(`Groq: Semua model & kunci API gagal setelah ${MAX_GLOBAL_RETRIES}x retry. Error terakhir: ${lastError}`);
               }
             } else {
-              const errBody = await response.json().catch(() => ({}));
-              const errMsg = errBody?.error?.message || response.statusText;
-              
-              // ✅ DETEKSI RATE LIMIT ERROR
-              const isRateLimitError = errMsg.includes("Rate limit reached") || 
-                                       response.status === 429;
-              
-              if (isRateLimitError) {
-                lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit reached. ${errMsg}`;
-                
-                // ✅ EKSTRAK WAKTU TUNGGU DARI PESAN ERROR GROQ
-                // Contoh: "Please try again in 13.706s"
-                const waitTimeMatch = errMsg.match(/try again in ([\d.]+)s/i);
-                let waitSeconds = 10; // Default fallback
-                
-                if (waitTimeMatch && waitTimeMatch[1]) {
-                  waitSeconds = parseFloat(waitTimeMatch[1]);
-                  // Tambahkan buffer 2 detik untuk keamanan
-                  waitSeconds = Math.min(waitSeconds + 2, 60); // Max 60 detik
-                }
-                
-                console.warn(`⏳ Rate limit terdeteksi pada Model [${modelName}] Key#${keyIndex+1}. Menunggu ${waitSeconds.toFixed(1)} detik...`);
-                
-                // Jika masih ada key/model lain dalam loop ini, lanjut ke berikutnya
-                const hasMoreInCurrentLoop = (k + 1 < activeKeys.length) || (m + 1 < activeModels.length);
-                
-                if (!hasMoreInCurrentLoop) {
-                  // Ini adalah percobaan terakhir dalam loop saat ini
-                  globalRetryCount++;
-                  
-                  if (globalRetryCount <= MAX_GLOBAL_RETRIES) {
-                    // Tunggu sesuai anjuran Groq, lalu restart loop dari awal
-                    console.log(`🔄 Retry global ke-${globalRetryCount}/${MAX_GLOBAL_RETRIES}. Menunggu ${waitSeconds.toFixed(1)} detik...`);
-                    await new Promise(r => setTimeout(r, waitSeconds * 1000));
-                    
-                    // Reset loop ke awal
-                    m = -1; // Akan jadi 0 setelah increment
-                    k = -1; // Akan jadi 0 setelah increment
-                    lastError = null; // Reset error agar tidak menampilkan error lama
-                    continue;
-                  } else {
-                    // Sudah mencapai maksimal retry, lempar error
-                    throw new Error(`Groq: Semua model & kunci API gagal setelah ${MAX_GLOBAL_RETRIES}x retry. Error terakhir: ${lastError}`);
-                  }
-                }
-                // Jika masih ada key/model lain, lanjut tanpa tunggu lama
-              } else {
-                lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
-              }
+              lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
+              // Untuk error non-rate-limit, coba key/model berikutnya dengan delay singkat
+              await new Promise(r => setTimeout(r, 500));
             }
-          } catch (err) {
-            // Jika error bukan dari response (misal network error)
-            if (err.message.includes("Semua model & kunci API gagal")) {
-              throw err; // Re-throw error final
-            }
-            lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
           }
-
-          await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+        } catch (err) {
+          // Jika error bukan dari response (misal network error)
+          if (err.message.includes("Semua model & kunci API gagal")) {
+            throw err; // Re-throw error final
+          }
+          lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
+          await new Promise(r => setTimeout(r, 500));
         }
       }
 
