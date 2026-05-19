@@ -1914,10 +1914,17 @@ INSTRUKSI AKHIR:
 
       // BUILD CONTENT ARRAY — OpenAI Vision Format
       // ✅ FIX: Hanya model vision yang menerima image payload
+      // Detect active vision model safely
+      const currentVisionModel = activeModels.find(m =>
+        m.includes("vision") ||
+        m.includes("scout") ||
+        m.includes("maverick")
+      ) || "";
+
       const isVisionModel =
-        modelName.includes("vision") ||
-        modelName.includes("scout") ||
-        modelName.includes("maverick");
+        currentVisionModel.includes("vision") ||
+        currentVisionModel.includes("scout") ||
+        currentVisionModel.includes("maverick");
 
       const userContent = [];
       userContent.push({ type: "text", text: userPromptText });
