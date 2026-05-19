@@ -234,7 +234,7 @@
                     <i data-lucide="chevron-down" id="api-vault-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-300"></i>
                   </div>
                   
-                  <div id="api-vault-content" class="p-4 space-y-3 bg-white">
+                  <div id="api-vault-content" class="p-4 space-y-3 bg-white hidden">
                     <!-- Slot 1 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
@@ -365,7 +365,7 @@
                     </span>
                     <i data-lucide="chevron-down" id="groq-vault-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-300"></i>
                   </div>
-                  <div id="groq-vault-content" class="p-4 space-y-3 bg-white">
+                  <div id="groq-vault-content" class="p-4 space-y-3 bg-white hidden">
                     <!-- Slot 1 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
@@ -581,37 +581,34 @@
                 <label class="text-xs font-bold text-slate-600">Prioritas Konsep SEO Microstock</label><p class="text-[10px] text-slate-400 font-semibold mt-1">Gunakan niche buyer intent & keyword volume tinggi agar ranking lebih kuat di Shutterstock, Adobe Stock, Freepik, dan Canva.</p>
                 <input type="text" id="key-concepts-input" placeholder="misal: business, luxury, medical, technology, ai, finance, lifestyle" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 transition-colors" />
               </div>
+
+              <div class="p-3 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-2xl border border-violet-200 mt-3">
+                <div class="flex items-start space-x-2">
+                  <i data-lucide="trending-up" class="w-4 h-4 text-violet-600 mt-0.5"></i>
+                  <div>
+                    <p class="text-[11px] font-extrabold text-violet-800">Trend Keyword AI</p>
+                    <p class="text-[10px] text-violet-700 font-semibold mt-1">
+                      AI otomatis menambahkan keyword buyer intent & keyword trending microstock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Video AI Analysis Info -->
+              <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 mt-3">
+                <div class="flex items-start space-x-2">
+                  <i data-lucide="film" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                  <div>
+                    <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis</p>
+                    <p class="text-[10px] text-blue-700 font-semibold leading-relaxed mt-1">
+                      Sistem mengambil frame awal, tengah, dan akhir video untuk membaca alur footage,
+                      motion, cinematic context, serta buyer intent microstock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
             </div>
-
-            
-                
-                <div class="p-3 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-2xl border border-violet-200 mt-3">
-                  <div class="flex items-start space-x-2">
-                    <i data-lucide="trending-up" class="w-4 h-4 text-violet-600 mt-0.5"></i>
-                    <div>
-                      <p class="text-[11px] font-extrabold text-violet-800">Trend Keyword AI</p>
-                      <p class="text-[10px] text-violet-700 font-semibold mt-1">
-                        AI otomatis menambahkan keyword buyer intent & keyword trending microstock.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-
-                <!-- Video AI Analysis Info -->
-                <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 mt-3">
-                  <div class="flex items-start space-x-2">
-                    <i data-lucide="film" class="w-4 h-4 text-blue-600 mt-0.5"></i>
-                    <div>
-                      <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis</p>
-                      <p class="text-[10px] text-blue-700 font-semibold leading-relaxed mt-1">
-                        Sistem mengambil frame awal, tengah, dan akhir video untuk membaca alur footage,
-                        motion, cinematic context, serta buyer intent microstock.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
 
             <!-- Tombol Generate Utama -->
             <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
@@ -2920,8 +2917,7 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
     }
   </script>
   
-  <!-- Structured Data / Schema.org untuk Rich Snippets Google -->
-  <script type="application/ld+json">
+  <!-- Structured Data / Schema.org untuk Rich Snippets Google -->  <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -2995,21 +2991,19 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
     ]
   }
   </script>
-</body>
-</html>
+  <!-- Video hover autoplay initializer -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (typeof setupVideoHoverAutoplay === 'function') {
+        setupVideoHoverAutoplay();
+      }
+    }, 800);
+  });
+  </script>
 
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    if (typeof setupVideoHoverAutoplay === 'function') {
-      setupVideoHoverAutoplay();
-    }
-  }, 800);
-});
-</script>
-    // ===== ADVANCED MICROSTOCK AI ENGINE =====
-
+  <!-- ===== ADVANCED MICROSTOCK AI ENGINE ===== -->
+  <script>
     const TRENDING_KEYWORDS = [
       "business","technology","ai","startup","finance","success",
       "innovation","digital","future","corporate","marketing",
@@ -3041,7 +3035,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateAIScore(metadata) {
       const keywordCount = metadata.keywords?.length || 0;
-
       return {
         seoScore: Math.min(100, 70 + Math.floor(keywordCount / 2)),
         commercialScore: 92,
@@ -3052,39 +3045,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function detectCommercialIntent(title = "") {
       title = title.toLowerCase();
-
       if (title.includes("business")) return "Corporate";
       if (title.includes("technology")) return "Technology";
       if (title.includes("family")) return "Lifestyle";
       if (title.includes("nature")) return "Nature";
-
       return "Commercial";
     }
 
     function autoDetectCategories(title = "") {
       title = title.toLowerCase();
-
       if (title.includes("business")) {
-        return {
-          shutterstock1: "Business",
-          shutterstock2: "Technology",
-          adobe: "Business"
-        };
+        return { shutterstock1: "Business", shutterstock2: "Technology", adobe: "Business" };
       }
-
       if (title.includes("nature")) {
-        return {
-          shutterstock1: "Nature",
-          shutterstock2: "Travel",
-          adobe: "Nature"
-        };
+        return { shutterstock1: "Nature", shutterstock2: "Travel", adobe: "Nature" };
       }
-
-      return {
-        shutterstock1: "Commercial",
-        shutterstock2: "Lifestyle",
-        adobe: "Business"
-      };
+      return { shutterstock1: "Commercial", shutterstock2: "Lifestyle", adobe: "Business" };
     }
 
     function injectTrendingKeywords(keywords = []) {
@@ -3100,13 +3076,12 @@ document.addEventListener('DOMContentLoaded', () => {
           removeSpamKeywords(metadata.keywords || [])
         )
       );
-
       metadata.aiScore = generateAIScore(metadata);
       metadata.intent = detectCommercialIntent(metadata.title || "");
       metadata.categories = autoDetectCategories(metadata.title || "");
-
       return metadata;
     }
+  </script>
 
-
-    
+</body>
+</html>
