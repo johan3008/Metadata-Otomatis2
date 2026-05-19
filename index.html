@@ -1883,6 +1883,10 @@ INSTRUKSI AKHIR:
 
       const useSpeed3x = document.getElementById("groq-speed-toggle")?.checked;
       let lastError = null;
+      
+      // ✅ COUNTER UNTUK MEMBATASI RETRY SETELAH RATE LIMIT
+      let globalRetryCount = 0;
+      const MAX_GLOBAL_RETRIES = 2; // Maksimal 2x retry global setelah semua key/model habis
 
       // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
       for (let m = 0; m < activeModels.length; m++) {
@@ -1984,27 +1988,40 @@ INSTRUKSI AKHIR:
                   waitSeconds = Math.min(waitSeconds + 2, 60); // Max 60 detik
                 }
                 
-                console.warn(`⏳ Rate limit terdeteksi. Menunggu ${waitSeconds.toFixed(1)} detik sebelum melanjutkan...`);
+                console.warn(`⏳ Rate limit terdeteksi pada Model [${modelName}] Key#${keyIndex+1}. Menunggu ${waitSeconds.toFixed(1)} detik...`);
                 
-                // Jika masih ada key/model lain, lanjut ke berikutnya tanpa tunggu lama
-                // Jika ini percobaan terakhir, tunggu sesuai anjuran Groq lalu restart loop
-                const hasMoreAttempts = (k + 1 < activeKeys.length) || (m + 1 < activeModels.length);
+                // Jika masih ada key/model lain dalam loop ini, lanjut ke berikutnya
+                const hasMoreInCurrentLoop = (k + 1 < activeKeys.length) || (m + 1 < activeModels.length);
                 
-                if (!hasMoreAttempts) {
-                  // Ini adalah percobaan terakhir, tunggu sesuai anjuran Groq
-                  await new Promise(r => setTimeout(r, waitSeconds * 1000));
+                if (!hasMoreInCurrentLoop) {
+                  // Ini adalah percobaan terakhir dalam loop saat ini
+                  globalRetryCount++;
                   
-                  // Setelah menunggu, coba lagi dari awal (loop akan restart)
-                  console.log(`🔄 Mencoba kembali setelah rate limit delay...`);
-                  m = -1; // Reset loop model
-                  k = -1; // Reset loop key (akan jadi 0 setelah increment)
-                  continue;
+                  if (globalRetryCount <= MAX_GLOBAL_RETRIES) {
+                    // Tunggu sesuai anjuran Groq, lalu restart loop dari awal
+                    console.log(`🔄 Retry global ke-${globalRetryCount}/${MAX_GLOBAL_RETRIES}. Menunggu ${waitSeconds.toFixed(1)} detik...`);
+                    await new Promise(r => setTimeout(r, waitSeconds * 1000));
+                    
+                    // Reset loop ke awal
+                    m = -1; // Akan jadi 0 setelah increment
+                    k = -1; // Akan jadi 0 setelah increment
+                    lastError = null; // Reset error agar tidak menampilkan error lama
+                    continue;
+                  } else {
+                    // Sudah mencapai maksimal retry, lempar error
+                    throw new Error(`Groq: Semua model & kunci API gagal setelah ${MAX_GLOBAL_RETRIES}x retry. Error terakhir: ${lastError}`);
+                  }
                 }
+                // Jika masih ada key/model lain, lanjut tanpa tunggu lama
               } else {
                 lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
               }
             }
           } catch (err) {
+            // Jika error bukan dari response (misal network error)
+            if (err.message.includes("Semua model & kunci API gagal")) {
+              throw err; // Re-throw error final
+            }
             lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
           }
 
