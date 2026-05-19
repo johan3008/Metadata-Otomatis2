@@ -211,6 +211,17 @@
                   </label>
                 </div>
 
+                <!-- Mode No Limit - Metadata via Software -->
+                <div class="p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200">
+                  <label class="flex items-start space-x-2.5 cursor-pointer">
+                    <input type="checkbox" id="no-limit-mode" class="accent-emerald-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span class="text-[11px] font-extrabold text-emerald-800 block">🔓 No Limit Mode (Software)</span>
+                      <span class="text-[9px] text-emerald-600 font-medium">Aktifkan rotasi otomatis semua API key untuk unlimited request</span>
+                    </div>
+                  </label>
+                </div>
+
                 <!-- Pilihan Model Gemini -->
                 <div class="space-y-2">
                   <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
@@ -1502,15 +1513,23 @@ INSTRUKSI AKHIR:
       if (titleLen < minTitle) {
         console.warn(`⚠️ Title terlalu pendek (${titleLen} chars, min ${minTitle}). Normalizing...`);
         // Jika title terlalu pendek, tambahkan deskripsi singkat yang relevan
-        // CATATAN: Tidak menambahkan "professional quality asset" karena dilarang untuk Groq
+        // CATATAN: DILARANG menggunakan "professional quality asset" - gunakan variasi natural
         const extensions = [
           " for commercial use",
           " with creative design",
           " in modern style",
           " for marketing projects",
-          " for digital media"
+          " for digital media",
+          " for business presentations",
+          " for social media content",
+          " for web design",
+          " for print materials",
+          " for advertising campaigns"
         ];
-        const randomExt = extensions[Math.floor(Math.random() * extensions.length)];
+        // Pilih ekstensi berdasarkan hash nama file agar konsisten untuk file yang sama
+        // tapi berbeda untuk file berbeda
+        const hash = fileName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const randomExt = extensions[hash % extensions.length];
         parsed.title = parsed.title.trim() + randomExt;
       } else if (titleLen > maxTitle) {
         console.warn(`⚠️ Title terlalu panjang (${titleLen} chars, max ${maxTitle}). Trimming...`);
