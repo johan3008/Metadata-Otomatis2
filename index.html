@@ -1504,66 +1504,70 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       throw new Error(`Semua kunci API & skema fallback model gagal memproses. Kesalahan terakhir: ${lastError}`);
     }
 
-    // ===== ENGINE DIRECT CLIENT CALL KE API GROQ (OpenAI-Compatible + Vision) =====
+    // ===== ENGINE DIRECT CLIENT CALL KE API GROQ =====
+    // Setara penuh dengan Gemini: prompt identik (buildSystemPrompt), kategori resmi per platform,
+    // video 3-frame (awal/tengah/akhir), rotasi kunci paralel, JSON robust, validasi output.
     async function callGroqDirectClient(base64Images, settings, fileName) {
       const activeModels = getPrioritizedGroqModels();
-      const activeKeys = getActiveGroqApiKeys();
+      const activeKeys   = getActiveGroqApiKeys();
 
       if (activeKeys.length === 0) {
         throw new Error("Mohon masukkan minimal 1 API Key Groq (gsk_...) di tab ⚡ Groq!");
       }
       if (activeModels.length === 0) {
-        throw new Error("Pilih minimal 1 model Groq di tab ⚡ Groq!");
+        throw new Error("Pilih minimal 1 model Groq aktif di tab ⚡ Groq!");
       }
 
+      // PROMPT IDENTIK GEMINI: buildSystemPrompt mengandung semua aturan SEO, IP safety,
+      // kategori resmi per platform (Shutterstock 1+2, Adobe Stock, Dreamstime, Vecteezy, Canva),
+      // panduan aset video 3-frame, vektor, dan foto profesional.
       const systemPrompt = buildSystemPrompt(settings);
-      const userPromptText = `Analisis aset bernama "${fileName}" ini secara komersial dan terperinci. Berikan struktur metadata JSON komersial yang aman dari pelanggaran IP/Merek Dagang sesuai agensi Adobe Stock. PENTING: Kembalikan HANYA objek JSON murni tanpa markdown, tanpa komentar, tanpa \`\`\`.`;
 
-      // Build message content: teks + gambar (OpenAI vision format)
+      // User prompt — memperjelas konteks video 3-frame untuk model
+      const frameCtx = base64Images.length > 1
+        ? `Terdapat ${base64Images.length} frame gambar yang dikirim — ini adalah frame awal, tengah, dan akhir dari sebuah video. Analisis ketiganya untuk memahami alur visual, gerak subjek, suasana, pencahayaan, dan konten secara menyeluruh.\n`
+        : "";
+      const userPromptText =
+        `Analisis aset visual bernama "${fileName}" ini secara komersial dan mendalam.\n` +
+        frameCtx +
+        `Hasilkan metadata microstock berkualitas tinggi, aman dari pelanggaran IP/Merek Dagang.\n` +
+        `WAJIB: Kembalikan HANYA objek JSON murni (RFC 8259). ` +
+        `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
+
+      // BUILD CONTENT ARRAY — OpenAI Vision Format
+      // Llama 4 Scout/Maverick: image_url HARUS sebelum text agar model membaca semua frame
       const userContent = [];
-      userContent.push({ type: "text", text: userPromptText });
-
-      // Tambahkan semua gambar sebagai image_url (base64)
       base64Images.forEach((b64) => {
         userContent.push({
           type: "image_url",
-          image_url: {
-            url: `data:image/jpeg;base64,${b64}`
-          }
+          image_url: { url: `data:image/jpeg;base64,${b64}` }
         });
       });
-
-      const payload = {
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userContent }
-        ],
-        max_tokens: 2048,
-        temperature: 0.3,
-        response_format: { type: "json_object" }
-      };
+      userContent.push({ type: "text", text: userPromptText });
 
       const useSpeed3x = document.getElementById("groq-speed-toggle")?.checked;
       let lastError = null;
 
+      // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
       for (let m = 0; m < activeModels.length; m++) {
         const modelName = activeModels[m];
 
-        // Semua model Llama 4 Scout & Maverick support vision; llama-3.2 vision juga support
-        const isVisionModel = modelName.includes("scout") || modelName.includes("maverick") || modelName.includes("vision");
-
-        // Jika model tidak support vision, buat payload teks saja
-        let finalPayload = { ...payload, model: modelName };
-        if (!isVisionModel) {
-          finalPayload.messages = [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPromptText }
-          ];
-        }
-
         for (let k = 0; k < activeKeys.length; k++) {
+          // Rotasi kunci global antar pekerja paralel — identik dengan Gemini
           const keyIndex = (k + currentGroqKeyIndex) % activeKeys.length;
-          const apiKey = activeKeys[keyIndex];
+          const apiKey   = activeKeys[keyIndex];
+
+          const reqBody = {
+            model: modelName,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user",   content: userContent }
+            ],
+            temperature: 0.25,
+            max_tokens: 2048,
+            top_p: 0.9,
+            response_format: { type: "json_object" }
+          };
 
           try {
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -1572,35 +1576,61 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${apiKey}`
               },
-              body: JSON.stringify(finalPayload)
+              body: JSON.stringify(reqBody)
             });
 
             if (response.ok) {
-              const data = await response.json();
-              const resultText = data.choices?.[0]?.message?.content;
-              if (resultText) {
+              const data    = await response.json();
+              const rawText = (data.choices?.[0]?.message?.content || "").trim();
+
+              if (rawText) {
+                // JSON ROBUST EXTRACTOR
+                let jsonStr = rawText;
+
+                // 1. Hapus wrapper markdown ```json ... ``` jika ada
+                const mdMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+                if (mdMatch) jsonStr = mdMatch[1].trim();
+
+                // 2. Ekstrak objek {} pertama yang valid
+                const bStart = jsonStr.indexOf("{");
+                const bEnd   = jsonStr.lastIndexOf("}");
+                if (bStart !== -1 && bEnd > bStart) {
+                  jsonStr = jsonStr.slice(bStart, bEnd + 1);
+                }
+
+                // 3. Parse — throws jika JSON invalid, langsung ke catch
+                const parsed = JSON.parse(jsonStr);
+
+                // 4. Validasi struktur output (identik ekspektasi Gemini)
+                if (!parsed.title || typeof parsed.title !== "string" || parsed.title.trim().length < 5) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "title" kosong/tidak valid.`;
+                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                  continue;
+                }
+                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < 5) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "keywords" kosong/kurang dari 5.`;
+                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                  continue;
+                }
+
+                // 5. Simpan indeks kunci sukses untuk pekerja berikutnya
                 currentGroqKeyIndex = keyIndex;
-                // Bersihkan markdown wrapper jika ada
-                const cleaned = resultText.replace(/```json[\s\S]*?```|```[\s\S]*?```/g, m => m.replace(/```json?|```/g, '')).trim();
-                // Validasi JSON
-                JSON.parse(cleaned); // throw jika invalid
-                return cleaned;
+                return jsonStr;
               }
             } else {
               const errBody = await response.json().catch(() => ({}));
-              lastError = `Model [${modelName}] - Key #${keyIndex + 1}: ${errBody.error?.message || response.statusText}`;
+              lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errBody?.error?.message || response.statusText}`;
             }
           } catch (err) {
-            lastError = `Model [${modelName}] - Key #${keyIndex + 1}: ${err.message}`;
+            lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
           }
 
-          await new Promise(resolve => setTimeout(resolve, useSpeed3x ? 50 : 200));
+          await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
         }
       }
 
-      throw new Error(`Groq: Semua model & kunci gagal. Error terakhir: ${lastError}`);
+      throw new Error(`Groq: Semua model & kunci API gagal. Error terakhir: ${lastError}`);
     }
-
     // Memicu seluruh antrean secara sequential atau paralel
     async function processAllPending() {
       const pending = items.filter(i => i.status === 'pending' || i.status === 'error');
