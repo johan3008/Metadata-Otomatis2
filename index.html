@@ -67,25 +67,12 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* ===== LAYOUT IMPROVEMENTS ===== */
-    .main-layout {
-      display: grid;
-      grid-template-columns: 280px 1fr 380px;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    @media (max-width: 1280px) {
-      .main-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
+    
     /* ===== VIDEO PREVIEW HOVER PLAYER ===== */
     .video-preview-hover {
       position: relative;
       overflow: hidden;
-      border-radius: 1rem;
+      border-radius: 1.5rem;
       background: #0f172a;
       cursor: pointer;
     }
@@ -145,36 +132,9 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background-color: #cbd5e1;
     }
-
-    /* ===== CARD STYLES ===== */
-    .card-panel {
-      background: white;
-      border-radius: 1.25rem;
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-
-    /* ===== SECTION HEADERS ===== */
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid #f1f5f9;
-    }
-
-    .section-title {
-      font-size: 0.7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #64748b;
-    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-white to-purple-50/30 text-slate-800 antialiased selection:bg-purple-500/10 selection:text-purple-600">
+<body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-purple-500/10 selection:text-purple-600">
 
   <!-- Penggunaan min-h-screen untuk fleksibilitas tinggi di Netlify Sandbox -->
   <div id="app" class="min-h-screen flex flex-col w-full">
@@ -203,7 +163,7 @@
     </header>
 
     <!-- Kontainer utama responsif dengan pembatas max-w-7xl -->
-    <main class="flex-grow w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       
       <!-- Pesan Peringatan Jika Mengalami Masalah -->
       <div id="error-banner" class="hidden w-full mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-xs font-semibold flex items-center space-x-2 shadow-sm">
@@ -211,70 +171,41 @@
         <span id="error-message">Terjadi kesalahan sistem.</span>
       </div>
 
-      <!-- Progress Steps Indicator -->
-      <div class="w-full mb-8">
-        <div class="flex items-center justify-between max-w-4xl mx-auto">
-          <div class="flex flex-col items-center flex-1">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-purple-500/30 mb-2 step-active" id="step-1-indicator">
-              1
-            </div>
-            <span class="text-xs font-bold text-purple-600 uppercase tracking-wide">Pilih Tipe</span>
-          </div>
-          <div class="flex-1 h-1 bg-gradient-to-r from-purple-200 to-purple-300 mx-4 step-line" id="line-1"></div>
-          <div class="flex flex-col items-center flex-1">
-            <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 font-bold text-lg mb-2 step-inactive" id="step-2-indicator">
-              2
-            </div>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Upload</span>
-          </div>
-          <div class="flex-1 h-1 bg-gradient-to-r from-purple-200 to-purple-300 mx-4 step-line" id="line-2"></div>
-          <div class="flex flex-col items-center flex-1">
-            <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 font-bold text-lg mb-2 step-inactive" id="step-3-indicator">
-              3
-            </div>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Generate</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="main-layout">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- KOLOM KIRI: PANEL PENGATURAN (Fixed sidebar) -->
-        <aside class="space-y-4">
-          <div class="card-panel sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar">
+        <!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
+        <div class="lg:col-span-4 space-y-6">
+          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 space-y-6">
             
             <!-- 1. Tipe Aset -->
-            <div class="mb-6">
-              <div class="section-header">
-                <i data-lucide="layers" class="w-4 h-4 text-purple-500"></i>
-                <span class="section-title">1. Pilih Tipe Aset</span>
-              </div>
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center mb-3">
+                <i data-lucide="sliders" class="w-4 h-4 mr-2 text-purple-500"></i>
+                1. Pilih Tipe Aset
+              </h3>
               <div class="grid grid-cols-3 gap-2 bg-slate-100/80 p-1.5 rounded-2xl" id="asset-type-container">
-                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-purple-600 shadow-md shadow-slate-200 hover:shadow-lg hover:scale-105">
-                  <i data-lucide="image" class="w-5 h-5"></i>
+                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-purple-600 shadow-md shadow-slate-200">
+                  <i data-lucide="image" class="w-4 h-4"></i>
                   <span>Gambar</span>
                 </button>
-                <button onclick="setAssetType('vector')" id="btn-vector" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950 hover:bg-white hover:shadow-md">
-                  <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                <button onclick="setAssetType('vector')" id="btn-vector" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950">
+                  <i data-lucide="pen-tool" class="w-4 h-4"></i>
                   <span>Vektor</span>
                 </button>
-                <button onclick="setAssetType('video')" id="btn-video" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950 hover:bg-white hover:shadow-md">
-                  <i data-lucide="video" class="w-5 h-5"></i>
+                <button onclick="setAssetType('video')" id="btn-video" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950">
+                  <i data-lucide="video" class="w-4 h-4"></i>
                   <span>Video</span>
                 </button>
               </div>
             </div>
 
-            <!-- Divider -->
-            <div class="border-t border-slate-100 my-4"></div>
-
-            <!-- 2. Koneksi AI -->
-            <div class="mb-6">
+            <!-- 2. Pengaturan Multi API Key Gemini (5 Slot Visual) -->
+            <div class="pt-2 border-t border-slate-100">
               <div class="flex items-center justify-between mb-3">
-                <div class="section-header mb-0 pb-0 border-none">
-                  <i data-lucide="key-round" class="w-4 h-4 text-purple-500"></i>
-                  <span class="section-title">2. Koneksi AI</span>
-                </div>
+                <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
+                  <i data-lucide="key-round" class="w-4 h-4 mr-2 text-purple-500"></i>
+                  Koneksi Gemini AI (5 Kunci)
+                </h3>
               </div>
 
               <!-- Tab Pemilih Menu API -->
@@ -701,75 +632,9 @@
           </div>
         </div>
 
-        <!-- KOLOM TENGAH: AREA UPLOAD (Center) -->
-        <section class="space-y-4">
-          <div class="card-panel sticky top-24">
-            
-            <!-- 3. Upload Area -->
-            <div>
-              <div class="section-header">
-                <i data-lucide="upload-cloud" class="w-4 h-4 text-purple-500"></i>
-                <span class="section-title">3. Upload File</span>
-              </div>
-
-              <!-- Dropzone Premium dengan Animasi -->
-              <div id="dropzone" class="relative group cursor-pointer">
-                <input type="file" id="file-input" multiple accept="image/*,.ai,.eps,.svg,.mp4,.mov,.avi" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer" />
-                
-                <div class="border-2 border-dashed border-slate-300 group-hover:border-purple-500 rounded-3xl p-8 transition-all duration-300 bg-gradient-to-br from-slate-50/80 to-purple-50/30 group-hover:from-purple-50/50 group-hover:to-pink-50/30 text-center relative overflow-hidden">
-                  <!-- Background Pattern -->
-                  <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMTI0LDU4LDIzNywwLjEpIi8+PC9zdmc+')] opacity-50"></div>
-                  
-                  <div class="relative z-10 space-y-4">
-                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:scale-110 transition-transform duration-300">
-                      <i data-lucide="upload-cloud" class="w-10 h-10 text-white"></i>
-                    </div>
-                    
-                    <div>
-                      <p class="text-sm font-extrabold text-slate-700 mb-1">
-                        Klik atau seret file ke sini
-                      </p>
-                      <p class="text-xs text-slate-500">
-                        Gambar (JPG, PNG), Vektor (AI, EPS, SVG), atau Video (MP4, MOV)
-                      </p>
-                    </div>
-                    
-                    <div class="flex items-center justify-center gap-2 pt-2">
-                      <span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">
-                        <i data-lucide="zap" class="w-3 h-3 mr-1"></i>
-                        Batch Upload
-                      </span>
-                      <span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">
-                        <i data-lucide="shield-check" class="w-3 h-3 mr-1"></i>
-                        Auto Tagging
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Quick Stats -->
-              <div class="grid grid-cols-3 gap-3 mt-5">
-                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-3 border border-purple-100 text-center">
-                  <p class="text-[10px] font-bold text-purple-600 uppercase">Total</p>
-                  <p class="text-xl font-extrabold text-purple-700" id="stat-total">0</p>
-                </div>
-                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-3 border border-emerald-100 text-center">
-                  <p class="text-[10px] font-bold text-emerald-600 uppercase">Selesai</p>
-                  <p class="text-xl font-extrabold text-emerald-700" id="stat-completed">0</p>
-                </div>
-                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-3 border border-amber-100 text-center">
-                  <p class="text-[10px] font-bold text-amber-600 uppercase">Proses</p>
-                  <p class="text-xl font-extrabold text-amber-700" id="stat-processing">0</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <!-- KOLOM KANAN: DAFTAR ANTREAN DAN EDITOR METADATA TERINTEGRASI -->
-        <aside class="space-y-4">
-          <div class="card-panel flex flex-col min-h-[670px]">
+        <div class="lg:col-span-8 space-y-6">
+          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 flex flex-col min-h-[670px]">
             
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
@@ -833,7 +698,7 @@
             </div>
 
           </div>
-        </aside>
+        </div>
 
       </div>
     </main>
