@@ -318,29 +318,56 @@
                   <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Groq Aktif</label>
                   <div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
                     
-                    <!-- Llama 4 Scout - Vision + Text Model Utama -->
+                    <!-- Llama 3.1 8B - Fast & Stable (Recommended) -->
                     <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
-                      <input type="checkbox" id="groq-model-scout" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <input type="checkbox" id="groq-model-llama31-8b" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                          <span>llama-3.1-8b-instant</span>
+                          <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Fast</span>
+                          <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Stable</span>
+                          <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Utama</span>
+                        </div>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">8B params · Ultra-fast inference · Rate limit lebih tinggi · Recommended untuk batch processing</p>
+                      </div>
+                    </label>
+
+                    <!-- Mixtral 8x7B - High Quality -->
+                    <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
+                      <input type="checkbox" id="groq-model-mixtral" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                          <span>mixtral-8x7b-32768</span>
+                          <span class="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">32K Context</span>
+                          <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">High Quality</span>
+                        </div>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">Mixture of Experts · 32K context window · Kualitas analisis lebih mendalam</p>
+                      </div>
+                    </label>
+
+                    <!-- Llama 4 Scout - Vision Model (Optional) -->
+                    <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
+                      <input type="checkbox" id="groq-model-scout" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
                       <div>
                         <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
                           <span>meta-llama/llama-4-scout-17b-16e-instruct</span>
                           <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-                          <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Utama</span>
+                          <span class="text-[8px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">Rate Limit Ketat</span>
                         </div>
-                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B aktif params · 16 Expert MoE · Multimodal vision · Konteks 128k · Analisis gambar langsung</p>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B aktif params · Multimodal vision · Gunakan hanya jika model lain gagal (rate limit sangat ketat)</p>
                       </div>
                     </label>
 
-                    <!-- Llama 4 Maverick - Vision + Text Fallback -->
+                    <!-- Llama 4 Maverick - Vision Fallback -->
                     <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
-                      <input type="checkbox" id="groq-model-maverick" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <input type="checkbox" id="groq-model-maverick" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
                       <div>
                         <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
                           <span>meta-llama/llama-4-maverick-17b-128e-instruct</span>
                           <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-                          <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Cadangan</span>
+                          <span class="text-[8px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-bold">Heavy</span>
                         </div>
-                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B params · 128 Expert MoE · Multimodal vision · Versi kapasitas lebih besar</p>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B params · 128 Expert MoE · Gunakan sebagai fallback terakhir</p>
                       </div>
                     </label>
 
@@ -351,7 +378,7 @@
                         <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
                           <span>llama-3.2-90b-vision-preview</span>
                           <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-                          <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">Preview</span>
+                          <span class="text-[8px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-bold">Preview</span>
                         </div>
                         <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">90B params · Vision stabil · Fallback legacy kompatibel</p>
                       </div>
@@ -749,9 +776,20 @@
     // Dapatkan model Groq yang dipilih (urutan prioritas)
     function getPrioritizedGroqModels() {
       const models = [];
-      if (document.getElementById("groq-model-scout")?.checked)    models.push("meta-llama/llama-4-scout-17b-16e-instruct");
-      if (document.getElementById("groq-model-maverick")?.checked) models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
-      if (document.getElementById("groq-model-llama32v")?.checked) models.push("llama-3.2-90b-vision-preview");
+      // ✅ PRIORITAS MODEL: Urutan dari yang paling stabil & rate limit tinggi ke rendah
+      // Model text-only lebih stabil untuk batch processing daripada vision models
+      if (document.getElementById("groq-model-llama31-8b")?.checked)   models.push("llama-3.1-8b-instant");
+      if (document.getElementById("groq-model-mixtral")?.checked)      models.push("mixtral-8x7b-32768");
+      if (document.getElementById("groq-model-scout")?.checked)        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
+      if (document.getElementById("groq-model-maverick")?.checked)     models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
+      if (document.getElementById("groq-model-llama32v")?.checked)     models.push("llama-3.2-90b-vision-preview");
+      
+      // ✅ Fallback tambahan jika tidak ada yang dipilih
+      if (models.length === 0) {
+        // Default: gunakan model paling stabil
+        models.push("llama-3.1-8b-instant");
+        models.push("mixtral-8x7b-32768");
+      }
       return models;
     }
 
@@ -770,11 +808,12 @@
       let workingKeysCount = 0;
       for (const key of activeKeys) {
         try {
+          // ✅ TEST DENGAN MODEL PALING STABIL (llama-3.1-8b-instant)
           const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
             body: JSON.stringify({
-              model: "meta-llama/llama-4-scout-17b-16e-instruct",
+              model: "llama-3.1-8b-instant",
               messages: [{ role: "user", content: "Hi" }],
               max_tokens: 1
             })
@@ -1886,15 +1925,20 @@ INSTRUKSI AKHIR:
       
       // ✅ COUNTER UNTUK MEMBATASI RETRY SETELAH RATE LIMIT
       let globalRetryCount = 0;
-      const MAX_GLOBAL_RETRIES = 3; // Maksimal 3x retry global setelah semua key/model habis
+      const MAX_GLOBAL_RETRIES = activeKeys.length * activeModels.length; // Retry sebanyak total kombinasi
       
       // ✅ DELAY AWAL UNTUK MENGHINDARI BURST REQUEST
-      const initialDelay = 1000 + Math.random() * 1000; // 1-2 detik random
+      const initialDelay = 500 + Math.random() * 500; // 0.5-1 detik random
       await new Promise(r => setTimeout(r, initialDelay));
 
+      // ✅ LOOP ULANG SELURUH KOMBINASI SAMPAI SUKSES ATAU SEMUA GAGAL
+      let totalAttempts = 0;
+      const maxTotalAttempts = activeModels.length * activeKeys.length * 3; // 3 putaran penuh
+      
       // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
-      for (let attempt = 0; attempt < (activeModels.length * activeKeys.length * 2); attempt++) {
-        // Rotasi model dan key secara fair
+      for (let attempt = 0; attempt < maxTotalAttempts; attempt++) {
+        totalAttempts++;
+        // Rotasi model dan key secara fair - coba semua kombinasi
         const m = attempt % activeModels.length;
         const k = Math.floor(attempt / activeModels.length) % activeKeys.length;
         
@@ -1908,9 +1952,9 @@ INSTRUKSI AKHIR:
             { role: "system", content: systemPrompt },
             { role: "user",   content: userContent }
           ],
-          temperature: 0.25,
-          max_tokens: 2048, // ✅ REDUKSI TOKEN untuk menghindari rate limit
-          top_p: 0.9,
+          temperature: 0.2,
+          max_tokens: 1500, // ✅ REDUKSI TOKEN lebih agresif untuk menghindari rate limit
+          top_p: 0.8,
           response_format: { type: "json_object" }
         };
 
