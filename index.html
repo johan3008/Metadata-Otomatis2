@@ -1317,12 +1317,14 @@
         base64ImagesPayload.push(targetItem.base64);
       }
 
+      // ✅ FIX: Selalu baca nilai slider & key-concepts terkini saat generate,
+      // bukan nilai saat file di-upload (yang sudah basi jika user mengubah slider).
       const settingsPayload = {
         assetType: targetItem.type,
-        titleLength: targetItem.settings.titleLength || 80,
-        descLength: targetItem.settings.descLength || 200,
-        keywordsCount: targetItem.settings.keywordsCount || 40,
-        keyConcepts: targetItem.settings.keyConcepts || "",
+        titleLength: parseInt(document.getElementById("title-slider")?.value) || targetItem.settings.titleLength || 80,
+        descLength: parseInt(document.getElementById("desc-slider")?.value) || targetItem.settings.descLength || 200,
+        keywordsCount: parseInt(document.getElementById("keywords-slider")?.value) || targetItem.settings.keywordsCount || 40,
+        keyConcepts: document.getElementById("key-concepts-input")?.value || targetItem.settings.keyConcepts || "",
         targetPlatforms: targetPlatforms
       };
 
@@ -1527,10 +1529,17 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       const frameCtx = base64Images.length > 1
         ? `Terdapat ${base64Images.length} frame gambar yang dikirim — ini adalah frame awal, tengah, dan akhir dari sebuah video. Analisis ketiganya untuk memahami alur visual, gerak subjek, suasana, pencahayaan, dan konten secara menyeluruh.\n`
         : "";
+      // ✅ FIX: Sertakan batasan numerik eksplisit di user message agar model Groq
+      // mematuhi pengaturan slider user (bukan hanya di system prompt).
       const userPromptText =
         `Analisis aset visual bernama "${fileName}" ini secara komersial dan mendalam.\n` +
         frameCtx +
         `Hasilkan metadata microstock berkualitas tinggi, aman dari pelanggaran IP/Merek Dagang.\n` +
+        `WAJIB PATUHI PERSIS:\n` +
+        `- title: tepat mendekati ${settings.titleLength} karakter (bukan lebih pendek dari setengahnya)\n` +
+        `- description: tepat mendekati ${settings.descLength} karakter\n` +
+        `- keywords: TEPAT ${settings.keywordsCount} kata kunci unik (tidak boleh kurang, tidak boleh lebih)\n` +
+        (settings.keyConcepts ? `- Prioritas konsep yang WAJIB ada di title dan 5 keyword pertama: "${settings.keyConcepts}"\n` : '') +
         `WAJIB: Kembalikan HANYA objek JSON murni (RFC 8259). ` +
         `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
 
@@ -1564,7 +1573,7 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
               { role: "user",   content: userContent }
             ],
             temperature: 0.25,
-            max_tokens: 2048,
+            max_tokens: 4096,
             top_p: 0.9,
             response_format: { type: "json_object" }
           };
@@ -1607,8 +1616,10 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
                   await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
                   continue;
                 }
-                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < 5) {
-                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "keywords" kosong/kurang dari 5.`;
+                // ✅ FIX: Validasi jumlah keyword berdasarkan settings user, bukan nilai hardcode
+                const minExpectedKeywords = Math.max(5, Math.floor((settings.keywordsCount || 40) * 0.5));
+                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < minExpectedKeywords) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "keywords" hanya ${parsed.keywords?.length || 0} item, diharapkan ${settings.keywordsCount}.`;
                   await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
                   continue;
                 }
