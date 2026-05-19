@@ -533,6 +533,22 @@
               </div>
             </div>
 
+            
+                <!-- Video AI Analysis Info -->
+                <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 mt-3">
+                  <div class="flex items-start space-x-2">
+                    <i data-lucide="film" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                    <div>
+                      <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis</p>
+                      <p class="text-[10px] text-blue-700 font-semibold leading-relaxed mt-1">
+                        Sistem mengambil frame awal, tengah, dan akhir video untuk membaca alur footage,
+                        motion, cinematic context, serta buyer intent microstock.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+
             <!-- Tombol Generate Utama -->
             <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
               <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
@@ -638,6 +654,22 @@
     // Progress Bar State
     let progressInterval = null;
     let currentProgress = 0;
+
+    
+    // VIDEO MICROSTOCK SEO
+    const VIDEO_SEO_PRIORITY = [
+      "motion",
+      "activity",
+      "cinematic",
+      "transition",
+      "storytelling",
+      "commercial usage",
+      "buyer intent",
+      "loopable footage",
+      "copyspace",
+      "camera movement"
+    ];
+
 
     const targetPlatforms = {
       shutterstock: true,
@@ -1018,7 +1050,7 @@
         acceptLabel.innerText = "Format EPS, AI, SVG";
         uploadIcon.setAttribute("data-lucide", "pen-tool");
       } else {
-        acceptLabel.innerText = "Format MP4, MOV";
+        acceptLabel.innerText = "Format MP4, MOV • AI membaca alur video dari 3 frame";
         uploadIcon.setAttribute("data-lucide", "video");
       }
       lucide.createIcons();
