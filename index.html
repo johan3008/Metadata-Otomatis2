@@ -762,38 +762,72 @@
       statusEl.className = "text-[10px] font-bold text-purple-600 animate-pulse";
       statusEl.innerText = `⏳ Memeriksa ${activeKeys.length} Kunci...`;
       
+      // ✅ Gunakan model aktif pertama yang dipilih user, bukan hardcode
+      // Fallback ke gemini-2.0-flash jika belum ada pilihan
+      const activeModels = getPrioritizedModels();
+      // Pilih model yang paling ringan & stabil untuk test
+      const TEST_MODEL_PRIORITY = [
+        "gemini-3.1-flash-lite",
+        "gemini-2.0-flash",
+        "gemini-2.5-flash-preview-05-20",
+        "gemini-3-flash-preview",
+        "gemini-1.5-flash",
+        "gemini-3.1-pro-preview"
+      ];
+      let testModel = "gemini-2.0-flash";
+      for (const preferred of TEST_MODEL_PRIORITY) {
+        if (activeModels.includes(preferred)) { testModel = preferred; break; }
+      }
+
       let workingKeysCount = 0;
+      let lastErrMsg = "";
       
       for (let i = 0; i < activeKeys.length; i++) {
         const testKey = activeKeys[i];
         try {
-          // Hemat kuota: kueri dibuat seringkas mungkin dengan maxOutputTokens terbatas
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${testKey}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: "Hi" }] }],
-              generationConfig: { maxOutputTokens: 1 }
-            })
-          });
+          // ✅ Kirim API key via KEDUA cara: header x-goog-api-key DAN query param ?key=
+          // Gemini API menerima keduanya; Gemini 3 series lebih andal via header
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${testModel}:generateContent?key=${testKey}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": testKey
+              },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: "Hi" }] }],
+                generationConfig: { maxOutputTokens: 5 }
+              })
+            }
+          );
           
           if (response.ok) {
             workingKeysCount++;
+          } else {
+            // ✅ Tangkap pesan error dari API untuk diagnosis
+            const errBody = await response.json().catch(() => ({}));
+            lastErrMsg = errBody?.error?.message || `HTTP ${response.status}`;
+            console.warn(`❌ Key #${i+1} [${testModel}]: ${lastErrMsg}`);
           }
         } catch (err) {
-          // Lanjutkan pengujian kunci berikutnya
+          // Network error atau CORS
+          lastErrMsg = err.message || "Network error";
+          console.warn(`❌ Key #${i+1} Network Error: ${lastErrMsg}`);
         }
       }
 
       if (workingKeysCount === activeKeys.length) {
         statusEl.className = "text-[10px] font-bold text-emerald-600";
-        statusEl.innerText = `✅ Semua Aktif (${workingKeysCount}/${activeKeys.length})`;
+        statusEl.innerText = `✅ Semua Aktif (${workingKeysCount}/${activeKeys.length}) · ${testModel}`;
       } else if (workingKeysCount > 0) {
-        statusEl.className = "text-[10px] font-bold text-purple-500";
+        statusEl.className = "text-[10px] font-bold text-amber-600";
         statusEl.innerText = `⚠️ Sebagian Aktif (${workingKeysCount}/${activeKeys.length})`;
       } else {
         statusEl.className = "text-[10px] font-bold text-red-500";
-        statusEl.innerText = "❌ Semua Error";
+        // ✅ Tampilkan pesan error yang informatif agar user tahu penyebabnya
+        const shortErr = lastErrMsg.length > 60 ? lastErrMsg.slice(0, 60) + "…" : lastErrMsg;
+        statusEl.innerText = `❌ Gagal — ${shortErr || "Periksa key & koneksi"}`;
       }
     }
 
@@ -1952,7 +1986,8 @@ INSTRUKSI AKHIR:
           try {
             const response = await fetch(url, {
               method: "POST",
-              headers: headers,
+              // ✅ Kirim key via header DAN query param — lebih kompatibel dengan semua model Gemini
+              headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
               body: JSON.stringify(payload)
             });
 
