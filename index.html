@@ -1624,131 +1624,192 @@
       renderQueueList();
     }
 
-    // PROMPT SYSTEM UTAMA (KETAT & TERUKUR UNTUK GROQ & GEMINI)
+    // PROMPT SYSTEM UTAMA — 3-LAYER TITLE FORMULA + GROUNDED KEYWORDS
     function buildSystemPrompt(settings) {
       const targetPlatformsStr = Object.keys(settings.targetPlatforms || {}).filter(p => settings.targetPlatforms[p]).join(', ');
       const minTitle = Math.floor(settings.titleLength * 0.8);
       const maxTitle = Math.ceil(settings.titleLength * 1.2);
       const minDesc = Math.floor(settings.descLength * 0.8);
       const maxDesc = Math.ceil(settings.descLength * 1.2);
-      
-      let assetSpecificInstructions = "";
+
+      // ─── PANDUAN SPESIFIK PER TIPE ASET ────────────────────────────────────
+      let assetTitleExamples = "";
+      let assetKeywordGuide = "";
+
       if (settings.assetType === "video") {
-        assetSpecificInstructions = `
-PANDUAN KONSEP VIDEO / FOOTAGE:
-1. Analisis ke-3 frame (awal, tengah, akhir) untuk memahami NARASI KONSEPTUAL, bukan hanya gerakan visual.
-2. Identifikasi METAFORA BISNIS, EMOSI, atau IDE ABSTRAK yang disampaikan footage ini.
-3. Gunakan keyword konseptual: "collaboration", "innovation", "growth", "success", "teamwork", "future vision".
-4. DILARANG KERAS: "4k", "high resolution", "camera", "shot on", "DSLR", "slow motion" (kecuali jika itu konsep utama).
-5. Fokus pada APLIKASI KOMERSIAL dan MAKNA di balik gerakan visual.`;
+        assetTitleExamples = `
+CONTOH TITLE 3-LAYER UNTUK VIDEO:
+  Aset  : Frame 1 = tangan mengetik laptop, Frame 2 = grafik naik di layar, Frame 3 = orang senyum puas
+  Layer 1 (ISI)   : "Professional Working on Laptop with Rising Business Charts"
+  Layer 2 (ALUR)  : mengetik → grafik naik → ekspresi puas  →  "Tracking Growth and Achieving Milestones"
+  Layer 3 (KONSEP): makna = kerja keras membuahkan hasil, sukses terukur
+  ✅ TITLE FINAL  : "Professional Tracking Business Growth on Laptop and Celebrating Achievement"
+
+  Aset  : Frame 1 = biji tanaman, Frame 2 = tunas kecil, Frame 3 = pohon hijau besar
+  Layer 1 (ISI)   : "Seed Sprouting Into a Tall Green Tree"
+  Layer 2 (ALUR)  : tumbuh dari kecil ke besar  →  "Time-Lapse Growth Journey"
+  Layer 3 (KONSEP): metafora perkembangan bisnis / investasi jangka panjang
+  ✅ TITLE FINAL  : "From Seed to Tree — Business Growth Journey and Long-Term Investment Concept"`;
+
+        assetKeywordGuide = `
+KEYWORD UNTUK VIDEO — WAJIB 3 LAPISAN:
+  • Layer ISI (35%): subjek nyata di frame — orang, objek, lokasi, warna dominan, aksi fisik
+  • Layer ALUR (30%): kata kerja progresif — "growing", "transitioning", "building", "evolving", "rising"
+  • Layer KONSEP (35%): makna simbolis — "career growth", "entrepreneurship", "life cycle", "progress"
+  ❌ DILARANG: "4k", "slow motion", "camera", "DSLR", "footage quality", "video resolution"`;
+
       } else if (settings.assetType === "vector") {
-        assetSpecificInstructions = `
-PANDUAN KONSEP VEKTOR / ILUSTRASI:
-1. Fokus pada IDE DESAIN dan PESAN KOMUNIKASI VISUAL, bukan hanya bentuk geometris.
-2. Identifikasi konsep: "minimalism", "scalability", "modern branding", "digital transformation".
-3. Gunakan keyword konseptual: "versatile design", "brand identity", "visual communication", "creative solution".
-4. DILARANG KERAS: "4k", "high resolution", "camera", "photorealistic".
-5. Fokus pada FUNGSI DESAIN dan APLIKASI BISNIS dari ilustrasi ini.`;
+        assetTitleExamples = `
+CONTOH TITLE 3-LAYER UNTUK VEKTOR:
+  Aset  : Ikon panah naik + grafik batang + latar biru bersih
+  Layer 1 (ISI)   : "Blue Bar Chart with Rising Arrow Icon"
+  Layer 2 (ALUR)  : data meningkat, visual analitik  →  "Financial Data Visualization"
+  Layer 3 (KONSEP): keberhasilan finansial, laporan kinerja
+  ✅ TITLE FINAL  : "Blue Bar Chart and Rising Arrow Representing Financial Growth and Business Analytics"
+
+  Aset  : Siluet manusia saling terhubung membentuk lingkaran
+  Layer 1 (ISI)   : "Connected Human Silhouettes Forming a Circle"
+  Layer 2 (ALUR)  : individu bergabung menjadi komunitas  →  "Network Building"
+  Layer 3 (KONSEP): kolaborasi, keberagaman, komunitas global
+  ✅ TITLE FINAL  : "Connected Human Silhouettes in a Circle Symbolizing Teamwork and Global Community"`;
+
+        assetKeywordGuide = `
+KEYWORD UNTUK VEKTOR — WAJIB 3 LAPISAN:
+  • Layer ISI (35%): elemen visual nyata — bentuk, warna, ikon, garis, karakter, latar
+  • Layer ALUR (30%): aksi/fungsi desain — "connecting", "pointing upward", "branching", "encircling"
+  • Layer KONSEP (35%): fungsi komersial — "brand identity", "infographic element", "business icon"
+  ❌ DILARANG: "4k", "high resolution", "photorealistic", "vector quality", "file format"`;
+
       } else {
-        assetSpecificInstructions = `
-PANDUAN KONSEP FOTO / GAMBAR DIGITAL:
-1. Lihat MELAMPAUI objek fisik - identifikasi EMOSI, METAFORA BISNIS, atau MASALAH SOSIAL yang digambarkan.
-   * Buruk (Visual): "Seekor kucing di atas meja"
-   * Baik (Konsep): "Kemandirian hewan peliharaan dalam ruang domestik modern"
-   * Buruk (Visual): "Orang berjabat tangan"
-   * Baik (Konsep): "Kemitraan korporat dan kepercayaan bisnis"
-2. Gunakan keyword konseptual: "entrepreneurship", "work-life balance", "sustainability", "diversity", "empowerment".
-3. DILARANG KERAS: "4k", "high resolution", "camera", "DSLR", "megapixel", "shot on".
-4. Fokus pada MAKNA, PERASAAN, dan APLIKASI KOMERSIAL - BUKAN spesifikasi teknis atau deskripsi dangkal.`;
+        assetTitleExamples = `
+CONTOH TITLE 3-LAYER UNTUK FOTO/GAMBAR:
+  Aset  : Foto wanita muda duduk di kafe, membuka laptop, wajah fokus, cahaya hangat
+  Layer 1 (ISI)   : "Young Woman Using Laptop in a Warm Coffee Shop"
+  Layer 2 (ALUR)  : duduk → membuka laptop → fokus bekerja  →  "Remote Work Session"
+  Layer 3 (KONSEP): work-from-anywhere lifestyle, produktivitas modern, freelancer
+  ✅ TITLE FINAL  : "Young Woman Working Remotely on Laptop in Cozy Coffee Shop Embracing Freelance Lifestyle"
+
+  Aset  : Foto tangan menanam bibit di tanah, outdoor, cahaya matahari sore
+  Layer 1 (ISI)   : "Hands Planting a Seedling in Soil Under Afternoon Sun"
+  Layer 2 (ALUR)  : menanam → menyentuh tanah → merawat  →  "Nurturing Nature"
+  Layer 3 (KONSEP): keberlanjutan lingkungan, harapan, pertumbuhan organik
+  ✅ TITLE FINAL  : "Hands Planting a Seedling in Sunlit Soil as a Symbol of Environmental Sustainability"
+
+  Aset  : Close-up mata seseorang dengan refleksi cahaya kota di malam hari
+  Layer 1 (ISI)   : "Close-Up of Eye Reflecting City Lights at Night"
+  Layer 2 (ALUR)  : memandang → merefleksikan → menyerap  →  "Visionary Gaze"
+  Layer 3 (KONSEP): visi masa depan, ambisi urban, mimpi dan aspirasi
+  ✅ TITLE FINAL  : "Close-Up Eye Reflecting City Lights at Night Representing Urban Vision and Future Ambition"`;
+
+        assetKeywordGuide = `
+KEYWORD UNTUK FOTO — WAJIB 3 LAPISAN (GROUNDED PADA ASET NYATA):
+  • Layer ISI (35%): HANYA dari apa yang BENAR-BENAR ADA di gambar
+    → orang/karakter (gender, usia, ekspresi), objek utama, lokasi, warna dominan, komposisi
+    → JANGAN tambah subjek yang tidak ada di gambar
+  • Layer ALUR (30%): aksi/gerakan/proses yang terjadi
+    → "working", "planting", "walking", "looking", "building", "holding"
+  • Layer KONSEP (35%): makna komersial yang LANGSUNG relevan dengan ISI di atas
+    → JANGAN gunakan konsep abstrak yang tidak ada hubungan dengan gambar
+    → "remote work" (jika ada laptop & kafe), "sustainability" (jika ada tanaman/alam)
+  ❌ DILARANG: keyword yang tidak ada kaitannya dengan gambar, spesifikasi kamera, kata sifat kualitas`;
       }
 
-      return `ROLE: SEO Microstock Concept Strategist
-AGENSI: ${targetPlatformsStr || 'Adobe Stock, Shutterstock'}
-ASET: ${settings.assetType}
-FOKUS: HIGH-CONCEPT METADATA (Jual IDE, bukan gambar)
+      return `ROLE: Senior Microstock Metadata Specialist
+PLATFORM: ${targetPlatformsStr || 'Adobe Stock, Shutterstock'}
+ASSET TYPE: ${settings.assetType}
+MISSION: Generate a TITLE that simultaneously describes 3 layers of the asset, and KEYWORDS that are directly grounded in the actual asset content.
 
 ═══════════════════════════════════════════════════════════════════════════════════
-PRINSIP UTAMA - WAJIB DIPATUHI 100%:
+ATURAN INTI — WAJIB DIPATUHI 100%
 ═══════════════════════════════════════════════════════════════════════════════════
 
-1. DEEP CONCEPTUALIZATION (KONSEP > VISUAL):
-   - JANGAN hanya deskripsikan apa yang terlihat secara fisik
-   - IDENTIFIKASI: Emosi, metafora bisnis, tren teknologi, isu sosial, ide abstrak
-   - CONTOH TRANSFORMASI:
-     * Visual: "Lampu menyala di ruang gelap" → Konsep: "Terobosan inovasi dan solusi kreatif"
-     * Visual: "Tim bekerja di kantor" → Konsep: "Kolaborasi startup dan pertumbuhan bisnis"
-     * Visual: "Tanaman tumbuh di pot" → Konsep: "Keberlanjutan lingkungan dan gaya hidup hijau"
+▌ATURAN #1 — TITLE HARUS MENGANDUNG TEPAT 3 LAPISAN:
 
-2. TITLE GENERATION (SEO KONCEPTUAL):
-   - Panjang: ${minTitle}-${maxTitle} karakter
-   - Struktur: [KONSEP INTI] + [KONTEKS/AKSI] + [AUDIENS/PERASAAN]
-   - Bahasa: Inggris, natural, profesional
-   - DILARANG: "Image of...", "Photo of...", "Picture of..."
-   - DILARANG: Istilah teknis "4k", "high resolution", "camera", "shot on"
-   - PRIORITAS: Konsep bisnis, emosi, lifestyle, sustainability, diversity, innovation
-   ${settings.keyConcepts ? `   - WAJIB: Embed "${settings.keyConcepts}" sebagai konsep inti` : ''}
+  LAPISAN 1 — "APA YANG ADA" (WHAT IS IN THE ASSET):
+    Deskripsikan subjek/objek/elemen NYATA yang terlihat/terdengar dalam aset.
+    Ini adalah FONDASI title. Tanpa ini, title tidak jujur terhadap aset.
 
-3. KEYWORD STRATEGY (RELEVANSI KOMERSIAL):
-   - JUMLAH: TEPAT ${settings.keywordsCount} item unik
-   - KOMPOSISI IDEAL:
-     * 40% Abstract Concepts (success, freedom, future, trust, empowerment)
-     * 30% Action/Verb (collaborating, growing, achieving, transforming)
-     * 30% Specific Subject (team, laptop, plant, office) - HANYA jika relevan
-   - URUTAN: Konsep terpenting di awal, subjek spesifik di akhir
-   - RELEVANSI: Keyword harus sesuai INTENSI PEMBELI yang mencari konsep ini
-   - DILARANG KERAS:
-     * Spesifikasi kamera: "4k", "8k", "HD", "DSLR", "ISO", "megapixel"
-     * Brand kamera: "Canon", "Nikon", "Sony", "Fujifilm"
-     * Fluff subjektif: "professional quality asset", "beautiful shot", "amazing image"
-     * Format file: "JPG", "PNG", "Vector", "digital file"
-   ${settings.keyConcepts ? `   - MUST: "${settings.keyConcepts}" di urutan 1-5` : ''}
+  LAPISAN 2 — "APA ALURNYA" (WHAT IS THE FLOW/NARRATIVE):
+    Deskripsikan aksi, gerakan, proses, atau transisi yang terjadi.
+    Untuk foto: pose/ekspresi/interaksi. Untuk video: perubahan antar frame.
+    Untuk vektor: hubungan antar elemen / arah visual.
 
-4. CATEGORIES (Kategori Platform):
-   - Shutterstock: 2 kategori BERBEDA
-   - Adobe Stock: 1 kategori
-   - Dreamstime: 1 kategori
-   - Vecteezy: 1 kategori
-   - Canva: 1 kategori
+  LAPISAN 3 — "APA MAKNANYA" (WHAT IS THE CONCEPT/INTENT):
+    Beri makna simbolis, bisnis, atau emosional yang LANGSUNG terhubung
+    dengan Lapisan 1 dan 2. Jangan buat konsep yang tidak nyambung dengan isi aset.
 
-5. IP/TRADEMARK SAFETY (MUTLAK):
-   - DILARANG: iPhone, Nike, Adidas, BMW, Sony, Disney, LEGO, Coca-Cola, Canon, Nikon
-   - GUNAKAN: modern smartphone, athletic footwear, luxury car, soft drink, mirrorless camera
+  FORMULA TITLE:
+    "[ISI NYATA] + [ALUR/AKSI] + [MAKNA/KONSEP]"
 
-6. SPESIFIKASI TEKNIS - DILARANG KERAS:
-   - JANGAN PERNAH: "4k", "high resolution", "HD", "ultra HD", "8K"
-   - JANGAN PERNAH: "camera", "DSLR", "megapixel", "shot on", "photograph"
-   - JANGAN PERNAH: Brand kamera (Canon, Nikon, Sony, etc.)
-   - FOKUS PADA: Konsep, emosi, aplikasi komersial, makna simbolis
+  VALIDASI MANDIRI SEBELUM SUBMIT TITLE:
+    ✓ Apakah title menyebut elemen nyata dari aset? (Lap.1)
+    ✓ Apakah title menyebut apa yang TERJADI atau dilakukan? (Lap.2)
+    ✓ Apakah title menyebut makna/tujuan/konsep yang relevan? (Lap.3)
+    → Jika salah satu TIDAK, revisi title sebelum output.
 
-${assetSpecificInstructions}
+${assetTitleExamples}
+
+▌ATURAN #2 — KEYWORDS HARUS GROUNDED PADA ASET NYATA:
+
+  PRINSIP: Setiap keyword harus bisa dijawab dengan "ya, ada di aset ini".
+  Buyer yang mengetik keyword ini HARUS mendapatkan aset yang relevan.
+
+  KOMPOSISI WAJIB (${settings.keywordsCount} keywords):
+${assetKeywordGuide}
+
+  URUTAN KEYWORD:
+    1-10   : Subjek & elemen paling dominan di aset (Layer ISI)
+    11-25  : Aksi/alur/proses (Layer ALUR)
+    26-${settings.keywordsCount}  : Konsep & makna komersial (Layer KONSEP)
+    ${settings.keyConcepts ? `⭐ PRIORITAS: "${settings.keyConcepts}" WAJIB di posisi 1-5` : ''}
+
+  DILARANG KERAS — KEYWORD TIDAK RELEVAN:
+    ✗ Spesifikasi teknis: "4k", "HD", "8K", "megapixel", "DSLR", "shot on"
+    ✗ Brand kamera: "Canon", "Nikon", "Sony", "Fujifilm"
+    ✗ Kata sifat kualitas kosong: "beautiful", "amazing", "stunning", "professional quality"
+    ✗ Format file: "JPG", "PNG", "EPS", "vector file"
+    ✗ Konsep tidak nyambung: jangan tulis "ocean" jika gambarnya kantor kota
+
+▌ATURAN #3 — DESCRIPTION:
+  - Panjang: ${minDesc}-${maxDesc} karakter
+  - Jelaskan ketiga lapisan dalam 2-3 kalimat: APA isinya, APA yang terjadi, APA maknanya
+  - Natural, marketing-friendly, Bahasa Inggris
+
+▌ATURAN #4 — IP/TRADEMARK SAFETY:
+  Ganti semua brand dengan deskripsi generik:
+  iPhone→"modern smartphone", Nike→"athletic footwear", BMW→"luxury sedan"
+  Disney→"animated character", LEGO→"building blocks toy", Canon→"mirrorless camera"
+
+▌ATURAN #5 — CATEGORIES:
+  Shutterstock: 2 kategori BERBEDA | Adobe Stock: 1 | Dreamstime: 1 | Vecteezy: 1 | Canva: 1
 
 ═══════════════════════════════════════════════════════════════════════════════════
-OUTPUT JSON (EXACT FORMAT):
+OUTPUT FORMAT — HANYA JSON, TANPA APAPUN DI LUAR JSON:
 ═══════════════════════════════════════════════════════════════════════════════════
 
 {
-  "title": "(string: ${minTitle}-${maxTitle} chars, concept-focused, English)",
-  "description": "(string: ${minDesc}-${maxDesc} chars, marketing-friendly, English)",
-  "keywords": ["concept1", "concept2", "action1", "subject1", ... EXACTLY ${settings.keywordsCount} ITEMS],
+  "title": "string — ${minTitle}-${maxTitle} chars — berisi Lapisan 1 + 2 + 3",
+  "description": "string — ${minDesc}-${maxDesc} chars — jelaskan isi, alur, dan makna aset",
+  "keywords": ["isi_nyata_1", "isi_nyata_2", "aksi_1", "aksi_2", "konsep_1", ... TEPAT ${settings.keywordsCount} ITEM UNIK],
   "categories": {
-    "shutterstock1": "valid category",
-    "shutterstock2": "DIFFERENT valid category",
-    "adobeStock": "valid category",
-    "dreamstime": "valid category",
-    "vecteezy": "valid category",
-    "canva": "valid category"
+    "shutterstock1": "kategori valid",
+    "shutterstock2": "kategori BERBEDA dari shutterstock1",
+    "adobeStock": "kategori valid",
+    "dreamstime": "kategori valid",
+    "vecteezy": "kategori valid",
+    "canva": "kategori valid"
   }
 }
 
-═══════════════════════════════════════════════════════════════════════════════════
-INSTRUKSI AKHIR:
-═══════════════════════════════════════════════════════════════════════════════════
-✓ OUTPUT HANYA JSON, tanpa markdown, tanpa teks tambahan
-✓ keywords.length === ${settings.keywordsCount} (EXACT)
-✓ title.length ∈ [${minTitle}, ${maxTitle}] (EXACT RANGE)
-✓ description.length ∈ [${minDesc}, ${maxDesc}] (EXACT RANGE)
-✓ Prioritaskan KONSEP over VISUAL dalam setiap field
-✓ Jika ada key concepts: HARUS di-embed di title & top 5 keywords`;
+CHECKLIST FINAL SEBELUM OUTPUT:
+  ✓ title mengandung ISI nyata + ALUR + KONSEP (3 lapisan)?
+  ✓ title panjangnya ${minTitle}-${maxTitle} karakter?
+  ✓ keywords TEPAT ${settings.keywordsCount} item, semua relevan dengan aset ini?
+  ✓ keywords Layer ISI (posisi 1-10) menyebut elemen yang benar-benar ada di aset?
+  ✓ tidak ada spesifikasi kamera/teknis di mana pun?
+  ✓ tidak ada brand/trademark?
+  ✓ output adalah JSON murni saja?
+  ${settings.keyConcepts ? `✓ "${settings.keyConcepts}" ada di title DAN di keyword posisi 1-5?` : ''}`;
     }
 
     // ✅ POST-PROCESSING: Validasi & Normalisasi Output agar sesuai preferensi user
@@ -1951,7 +2012,11 @@ INSTRUKSI AKHIR:
       }
 
       const systemPrompt = buildSystemPrompt(settings);
-      const userPrompt = `Analisis aset bernama "${fileName}" ini secara komersial dan terperinci. Berikan struktur metadata JSON komersial yang aman dari pelanggaran IP/Merek Dagang sesuai agensi Adobe Stock.`;
+      const userPrompt = `Analyze this "${fileName}" asset carefully and generate metadata following the 3-LAYER TITLE RULE:
+LAYER 1 (WHAT IS IN IT): Identify every visible subject, object, person, environment, and dominant color in the asset.
+LAYER 2 (WHAT IS THE FLOW): Identify the action, movement, interaction, or visual progression taking place.
+LAYER 3 (WHAT IS THE CONCEPT): Identify the commercial meaning, emotion, or symbolic intent that DIRECTLY connects to layers 1 and 2.
+Then combine all 3 layers into the title. Keywords must be grounded in the actual asset content — not generic filler.`;
 
       const parts = [{ text: userPrompt }];
       base64Images.forEach((base64Str) => {
@@ -2042,16 +2107,22 @@ INSTRUKSI AKHIR:
       // ✅ FIX: Sertakan batasan numerik eksplisit di user message agar model Groq
       // mematuhi pengaturan slider user (bukan hanya di system prompt).
       const userPromptText =
-        `Analisis aset visual bernama "${fileName}" ini secara komersial dan mendalam.\n` +
+        `Analyze the visual asset named "${fileName}" carefully.\n` +
         frameCtx +
-        `Hasilkan metadata microstock berkualitas tinggi, aman dari pelanggaran IP/Merek Dagang.\n` +
-        `WAJIB PATUHI PERSIS:\n` +
-        `- title: tepat mendekati ${settings.titleLength} karakter (bukan lebih pendek dari setengahnya)\n` +
-        `- description: tepat mendekati ${settings.descLength} karakter\n` +
-        `- keywords: TEPAT ${settings.keywordsCount} kata kunci unik (tidak boleh kurang, tidak boleh lebih)\n` +
-        (settings.keyConcepts ? `- Prioritas konsep yang WAJIB ada di title dan 5 keyword pertama: "${settings.keyConcepts}"\n` : '') +
-        `WAJIB: Kembalikan HANYA objek JSON murni (RFC 8259). ` +
-        `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
+        `Generate microstock metadata using the 3-LAYER TITLE RULE:\n` +
+        `LAYER 1 — WHAT IS IN IT: List every subject, object, person, setting, and dominant color actually visible in the asset.\n` +
+        `LAYER 2 — WHAT IS THE FLOW: Describe the action, movement, interaction, or visual progression happening.\n` +
+        `LAYER 3 — WHAT IS THE CONCEPT: State the commercial meaning or symbolic intent that directly connects to Layers 1 and 2.\n` +
+        `Combine all 3 layers into the title. Keywords must be grounded in the actual asset — no generic filler.\n` +
+        `MANDATORY NUMERIC CONSTRAINTS:\n` +
+        `- title: ${settings.titleLength} chars (±20%)\n` +
+        `- description: ${settings.descLength} chars (±20%)\n` +
+        `- keywords: EXACTLY ${settings.keywordsCount} unique items\n` +
+        `  · Positions 1-${Math.round(settings.keywordsCount*0.35)}: subjects/objects actually IN the asset\n` +
+        `  · Positions ${Math.round(settings.keywordsCount*0.35)+1}-${Math.round(settings.keywordsCount*0.65)}: actions/flow/movement\n` +
+        `  · Positions ${Math.round(settings.keywordsCount*0.65)+1}-${settings.keywordsCount}: concept/meaning/commercial intent\n` +
+        (settings.keyConcepts ? `- Key concept "${settings.keyConcepts}" MUST appear in title AND in keywords positions 1-5\n` : '') +
+        `RETURN ONLY a raw JSON object. No markdown, no backticks, no comments outside JSON.`;
 
       // BUILD CONTENT ARRAY — OpenAI Vision Format
       // ✅ FIX: Urutan content dioptimalkan untuk model Groq - text dulu baru gambar
