@@ -312,7 +312,7 @@
                       <input type="checkbox" id="groq-model-scout" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
                       <div>
                         <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
-                          <span>llama-4-scout-17b-16e-instruct</span>
+                          <span>meta-llama/llama-4-scout-17b-16e-instruct</span>
                           <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
                           <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Utama</span>
                         </div>
@@ -370,7 +370,7 @@
                       <li>Klik <strong>"Create API Key"</strong>, beri nama, dan salin kunci <span class="font-mono text-[9px] bg-violet-50 px-1 rounded">gsk_...</span></li>
                       <li>Paste ke tab <strong>⚡ Groq</strong> di atas (hingga 5 kunci).</li>
                     </ol>
-                    <p class="text-[10px] text-violet-700 bg-violet-50 p-2 rounded-xl border border-violet-100 font-bold mt-2">💡 Model <strong>llama-4-scout-17b-16e-instruct</strong> mendukung analisis gambar (vision) secara langsung — bebas digunakan di tier gratis Groq.</p>
+                    <p class="text-[10px] text-violet-700 bg-violet-50 p-2 rounded-xl border border-violet-100 font-bold mt-2">💡 Model <strong>meta-llama/llama-4-scout-17b-16e-instruct</strong> mendukung analisis gambar (vision) secara langsung — bebas digunakan di tier gratis Groq.</p>
                   </div>
                 </div>
               </div>
@@ -721,7 +721,7 @@
     // Dapatkan model Groq yang dipilih (urutan prioritas)
     function getPrioritizedGroqModels() {
       const models = [];
-      if (document.getElementById("groq-model-scout")?.checked)    models.push("llama-4-scout-17b-16e-instruct");
+      if (document.getElementById("groq-model-scout")?.checked)    models.push("meta-llama/llama-4-scout-17b-16e-instruct");
       if (document.getElementById("groq-model-maverick")?.checked) models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
       if (document.getElementById("groq-model-llama32v")?.checked) models.push("llama-3.2-90b-vision-preview");
       return models;
@@ -746,7 +746,7 @@
             method: "POST",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
             body: JSON.stringify({
-              model: "llama-4-scout-17b-16e-instruct",
+              model: "meta-llama/llama-4-scout-17b-16e-instruct",
               messages: [{ role: "user", content: "Hi" }],
               max_tokens: 1
             })
@@ -1549,7 +1549,7 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
       for (let m = 0; m < activeModels.length; m++) {
         const modelName = activeModels[m];
 
-        // Model yang tidak support vision — fallback ke teks saja
+        // Semua model Llama 4 Scout & Maverick support vision; llama-3.2 vision juga support
         const isVisionModel = modelName.includes("scout") || modelName.includes("maverick") || modelName.includes("vision");
 
         // Jika model tidak support vision, buat payload teks saja
