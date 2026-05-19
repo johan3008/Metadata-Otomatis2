@@ -133,8 +133,19 @@
       background-color: #cbd5e1;
     }
   </style>
+
+<style>
+.card-hover {
+  transition: all .25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+}
+</style>
+
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-purple-500/10 selection:text-purple-600">
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-violet-500/10 selection:text-violet-700">
 
   <!-- Penggunaan min-h-screen untuk fleksibilitas tinggi di Netlify Sandbox -->
   <div id="app" class="min-h-screen flex flex-col w-full">
@@ -171,11 +182,11 @@
         <span id="error-message">Terjadi kesalahan sistem.</span>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         
         <!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
-        <div class="lg:col-span-4 space-y-6">
-          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 space-y-6">
+        <div class="xl:col-span-4 space-y-5 xl:sticky xl:top-24 order-2 xl:order-1">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
             
             <!-- 1. Tipe Aset -->
             <div>
@@ -517,15 +528,46 @@
                 <i data-lucide="upload" class="w-4 h-4 mr-2 text-purple-500"></i>
                 2. Area Unggah Batch
               </h3>
-              <div id="drop-zone" onclick="triggerFileSelect()" class="border-2 border-dashed border-slate-200 hover:border-purple-500 hover:bg-purple-50/5 rounded-2xl p-7 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-md">
-                <div id="upload-icon-container" class="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:scale-110 group-hover:bg-purple-100 group-hover:text-purple-600 transition-all duration-300 shadow-sm border border-slate-200/50">
-                  <i id="upload-icon" data-lucide="image" class="w-7 h-7"></i>
-                </div>
-                <div>
-                  <p class="text-xs font-extrabold text-slate-800">Klik atau seret berkas Anda</p>
-                  <p id="accept-label" class="text-[10px] text-slate-400 mt-1 font-bold">Format JPG, PNG, WEBP</p>
-                </div>
-              </div>
+              
+<div class="space-y-3">
+  <div class="flex items-center justify-between">
+    <div>
+      <h3 class="text-sm font-semibold text-slate-900">Upload Assets</h3>
+      <p class="text-xs text-slate-500 mt-1">Drag & drop image, vector, atau video</p>
+    </div>
+    <div class="px-3 py-1 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
+      Batch Upload
+    </div>
+  </div>
+
+  <div id="drop-zone" onclick="triggerFileSelect()"
+    class="group relative overflow-hidden rounded-3xl border border-dashed border-slate-300 bg-white hover:border-violet-400 hover:bg-violet-50/30 transition-all duration-300 cursor-pointer">
+
+    <div class="p-10 flex flex-col items-center justify-center text-center">
+
+      <div class="h-16 w-16 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+        <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+      </div>
+
+      <h4 class="text-base font-semibold text-slate-900">
+        Upload your assets
+      </h4>
+
+      <p class="text-sm text-slate-500 mt-2 max-w-sm leading-relaxed">
+        Drag & drop files di sini atau klik untuk memilih file.
+      </p>
+
+      <div class="mt-5 flex flex-wrap justify-center gap-2">
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-600">JPG</span>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-600">PNG</span>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-600">WEBP</span>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-xs text-slate-600">MP4</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
               
               <!-- Progress Bar Container -->
               <div id="progress-container" class="hidden mt-4">
@@ -633,8 +675,8 @@
         </div>
 
         <!-- KOLOM KANAN: DAFTAR ANTREAN DAN EDITOR METADATA TERINTEGRASI -->
-        <div class="lg:col-span-8 space-y-6">
-          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 flex flex-col min-h-[670px]">
+        <div class="xl:col-span-8 space-y-6 order-1 xl:order-2">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col min-h-[670px]">
             
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
@@ -704,14 +746,29 @@
     </main>
 
     <!-- Footer Premium yang Selalu di Pojok Bawah -->
-    <footer class="mt-auto bg-slate-900 text-slate-400 py-12 border-t border-slate-850 text-xs text-center space-y-3">
-      <p class="font-bold text-slate-300">© 2026 Metazo Ai. Sistem Berbasis Client Standalone.</p>
-      <div class="flex justify-center space-x-4 text-slate-500 font-bold">
-        <span>Aman Terenkripsi</span>
-        <span>•</span>
-        <span>Gemini 3.1 Pro/Flash · 2.5/2.0 Flash &amp; Groq Llama 4 Scout Vision</span>
-      </div>
-    </footer>
+    
+<footer class="border-t border-slate-200 bg-white py-8 mt-10">
+  <div class="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+    <div>
+      <p class="text-sm font-medium text-slate-900">
+        © 2026 Metazo AI
+      </p>
+
+      <p class="text-xs text-slate-500 mt-1">
+        AI-powered metadata generator for microstock creators.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-5 text-sm text-slate-500">
+      <a href="#" class="hover:text-slate-900 transition-colors">Privacy</a>
+      <a href="#" class="hover:text-slate-900 transition-colors">Docs</a>
+      <a href="#" class="hover:text-slate-900 transition-colors">Support</a>
+    </div>
+
+  </div>
+</footer>
+
   </div>
 
   <!-- KODE UTAMA JAVASCRIPT FRONTEND DIRECT EMBEDDED GEMINI API -->
