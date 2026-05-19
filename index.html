@@ -1964,7 +1964,45 @@ INSTRUKSI AKHIR:
               }
             } else {
               const errBody = await response.json().catch(() => ({}));
-              lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errBody?.error?.message || response.statusText}`;
+              const errMsg = errBody?.error?.message || response.statusText;
+              
+              // ✅ DETEKSI RATE LIMIT ERROR
+              const isRateLimitError = errMsg.includes("Rate limit reached") || 
+                                       response.status === 429;
+              
+              if (isRateLimitError) {
+                lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit reached. ${errMsg}`;
+                
+                // ✅ EKSTRAK WAKTU TUNGGU DARI PESAN ERROR GROQ
+                // Contoh: "Please try again in 13.706s"
+                const waitTimeMatch = errMsg.match(/try again in ([\d.]+)s/i);
+                let waitSeconds = 10; // Default fallback
+                
+                if (waitTimeMatch && waitTimeMatch[1]) {
+                  waitSeconds = parseFloat(waitTimeMatch[1]);
+                  // Tambahkan buffer 2 detik untuk keamanan
+                  waitSeconds = Math.min(waitSeconds + 2, 60); // Max 60 detik
+                }
+                
+                console.warn(`⏳ Rate limit terdeteksi. Menunggu ${waitSeconds.toFixed(1)} detik sebelum melanjutkan...`);
+                
+                // Jika masih ada key/model lain, lanjut ke berikutnya tanpa tunggu lama
+                // Jika ini percobaan terakhir, tunggu sesuai anjuran Groq lalu restart loop
+                const hasMoreAttempts = (k + 1 < activeKeys.length) || (m + 1 < activeModels.length);
+                
+                if (!hasMoreAttempts) {
+                  // Ini adalah percobaan terakhir, tunggu sesuai anjuran Groq
+                  await new Promise(r => setTimeout(r, waitSeconds * 1000));
+                  
+                  // Setelah menunggu, coba lagi dari awal (loop akan restart)
+                  console.log(`🔄 Mencoba kembali setelah rate limit delay...`);
+                  m = -1; // Reset loop model
+                  k = -1; // Reset loop key (akan jadi 0 setelah increment)
+                  continue;
+                }
+              } else {
+                lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
+              }
             }
           } catch (err) {
             lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
