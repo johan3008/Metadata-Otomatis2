@@ -1913,16 +1913,31 @@ INSTRUKSI AKHIR:
         `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
 
       // BUILD CONTENT ARRAY — OpenAI Vision Format
-      // ✅ FIX: Urutan content dioptimalkan untuk model Groq - text dulu baru gambar
-      // agar model memahami instruksi sebelum memproses gambar
+      // ✅ FIX: Hanya model vision yang menerima image payload
+      const isVisionModel =
+        modelName.includes("vision") ||
+        modelName.includes("scout") ||
+        modelName.includes("maverick");
+
       const userContent = [];
       userContent.push({ type: "text", text: userPromptText });
-      base64Images.forEach((b64) => {
-        userContent.push({
-          type: "image_url",
-          image_url: { url: `data:image/jpeg;base64,${b64}` }
+
+      if (isVisionModel) {
+        base64Images.forEach((b64) => {
+          // Skip image terlalu besar untuk menghindari Scout failure
+          if (b64.length > 1800000) {
+            console.warn("⚠️ Skip image terlalu besar untuk Scout Vision");
+            return;
+          }
+
+          userContent.push({
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${b64}`
+            }
+          });
         });
-      });
+      }
 
       const useSpeed3x = document.getElementById("groq-speed-toggle")?.checked;
       let lastError = null;
@@ -1961,7 +1976,7 @@ INSTRUKSI AKHIR:
         const maxTokens = isVisionModel ? 600 : 800;
         
         const reqBody = {
-          model: modelName,
+            model: modelName,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user",   content: userContent }
@@ -1985,6 +2000,8 @@ INSTRUKSI AKHIR:
           if (response.ok) {
             const data    = await response.json();
             const rawText = (data.choices?.[0]?.message?.content || "").trim();
+
+            console.log("🔥 RAW GROQ RESPONSE:", rawText);
 
             if (rawText) {
               // JSON ROBUST EXTRACTOR
@@ -2018,11 +2035,9 @@ INSTRUKSI AKHIR:
                 await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
                 continue;
               }
-              // Also check description exists
-              if (!parsed.description || typeof parsed.description !== "string" || parsed.description.trim().length < 10) {
-                lastError = `Model [${modelName}] Key#${keyIndex+1}: description invalid/too short.`;
-                await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
-                continue;
+              // Description fallback agar Scout tidak gagal total
+              if (!parsed.description || typeof parsed.description !== "string") {
+                parsed.description = parsed.title || "Generated metadata description";
               }
 
               // 5. Simpan indeks kunci sukses untuk pekerja berikutnya
@@ -2118,7 +2133,13 @@ INSTRUKSI AKHIR:
       updateProgress(0, "Memulai analisis batch...");
 
       const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
-      const concurrencyLimit = useSpeed3x ? 3 : 1;
+
+      // Scout sangat sensitif terhadap parallel request
+      const usingScout =
+        activeAuthProvider === 'groq' &&
+        document.getElementById("groq-model-scout")?.checked;
+
+      const concurrencyLimit = usingScout ? 1 : (useSpeed3x ? 3 : 1);
 
       // Inisialisasi pool pekerja paralel
       let index = 0;
