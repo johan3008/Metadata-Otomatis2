@@ -21,6 +21,28 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Metazo Ai - Auto Keywording Tool" />
   <meta name="twitter:description" content="Kompresi visual cerdas hemat token. Hasilkan metadata massal microstock ramah SEO bebas klaim hak cipta." />
+  
+  <!-- Canonical URL untuk mencegah duplicate content -->
+  <link rel="canonical" href="https://metazo.ai/" />
+  
+  <!-- Favicon untuk branding -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=180&auto=format&fit=crop" />
+  
+  <!-- Theme Color untuk mobile browser -->
+  <meta name="theme-color" content="#7c3aed" />
+  <meta name="msapplication-TileColor" content="#7c3aed" />
+  
+  <!-- Language & Localization -->
+  <meta http-equiv="content-language" content="id" />
+  <link rel="alternate" hreflang="id" href="https://metazo.ai/" />
+  <link rel="alternate" hreflang="x-default" href="https://metazo.ai/" />
+  
+  <!-- Preconnect untuk performa loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
+  <link rel="dns-prefetch" href="https://unpkg.com" />
 
   <!-- Load Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -2675,6 +2697,82 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
       const banner = document.getElementById("error-banner");
       if (banner) banner.classList.add("hidden");
     }
+  </script>
+  
+  <!-- Structured Data / Schema.org untuk Rich Snippets Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Metazo Ai - Batch Metadata Generator",
+    "alternateName": "Metazo Ai Auto Keywording Tool",
+    "url": "https://metazo.ai/",
+    "description": "Sistem otomatis penata metadata microstock berbasis visi AI. Hasilkan judul SEO komersial, klasifikasi kategori ganda Shutterstock & tag kata kunci bebas trademark secara massal untuk Adobe Stock, Freepik, dan Canva gratis.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Metazo Ai Enterprise",
+      "url": "https://metazo.ai/"
+    },
+    "featureList": "Auto keywording, CSV batch export, Multi-platform support (Shutterstock, Adobe Stock, Freepik, Canva), AI-powered metadata generation, Trademark-free tagging",
+    "keywords": "microstock metadata generator, otomatis keyword shutterstock, adobe stock tag generator, csv batch upload microstock, auto keywording tool, image seo workflow ai, csv freepik metadata",
+    "inLanguage": "id",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Photographers, Designers, Content Creators, Microstock Contributors"
+    },
+    "potentialAction": {
+      "@type": "UseAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://metazo.ai/",
+        "actionPlatform": [
+          "http://schema.org/DesktopWebPlatform",
+          "http://schema.org/MobileWebPlatform"
+        ]
+      }
+    }
+  }
+  </script>
+  
+  <!-- FAQ Schema untuk Featured Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Apa itu Metazo Ai?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Metazo Ai adalah sistem otomatis penata metadata microstock berbasis visi AI yang membantu menghasilkan judul SEO komersial, klasifikasi kategori, dan tag kata kunci bebas trademark secara massal untuk berbagai platform microstock."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Platform apa saja yang didukung?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Metazo Ai mendukung ekspor metadata untuk Adobe Stock, Freepik, Canva, Shutterstock, dan platform microstock lainnya dalam format CSV batch upload."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Apakah Metazo Ai gratis digunakan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ya, Metazo Ai dapat digunakan secara gratis dengan fitur lengkap untuk menghasilkan metadata microstock secara otomatis menggunakan teknologi AI."
+        }
+      }
+    ]
+  }
   </script>
 </body>
 </html>
