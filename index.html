@@ -782,16 +782,10 @@
       if (document.getElementById("groq-model-llama31-8b")?.checked)   models.push("llama-3.1-8b-instant");
       if (document.getElementById("groq-model-mixtral")?.checked)      models.push("mixtral-8x7b-32768");
       // Fallback vision models hanya jika model text gagal
-      // Prioritas vision model paling stabil dulu
-      if (document.getElementById("groq-model-llama32v")?.checked)
-        models.push("llama-3.2-90b-vision-preview");
-
-      if (document.getElementById("groq-model-maverick")?.checked)
-        models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
-
-      // Scout paling akhir karena TPD limit sangat kecil
-      if (document.getElementById("groq-model-scout")?.checked)
-        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
+      if (document.getElementById("groq-model-llama32v")?.checked)     models.push("llama-3.2-90b-vision-preview");
+      if (document.getElementById("groq-model-maverick")?.checked)     models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
+      // Scout dipaling akhir karena rate limit paling ketat
+      if (document.getElementById("groq-model-scout")?.checked)        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
       
       // ✅ Fallback tambahan jika tidak ada yang dipilih
       if (models.length === 0) {
@@ -1843,15 +1837,6 @@ INSTRUKSI AKHIR:
       for (let m = 0; m < activeModels.length; m++) {
         const modelName = activeModels[m];
 
-        // Skip model yang TPD hariannya habis selama 1 jam
-        if (
-          keyRateLimitTracker[`daily_${modelName}`] &&
-          (Date.now() - keyRateLimitTracker[`daily_${modelName}`]) < 3600000
-        ) {
-          console.log(`⏭️ Skip ${modelName} karena daily quota habis`);
-          continue;
-        }
-
         for (let k = 0; k < activeKeys.length; k++) {
           // Mendistribusikan rotasi kunci global secara asinkron di antara pekerja paralel
           const keyIndex = (k + currentApiKeyIndex) % activeKeys.length;
@@ -1915,17 +1900,7 @@ INSTRUKSI AKHIR:
         : "";
       // ✅ FIX: Sertakan batasan numerik eksplisit di user message agar model Groq
       // mematuhi pengaturan slider user (bukan hanya di system prompt).
-      
-      // Optimasi token khusus Scout
-      const isScoutSelected = activeModels.some(m => m.includes("scout"));
-
-      if (isScoutSelected && base64Images.length > 1) {
-        // Scout free tier jangan kirim terlalu banyak frame
-        base64Images = [base64Images[0]];
-        console.warn("⚡ Scout optimization aktif: hanya 1 frame dikirim");
-      }
-
-const userPromptText =
+      const userPromptText =
         `Analisis aset visual bernama "${fileName}" ini secara komersial dan mendalam.\n` +
         frameCtx +
         `Hasilkan metadata microstock berkualitas tinggi, aman dari pelanggaran IP/Merek Dagang.\n` +
@@ -1938,38 +1913,18 @@ const userPromptText =
         `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
 
       // BUILD CONTENT ARRAY — OpenAI Vision Format
-      // ✅ FIX: Hanya model vision yang menerima image payload
-      // Detect active vision model safely
-      const currentVisionModel = activeModels.find(m =>
-        m.includes("vision") ||
-        m.includes("scout") ||
-        m.includes("maverick")
-      ) || "";
-
-      const isVisionModel =
-        currentVisionModel.includes("vision") ||
-        currentVisionModel.includes("scout") ||
-        currentVisionModel.includes("maverick");
-
+      // ✅ FIX: Urutan content dioptimalkan untuk model Groq - text dulu baru gambar
+      // agar model memahami instruksi sebelum memproses gambar
       const userContent = [];
       userContent.push({ type: "text", text: userPromptText });
-
-      if (isVisionModel) {
-        base64Images.forEach((b64) => {
-          // Skip image terlalu besar untuk menghindari Scout failure
-          if (b64.length > 1800000) {
-            console.warn("⚠️ Skip image terlalu besar untuk Scout Vision");
-            return;
-          }
-
-          userContent.push({
-            type: "image_url",
-            image_url: {
-              url: `data:image/jpeg;base64,${b64}`
-            }
-          });
+      base64Images.forEach((b64) => {
+        userContent.push({
+          type: "image_url",
+          // ✅ FIX: Canvas menghasilkan PNG (toDataURL('image/png')), bukan JPEG
+          // Kirim sebagai PNG agar MIME type sesuai dan model tidak gagal decode gambar
+          image_url: { url: `data:image/png;base64,${b64}` }
         });
-      }
+      });
 
       const useSpeed3x = document.getElementById("groq-speed-toggle")?.checked;
       let lastError = null;
@@ -2003,12 +1958,14 @@ const userPromptText =
 
         const keyId = `${apiKey.substring(0,8)}_${modelName}`;
         
-        // ✅ REDUKSI TOKEN lebih agresif untuk model vision yang rate limit ketat
+        // ✅ FIX: Vision model (Scout/Maverick) butuh lebih banyak token untuk JSON lengkap
+        // response_format json_object TIDAK kompatibel dengan vision model Groq → dihapus untuk vision
         const isVisionModel = modelName.includes('scout') || modelName.includes('maverick') || modelName.includes('vision');
-        const maxTokens = isVisionModel ? 600 : 800;
+        // Scout/Maverick butuh ~1200-1500 token untuk output JSON penuh (40 keywords + title + desc + categories)
+        const maxTokens = isVisionModel ? 1500 : 1000;
         
         const reqBody = {
-            model: modelName,
+          model: modelName,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user",   content: userContent }
@@ -2016,7 +1973,9 @@ const userPromptText =
           temperature: 0.2,
           max_tokens: maxTokens,
           top_p: 0.8,
-          response_format: { type: "json_object" }
+          // ✅ FIX KRITIS: response_format json_object tidak kompatibel dengan vision model Groq
+          // Gunakan hanya untuk model text-only, vision model cukup mengandalkan prompt instruksi
+          ...(isVisionModel ? {} : { response_format: { type: "json_object" } })
         };
 
         try {
@@ -2033,8 +1992,6 @@ const userPromptText =
             const data    = await response.json();
             const rawText = (data.choices?.[0]?.message?.content || "").trim();
 
-            console.log("🔥 RAW GROQ RESPONSE:", rawText);
-
             if (rawText) {
               // JSON ROBUST EXTRACTOR
               let jsonStr = rawText;
@@ -2049,6 +2006,25 @@ const userPromptText =
               if (bStart !== -1 && bEnd > bStart) {
                 jsonStr = jsonStr.slice(bStart, bEnd + 1);
               }
+
+              // ✅ FIX: Perbaiki JSON yang terpotong karena max_tokens — tambahkan penutup jika perlu
+              // Hitung keseimbangan kurung kurawal untuk deteksi JSON terpotong
+              let openBraces = 0, openBrackets = 0;
+              let inString = false, escaped = false;
+              for (const ch of jsonStr) {
+                if (escaped) { escaped = false; continue; }
+                if (ch === '\\' && inString) { escaped = true; continue; }
+                if (ch === '"') { inString = !inString; continue; }
+                if (!inString) {
+                  if (ch === '{') openBraces++;
+                  else if (ch === '}') openBraces--;
+                  else if (ch === '[') openBrackets++;
+                  else if (ch === ']') openBrackets--;
+                }
+              }
+              // Tutup bracket/brace yang terbuka jika JSON terpotong
+              while (openBrackets > 0) { jsonStr += ']'; openBrackets--; }
+              while (openBraces > 0) { jsonStr += '}'; openBraces--; }
 
               // 3. Parse — throws jika JSON invalid, langsung ke catch
               const parsed = JSON.parse(jsonStr);
@@ -2067,9 +2043,11 @@ const userPromptText =
                 await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
                 continue;
               }
-              // Description fallback agar Scout tidak gagal total
-              if (!parsed.description || typeof parsed.description !== "string") {
-                parsed.description = parsed.title || "Generated metadata description";
+              // Also check description exists
+              if (!parsed.description || typeof parsed.description !== "string" || parsed.description.trim().length < 10) {
+                lastError = `Model [${modelName}] Key#${keyIndex+1}: description invalid/too short.`;
+                await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                continue;
               }
 
               // 5. Simpan indeks kunci sukses untuk pekerja berikutnya
@@ -2081,17 +2059,8 @@ const userPromptText =
             const errMsg = errBody?.error?.message || response.statusText;
             
             // ✅ DETEKSI RATE LIMIT ERROR
-            const isRateLimitError =
-                                     errMsg.includes("Rate limit reached") ||
-                                     errMsg.includes("tokens per day") ||
+            const isRateLimitError = errMsg.includes("Rate limit reached") ||
                                      response.status === 429;
-
-// Skip Scout jika TPD harian habis
-if (errMsg.includes("tokens per day")) {
-  console.warn(`🚫 Daily token limit habis untuk ${modelName}. Skip sementara.`);
-  keyRateLimitTracker[`daily_${modelName}`] = Date.now();
-  continue;
-}
 
             if (isRateLimitError) {
               lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit. ${errMsg}`;
@@ -2174,13 +2143,7 @@ if (errMsg.includes("tokens per day")) {
       updateProgress(0, "Memulai analisis batch...");
 
       const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
-
-      // Scout sangat sensitif terhadap parallel request
-      const usingScout =
-        activeAuthProvider === 'groq' &&
-        document.getElementById("groq-model-scout")?.checked;
-
-      const concurrencyLimit = usingScout ? 1 : (useSpeed3x ? 3 : 1);
+      const concurrencyLimit = useSpeed3x ? 3 : 1;
 
       // Inisialisasi pool pekerja paralel
       let index = 0;
