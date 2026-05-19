@@ -1501,8 +1501,17 @@ INSTRUKSI AKHIR:
       
       if (titleLen < minTitle) {
         console.warn(`⚠️ Title terlalu pendek (${titleLen} chars, min ${minTitle}). Normalizing...`);
-        // Jika title terlalu pendek, tambahkan deskripsi singkat
-        parsed.title = parsed.title.trim() + ", professional quality asset";
+        // Jika title terlalu pendek, tambahkan deskripsi singkat yang relevan
+        // CATATAN: Tidak menambahkan "professional quality asset" karena dilarang untuk Groq
+        const extensions = [
+          " for commercial use",
+          " with creative design",
+          " in modern style",
+          " for marketing projects",
+          " for digital media"
+        ];
+        const randomExt = extensions[Math.floor(Math.random() * extensions.length)];
+        parsed.title = parsed.title.trim() + randomExt;
       } else if (titleLen > maxTitle) {
         console.warn(`⚠️ Title terlalu panjang (${titleLen} chars, max ${maxTitle}). Trimming...`);
         // Trim ke panjang maksimal
@@ -2050,7 +2059,8 @@ INSTRUKSI AKHIR:
 
         video.onloadedmetadata = () => {
           const duration = video.duration;
-          const timestamps = [duration * 0.1, duration * duration > 1 ? 0.5 : 0.4, duration * 0.9];
+          // Ambil 3 frame: awal (10%), tengah (50%), dan akhir (90%)
+          const timestamps = [duration * 0.1, duration * 0.5, duration * 0.9];
           const frames = [];
           let index = 0;
 
