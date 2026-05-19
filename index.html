@@ -403,6 +403,19 @@
                   <p id="accept-label" class="text-[10px] text-slate-400 mt-1 font-bold">Format JPG, PNG, WEBP</p>
                 </div>
               </div>
+              
+              <!-- Progress Bar Container -->
+              <div id="progress-container" class="hidden mt-4">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span id="progress-label" class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Memproses...</span>
+                  <span id="progress-percent" class="text-[10px] font-extrabold text-purple-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden shadow-inner">
+                  <div id="progress-bar" class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+                </div>
+                <div id="progress-status" class="mt-1.5 text-[9px] text-slate-400 font-medium truncate">Menyiapkan file...</div>
+              </div>
+              
               <input type="file" id="file-input" class="hidden" multiple="multiple" onchange="handleBatchFiles(event)" />
             </div>
 
@@ -543,6 +556,10 @@
     let activeAuthProvider = 'gemini'; // 'gemini' | 'groq' | 'helper'
     let currentApiKeyIndex = 0; // Rotasi kunci global Gemini
     let currentGroqKeyIndex = 0; // Rotasi kunci global Groq
+    
+    // Progress Bar State
+    let progressInterval = null;
+    let currentProgress = 0;
 
     const targetPlatforms = {
       shutterstock: true,
@@ -1936,23 +1953,45 @@ INSTRUKSI AKHIR:
       if (genText) genText.innerText = "MENGANALISIS BATCH...";
       
       hideError();
+      
+      // Tampilkan dan reset progress bar
+      const progressContainer = document.getElementById("progress-container");
+      const progressBar = document.getElementById("progress-bar");
+      const progressPercent = document.getElementById("progress-percent");
+      const progressStatus = document.getElementById("progress-status");
+      
+      if (progressContainer) progressContainer.classList.remove("hidden");
+      currentProgress = 0;
+      updateProgress(0, "Memulai analisis batch...");
 
       const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
       const concurrencyLimit = useSpeed3x ? 3 : 1;
 
       // Inisialisasi pool pekerja paralel
       let index = 0;
+      const totalItems = pending.length;
+      
       async function worker() {
-        while (index < pending.length) {
+        while (index < totalItems) {
           const currentIdx = index++;
           const item = pending[currentIdx];
+          
+          // Update status progres per item
+          const currentItemNum = currentIdx + 1;
+          const baseProgress = (currentIdx / totalItems) * 100;
+          updateProgress(baseProgress, `Memproses ${item.name} (${currentItemNum}/${totalItems})...`);
+          
           await processSingleItem(item.id);
+          
+          // Progres selesai untuk item ini
+          const completedProgress = ((currentIdx + 1) / totalItems) * 100;
+          updateProgress(completedProgress, `Selesai: ${item.name}`);
         }
       }
 
       // Jalankan pool pekerja sesuai batas konkurensi (3x lebih cepat)
       const workers = [];
-      const activeWorkersCount = Math.min(concurrencyLimit, pending.length);
+      const activeWorkersCount = Math.min(concurrencyLimit, totalItems);
       for (let i = 0; i < activeWorkersCount; i++) {
         workers.push(worker());
       }
@@ -1964,7 +2003,40 @@ INSTRUKSI AKHIR:
       if (genAllBtn) genAllBtn.disabled = false;
       if (genIcon) genIcon.classList.remove("animate-spin");
       if (genText) genText.innerText = "GENERATE SEMUA METADATA (BATCH)";
+      
+      // Selesaikan progress bar
+      updateProgress(100, "Semua metadata berhasil dibuat!");
+      
+      // Sembunyikan progress bar setelah 2 detik
+      setTimeout(() => {
+        if (progressContainer) progressContainer.classList.add("hidden");
+      }, 2000);
+      
       renderQueueList();
+    }
+    
+    // Fungsi helper untuk update progress bar
+    function updateProgress(percent, statusText) {
+      const progressBar = document.getElementById("progress-bar");
+      const progressPercent = document.getElementById("progress-percent");
+      const progressStatus = document.getElementById("progress-status");
+      
+      if (progressBar) progressBar.style.width = `${percent}%`;
+      if (progressPercent) progressPercent.innerText = `${Math.round(percent)}%`;
+      if (progressStatus) progressStatus.innerText = statusText || '';
+      
+      // Ubah warna saat selesai
+      if (percent >= 100) {
+        if (progressBar) {
+          progressBar.classList.remove("from-indigo-600", "via-purple-600", "to-pink-600");
+          progressBar.classList.add("bg-emerald-500");
+        }
+      } else {
+        if (progressBar) {
+          progressBar.classList.add("from-indigo-600", "via-purple-600", "to-pink-600");
+          progressBar.classList.remove("bg-emerald-500");
+        }
+      }
     }
 
     function renderCSVDownloadPanel() {
