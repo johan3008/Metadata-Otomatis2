@@ -1405,7 +1405,7 @@
         const parsed = JSON.parse(responseJsonText);
         
         // ✅ VALIDASI & NORMALISASI OUTPUT
-        const normalized = validateAndNormalizeOutput(parsed, settingsPayload);
+        const normalized = validateAndNormalizeOutput(parsed, settingsPayload, targetItem.name);
         
         items = items.map(i => i.id === itemId ? {
           ...i,
@@ -1552,7 +1552,7 @@ INSTRUKSI AKHIR:
     }
 
     // ✅ POST-PROCESSING: Validasi & Normalisasi Output agar sesuai preferensi user
-    function validateAndNormalizeOutput(parsed, settings) {
+    function validateAndNormalizeOutput(parsed, settings, fileName = "") {
       console.log("🔍 [Validation] Input parsed:", { titleLen: parsed.title?.length, descLen: parsed.description?.length, keywordCount: parsed.keywords?.length, expected: settings.keywordsCount });
       
       // Validasi & repair title length
@@ -1581,7 +1581,7 @@ INSTRUKSI AKHIR:
         ];
         // Pilih ekstensi berdasarkan hash nama file agar konsisten untuk file yang sama
         // tapi berbeda untuk file berbeda
-        const hash = fileName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const hash = fileName ? fileName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : Date.now();
         const randomExt = extensions[hash % extensions.length];
         parsed.title = parsed.title.trim() + randomExt;
       } else if (titleLen > maxTitle) {
