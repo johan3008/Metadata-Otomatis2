@@ -782,10 +782,16 @@
       if (document.getElementById("groq-model-llama31-8b")?.checked)   models.push("llama-3.1-8b-instant");
       if (document.getElementById("groq-model-mixtral")?.checked)      models.push("mixtral-8x7b-32768");
       // Fallback vision models hanya jika model text gagal
-      if (document.getElementById("groq-model-llama32v")?.checked)     models.push("llama-3.2-90b-vision-preview");
-      if (document.getElementById("groq-model-maverick")?.checked)     models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
-      // Scout dipaling akhir karena rate limit paling ketat
-      if (document.getElementById("groq-model-scout")?.checked)        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
+      // Prioritas vision model paling stabil dulu
+      if (document.getElementById("groq-model-llama32v")?.checked)
+        models.push("llama-3.2-90b-vision-preview");
+
+      if (document.getElementById("groq-model-maverick")?.checked)
+        models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
+
+      // Scout paling akhir karena TPD limit sangat kecil
+      if (document.getElementById("groq-model-scout")?.checked)
+        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
       
       // ✅ Fallback tambahan jika tidak ada yang dipilih
       if (models.length === 0) {
@@ -1837,6 +1843,15 @@ INSTRUKSI AKHIR:
       for (let m = 0; m < activeModels.length; m++) {
         const modelName = activeModels[m];
 
+        // Skip model yang TPD hariannya habis selama 1 jam
+        if (
+          keyRateLimitTracker[`daily_${modelName}`] &&
+          (Date.now() - keyRateLimitTracker[`daily_${modelName}`]) < 3600000
+        ) {
+          console.log(`⏭️ Skip ${modelName} karena daily quota habis`);
+          continue;
+        }
+
         for (let k = 0; k < activeKeys.length; k++) {
           // Mendistribusikan rotasi kunci global secara asinkron di antara pekerja paralel
           const keyIndex = (k + currentApiKeyIndex) % activeKeys.length;
@@ -1900,7 +1915,17 @@ INSTRUKSI AKHIR:
         : "";
       // ✅ FIX: Sertakan batasan numerik eksplisit di user message agar model Groq
       // mematuhi pengaturan slider user (bukan hanya di system prompt).
-      const userPromptText =
+      
+      // Optimasi token khusus Scout
+      const isScoutSelected = activeModels.some(m => m.includes("scout"));
+
+      if (isScoutSelected && base64Images.length > 1) {
+        // Scout free tier jangan kirim terlalu banyak frame
+        base64Images = [base64Images[0]];
+        console.warn("⚡ Scout optimization aktif: hanya 1 frame dikirim");
+      }
+
+const userPromptText =
         `Analisis aset visual bernama "${fileName}" ini secara komersial dan mendalam.\n` +
         frameCtx +
         `Hasilkan metadata microstock berkualitas tinggi, aman dari pelanggaran IP/Merek Dagang.\n` +
@@ -2056,8 +2081,17 @@ INSTRUKSI AKHIR:
             const errMsg = errBody?.error?.message || response.statusText;
             
             // ✅ DETEKSI RATE LIMIT ERROR
-            const isRateLimitError = errMsg.includes("Rate limit reached") ||
+            const isRateLimitError =
+                                     errMsg.includes("Rate limit reached") ||
+                                     errMsg.includes("tokens per day") ||
                                      response.status === 429;
+
+// Skip Scout jika TPD harian habis
+if (errMsg.includes("tokens per day")) {
+  console.warn(`🚫 Daily token limit habis untuk ${modelName}. Skip sementara.`);
+  keyRateLimitTracker[`daily_${modelName}`] = Date.now();
+  continue;
+}
 
             if (isRateLimitError) {
               lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit. ${errMsg}`;
