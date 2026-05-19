@@ -1,31 +1,35 @@
-<html class="scroll-smooth" lang="id"><head></head><body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-orange-500/10 selection:text-orange-600">```html
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Semantic & Technical SEO Meta Tags (Google Indexing & High CTR Optimization) -->
+  <title>Shophub Microstock Pro AI - Free Batch Metadata Generator</title>
+  <meta name="description" content="Sistem otomatis penata metadata microstock berbasis visi AI. Hasilkan judul SEO komersial, klasifikasi kategori ganda Shutterstock &amp; tag kata kunci bebas trademark secara massal untuk Adobe Stock, Freepik, dan Canva gratis." />
+  <meta name="keywords" content="microstock metadata generator, otomatis keyword shutterstock, adobe stock tag generator, csv batch upload microstock, auto keywording tool, image seo workflow ai, csv freepik metadata" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Shophub AI Enterprise" />
+  
+  <!-- Open Graph / Facebook SEO -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Shophub Microstock Pro AI - Batch Keyword &amp; Metadata Generator" />
+  <meta property="og:description" content="Alat penata metadata microstock massal otomatis bebas trademark. Ekspor CSV instan untuk Shutterstock, Adobe Stock, Freepik, dan Canva." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" />
+  
+  <!-- Twitter SEO -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Shophub Microstock Pro AI - Auto Keywording Tool" />
+  <meta name="twitter:description" content="Kompresi visual cerdas hemat token. Hasilkan metadata massal microstock ramah SEO bebas klaim hak cipta." />
 
-
-
-  <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<!-- Semantic & Technical SEO Meta Tags (Google Indexing & High CTR Optimization) -->
-<title>Shophub Microstock Pro AI - Free Batch Metadata Generator</title>
-<meta content="Sistem otomatis penata metadata microstock berbasis visi AI. Hasilkan judul SEO komersial, klasifikasi kategori ganda Shutterstock &amp; tag kata kunci bebas trademark secara massal untuk Adobe Stock, Freepik, dan Canva gratis." name="description"/>
-<meta content="microstock metadata generator, otomatis keyword shutterstock, adobe stock tag generator, csv batch upload microstock, auto keywording tool, image seo workflow ai, csv freepik metadata" name="keywords"/>
-<meta content="index, follow" name="robots"/>
-<meta content="Shophub AI Enterprise" name="author"/>
-<!-- Open Graph / Facebook SEO -->
-<meta content="website" property="og:type"/>
-<meta content="Shophub Microstock Pro AI - Batch Keyword &amp; Metadata Generator" property="og:title"/>
-<meta content="Alat penata metadata microstock massal otomatis bebas trademark. Ekspor CSV instan untuk Shutterstock, Adobe Stock, Freepik, dan Canva." property="og:description"/>
-<meta content="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" property="og:image"/>
-<!-- Twitter SEO -->
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Shophub Microstock Pro AI - Auto Keywording Tool" name="twitter:title"/>
-<meta content="Kompresi visual cerdas hemat token. Hasilkan metadata massal microstock ramah SEO bebas klaim hak cipta." name="twitter:description"/>
-<!-- Load Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Google Fonts dengan ampersand di-escape (&amp;) mematuhi standar parser XML ketat -->
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<!-- Load Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts dengan ampersand di-escape (&amp;) mematuhi standar parser XML ketat -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <!-- Load Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
     /* CSS Reset & Anti-Kepotong khusus untuk Netlify Deployment */
     html, body {
       margin: 0;
@@ -57,418 +61,469 @@
       background-color: #cbd5e1;
     }
   </style>
-<!-- Penggunaan min-h-screen untuk fleksibilitas tinggi di Netlify Sandbox -->
-<div class="min-h-screen flex flex-col w-full" id="app">
-<!-- Header Utama Premium -->
-<header class="sticky top-0 z-50 backdrop-blur-md bg-white/85 border-b border-slate-200/80 shadow-sm transition-all duration-300">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-<div class="flex items-center space-x-4">
-<div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-500 p-2.5 rounded-2xl text-white shadow-lg shadow-orange-500/25 transform hover:scale-105 transition-all">
-<i class="w-6 h-6 animate-pulse" data-lucide="sparkles"></i>
-</div>
-<div>
-<h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-orange-600 to-amber-500 bg-clip-text text-transparent">
+</head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-orange-500/10 selection:text-orange-600">
+
+  <!-- Penggunaan min-h-screen untuk fleksibilitas tinggi di Netlify Sandbox -->
+  <div id="app" class="min-h-screen flex flex-col w-full">
+    
+    <!-- Header Utama Premium -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/85 border-b border-slate-200/80 shadow-sm transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-500 p-2.5 rounded-2xl text-white shadow-lg shadow-orange-500/25 transform hover:scale-105 transition-all">
+            <i data-lucide="sparkles" class="w-6 h-6 animate-pulse"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-orange-600 to-amber-500 bg-clip-text text-transparent">
               Shophub Microstock Pro AI
             </h1>
-<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Enterprise Suite • Standalone Client Mode</p>
-</div>
-</div>
-<div class="flex items-center space-x-3">
-<span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-extrabold bg-emerald-50 border border-emerald-200/60 text-emerald-800 shadow-sm" id="status-badge">
-<span class="h-2 w-2 rounded-full bg-emerald-500 mr-2.5 animate-pulse"></span>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Enterprise Suite • Standalone Client Mode</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span id="status-badge" class="inline-flex items-center px-4 py-2 rounded-full text-xs font-extrabold bg-emerald-50 border border-emerald-200/60 text-emerald-800 shadow-sm">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 mr-2.5 animate-pulse"></span>
             Netlify App Active
           </span>
-</div>
-</div>
-</header>
-<!-- Kontainer utama responsif dengan pembatas max-w-7xl -->
-<main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<!-- Pesan Peringatan Jika Mengalami Masalah -->
-<div class="hidden w-full mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-xs font-semibold flex items-center space-x-2 shadow-sm" id="error-banner">
-<i class="w-5 h-5 text-red-500 flex-shrink-0" data-lucide="alert-circle"></i>
-<span id="error-message">Terjadi kesalahan sistem.</span>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-<!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
-<div class="lg:col-span-4 space-y-6">
-<div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 space-y-6">
-<!-- 1. Tipe Aset -->
-<div>
-<h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center mb-3">
-<i class="w-4 h-4 mr-2 text-orange-500" data-lucide="sliders"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Kontainer utama responsif dengan pembatas max-w-7xl -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <!-- Pesan Peringatan Jika Mengalami Masalah -->
+      <div id="error-banner" class="hidden w-full mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-xs font-semibold flex items-center space-x-2 shadow-sm">
+        <i data-lucide="alert-circle" class="w-5 h-5 text-red-500 flex-shrink-0"></i>
+        <span id="error-message">Terjadi kesalahan sistem.</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
+        <div class="lg:col-span-4 space-y-6">
+          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 space-y-6">
+            
+            <!-- 1. Tipe Aset -->
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center mb-3">
+                <i data-lucide="sliders" class="w-4 h-4 mr-2 text-orange-500"></i>
                 1. Pilih Tipe Aset
               </h3>
-<div class="grid grid-cols-3 gap-2 bg-slate-100/80 p-1.5 rounded-2xl" id="asset-type-container">
-<button class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200" id="btn-image" onclick="setAssetType('image')">
-<i class="w-4 h-4" data-lucide="image"></i>
-<span>Gambar</span>
-</button>
-<button class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950" id="btn-vector" onclick="setAssetType('vector')">
-<i class="w-4 h-4" data-lucide="pen-tool"></i>
-<span>Vektor</span>
-</button>
-<button class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950" id="btn-video" onclick="setAssetType('video')">
-<i class="w-4 h-4" data-lucide="video"></i>
-<span>Video</span>
-</button>
-</div>
-</div>
-<!-- 2. Pengaturan Multi API Key Gemini (5 Slot Visual) -->
-<div class="pt-2 border-t border-slate-100">
-<div class="flex items-center justify-between mb-3">
-<h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
-<i class="w-4 h-4 mr-2 text-orange-500" data-lucide="key-round"></i>
+              <div class="grid grid-cols-3 gap-2 bg-slate-100/80 p-1.5 rounded-2xl" id="asset-type-container">
+                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200">
+                  <i data-lucide="image" class="w-4 h-4"></i>
+                  <span>Gambar</span>
+                </button>
+                <button onclick="setAssetType('vector')" id="btn-vector" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950">
+                  <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                  <span>Vektor</span>
+                </button>
+                <button onclick="setAssetType('video')" id="btn-video" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-950">
+                  <i data-lucide="video" class="w-4 h-4"></i>
+                  <span>Video</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. Pengaturan Multi API Key Gemini (5 Slot Visual) -->
+            <div class="pt-2 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
+                  <i data-lucide="key-round" class="w-4 h-4 mr-2 text-orange-500"></i>
                   Koneksi Gemini AI (5 Kunci)
                 </h3>
-</div>
-<!-- Tab Pemilih Menu API -->
-<div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-2xl mb-4 text-center">
-<button class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm" id="tab-auth-gemini" onclick="switchAuthTab('gemini')">
+              </div>
+
+              <!-- Tab Pemilih Menu API -->
+              <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-2xl mb-4 text-center">
+                <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm">
                   🔮 Gemini
                 </button>
-<button class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900" id="tab-auth-groq" onclick="switchAuthTab('groq')">
+                <button onclick="switchAuthTab('groq')" id="tab-auth-groq" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
                   ⚡ Groq
                 </button>
-<button class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900" id="tab-auth-helper" onclick="switchAuthTab('helper')">
+                <button onclick="switchAuthTab('helper')" id="tab-auth-helper" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
                   Bantuan
                 </button>
-</div>
-<!-- Konten Tab 1: 5 Slot API Key Gemini secara Visual -->
-<div class="space-y-4" id="content-auth-gemini">
-<!-- Expandable Accordion Vault API Keys -->
-<div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
-<div class="flex items-center justify-between p-3.5 bg-slate-100/50 hover:bg-slate-100 cursor-pointer transition-colors border-b border-slate-200" onclick="toggleAccordion('api-vault-content')">
-<span class="text-xs font-extrabold text-slate-700 flex items-center">
-<i class="w-4 h-4 mr-2 text-emerald-500" data-lucide="shield-check"></i>
+              </div>
+
+              <!-- Konten Tab 1: 5 Slot API Key Gemini secara Visual -->
+              <div id="content-auth-gemini" class="space-y-4">
+                
+                <!-- Expandable Accordion Vault API Keys -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
+                  <div onclick="toggleAccordion('api-vault-content')" class="flex items-center justify-between p-3.5 bg-slate-100/50 hover:bg-slate-100 cursor-pointer transition-colors border-b border-slate-200">
+                    <span class="text-xs font-extrabold text-slate-700 flex items-center">
+                      <i data-lucide="shield-check" class="w-4 h-4 mr-2 text-emerald-500"></i>
                       Brankas Kunci API (5 Slot)
                     </span>
-<i class="w-4 h-4 text-slate-400 transition-transform duration-300" data-lucide="chevron-down" id="api-vault-arrow"></i>
-</div>
-<div class="p-4 space-y-3 bg-white" id="api-vault-content">
-<!-- Slot 1 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" id="api-key-1" onchange="saveApiKeys()" placeholder="Masukkan API Key ke-1 (Utama)" type="password"/>
-</div>
-<!-- Slot 2 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#2</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" id="api-key-2" onchange="saveApiKeys()" placeholder="Masukkan API Key ke-2 (Cadangan)" type="password"/>
-</div>
-<!-- Slot 3 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#3</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" id="api-key-3" onchange="saveApiKeys()" placeholder="Masukkan API Key ke-3 (Cadangan)" type="password"/>
-</div>
-<!-- Slot 4 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#4</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" id="api-key-4" onchange="saveApiKeys()" placeholder="Masukkan API Key ke-4 (Cadangan)" type="password"/>
-</div>
-<!-- Slot 5 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#5</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" id="api-key-5" onchange="saveApiKeys()" placeholder="Masukkan API Key ke-5 (Cadangan)" type="password"/>
-</div>
-<div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
-<button class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-extrabold transition-all flex items-center space-x-1.5" onclick="testApiKey()" type="button">
-<i class="w-3.5 h-3.5 text-emerald-500" data-lucide="check-circle-2"></i>
-<span>Uji Kunci Aktif</span>
-</button>
-<span class="text-[10px] font-bold text-slate-400" id="gemini-test-status">Belum diuji</span>
-</div>
-</div>
-</div>
-<!-- Fitur Kecepatan & Rotasi Lanjutan -->
-<div class="flex items-center justify-between p-3 bg-[#f8fafc] rounded-2xl border border-slate-200">
-<label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-600 cursor-pointer">
-<input checked="checked" class="accent-orange-500 h-4 w-4 rounded" id="speed-3x-toggle" type="checkbox"/>
-<span>Auto Rotate &amp; Speed 3x (Parallel)</span>
-</label>
-</div>
-<!-- Pilihan Model Gemini -->
-<div class="space-y-2">
-<label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
-<div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
-<label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-<input checked="checked" class="accent-orange-500 h-4 w-4 rounded" id="model-g31" type="checkbox"/>
-<span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full ml-1 font-bold">Ultra Baru</span></span>
-</label>
-<label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-<input checked="checked" class="accent-orange-500 h-4 w-4 rounded" id="model-g3" type="checkbox"/>
-<span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Baru</span></span>
-</label>
-<label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-<input checked="checked" class="accent-orange-500 h-4 w-4 rounded" id="model-g25" type="checkbox"/>
-<span>gemini-2.5-flash <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1 font-bold">Utama</span></span>
-</label>
-<label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-<input checked="checked" class="accent-orange-500 h-4 w-4 rounded" id="model-g20" type="checkbox"/>
-<span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-1 font-bold">Cadangan</span></span>
-</label>
-</div>
-</div>
-</div>
-<!-- Konten Tab 2: Groq API Key + Model Llama 4 Scout -->
-<div class="space-y-4 hidden" id="content-auth-groq">
-<!-- Info Chip Model Groq -->
-<div class="flex items-center space-x-2 p-3 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl border border-violet-200">
-<div class="p-1.5 bg-violet-100 rounded-xl">
-<i class="w-4 h-4 text-violet-600" data-lucide="zap"></i>
-</div>
-<div>
-<p class="text-[10px] font-extrabold text-violet-800">Groq Ultra-Fast Inference</p>
-<p class="text-[9px] text-violet-600 font-bold">Vision + Text · Free Tier Tersedia</p>
-</div>
-</div>
-<!-- Brankas Kunci API Groq (5 Slot) -->
-<div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
-<div class="flex items-center justify-between p-3.5 bg-slate-100/50 hover:bg-slate-100 cursor-pointer transition-colors border-b border-slate-200" onclick="toggleAccordion('groq-vault-content')">
-<span class="text-xs font-extrabold text-slate-700 flex items-center">
-<i class="w-4 h-4 mr-2 text-violet-500" data-lucide="shield-check"></i>
+                    <i data-lucide="chevron-down" id="api-vault-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-300"></i>
+                  </div>
+                  
+                  <div id="api-vault-content" class="p-4 space-y-3 bg-white">
+                    <!-- Slot 1 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
+                      <input type="password" id="api-key-1" placeholder="Masukkan API Key ke-1 (Utama)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
+
+                    <!-- Slot 2 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#2</span>
+                      <input type="password" id="api-key-2" placeholder="Masukkan API Key ke-2 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
+
+                    <!-- Slot 3 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#3</span>
+                      <input type="password" id="api-key-3" placeholder="Masukkan API Key ke-3 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
+
+                    <!-- Slot 4 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#4</span>
+                      <input type="password" id="api-key-4" placeholder="Masukkan API Key ke-4 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
+
+                    <!-- Slot 5 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#5</span>
+                      <input type="password" id="api-key-5" placeholder="Masukkan API Key ke-5 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                    </div>
+
+                    <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+                      <button type="button" onclick="testApiKey()" class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-extrabold transition-all flex items-center space-x-1.5">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i>
+                        <span>Uji Kunci Aktif</span>
+                      </button>
+                      <span id="gemini-test-status" class="text-[10px] font-bold text-slate-400">Belum diuji</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fitur Kecepatan & Rotasi Lanjutan -->
+                <div class="flex items-center justify-between p-3 bg-[#f8fafc] rounded-2xl border border-slate-200">
+                  <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-600 cursor-pointer">
+                    <input type="checkbox" id="speed-3x-toggle" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                    <span>Auto Rotate &amp; Speed 3x (Parallel)</span>
+                  </label>
+                </div>
+
+                <!-- Pilihan Model Gemini -->
+                <div class="space-y-2">
+                  <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
+                  <div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g31" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full ml-1 font-bold">Ultra Baru</span></span>
+                    </label>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g3" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Baru</span></span>
+                    </label>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g25" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-2.5-flash <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1 font-bold">Utama</span></span>
+                    </label>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g20" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-1 font-bold">Cadangan</span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Konten Tab 2: Groq API Key + Model Llama 4 Scout -->
+              <div id="content-auth-groq" class="space-y-4 hidden">
+
+                <!-- Info Chip Model Groq -->
+                <div class="flex items-center space-x-2 p-3 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl border border-violet-200">
+                  <div class="p-1.5 bg-violet-100 rounded-xl">
+                    <i data-lucide="zap" class="w-4 h-4 text-violet-600"></i>
+                  </div>
+                  <div>
+                    <p class="text-[10px] font-extrabold text-violet-800">Groq Ultra-Fast Inference</p>
+                    <p class="text-[9px] text-violet-600 font-bold">Vision + Text · Free Tier Tersedia</p>
+                  </div>
+                </div>
+
+                <!-- Brankas Kunci API Groq (5 Slot) -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
+                  <div onclick="toggleAccordion('groq-vault-content')" class="flex items-center justify-between p-3.5 bg-slate-100/50 hover:bg-slate-100 cursor-pointer transition-colors border-b border-slate-200">
+                    <span class="text-xs font-extrabold text-slate-700 flex items-center">
+                      <i data-lucide="shield-check" class="w-4 h-4 mr-2 text-violet-500"></i>
                       Brankas Kunci Groq (5 Slot)
                     </span>
-<i class="w-4 h-4 text-slate-400 transition-transform duration-300" data-lucide="chevron-down" id="groq-vault-arrow"></i>
-</div>
-<div class="p-4 space-y-3 bg-white" id="groq-vault-content">
-<!-- Slot 1 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" id="groq-key-1" onchange="saveGroqKeys()" placeholder="gsk_... (Kunci Groq Utama)" type="password"/>
-</div>
-<!-- Slot 2 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#2</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" id="groq-key-2" onchange="saveGroqKeys()" placeholder="gsk_... (Cadangan)" type="password"/>
-</div>
-<!-- Slot 3 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#3</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" id="groq-key-3" onchange="saveGroqKeys()" placeholder="gsk_... (Cadangan)" type="password"/>
-</div>
-<!-- Slot 4 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#4</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" id="groq-key-4" onchange="saveGroqKeys()" placeholder="gsk_... (Cadangan)" type="password"/>
-</div>
-<!-- Slot 5 -->
-<div class="relative">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#5</span>
-<input class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" id="groq-key-5" onchange="saveGroqKeys()" placeholder="gsk_... (Cadangan)" type="password"/>
-</div>
-<div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
-<button class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-extrabold transition-all flex items-center space-x-1.5" onclick="testGroqApiKey()" type="button">
-<i class="w-3.5 h-3.5 text-violet-500" data-lucide="check-circle-2"></i>
-<span>Uji Kunci Aktif</span>
-</button>
-<span class="text-[10px] font-bold text-slate-400" id="groq-test-status">Belum diuji</span>
-</div>
-</div>
-</div>
-<!-- Auto Rotate Groq -->
-<div class="flex items-center justify-between p-3 bg-[#f8fafc] rounded-2xl border border-slate-200">
-<label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-600 cursor-pointer">
-<input checked="checked" class="accent-violet-500 h-4 w-4 rounded" id="groq-speed-toggle" type="checkbox"/>
-<span>Auto Rotate &amp; Speed 3x (Parallel)</span>
-</label>
-</div>
-<!-- Pilihan Model Groq -->
-<div class="space-y-2">
-<label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Groq Aktif</label>
-<div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
-<!-- Llama 4 Scout - Vision + Text Model Utama -->
-<label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
-<input checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" id="groq-model-scout" type="checkbox"/>
-<div>
-<div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
-<span>meta-llama/llama-4-scout-17b-16e-instruct</span>
-<span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-<span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Utama</span>
-</div>
-<p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B aktif params · 16 Expert MoE · Multimodal vision · Konteks 128k · Analisis gambar langsung</p>
-</div>
-</label>
-<!-- Llama 4 Maverick - Vision + Text Fallback -->
-<label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
-<input checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" id="groq-model-maverick" type="checkbox"/>
-<div>
-<div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
-<span>meta-llama/llama-4-maverick-17b-128e-instruct</span>
-<span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-<span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Cadangan</span>
-</div>
-<p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B params · 128 Expert MoE · Multimodal vision · Versi kapasitas lebih besar</p>
-</div>
-</label>
-<!-- Llama 3.2 Vision -->
-<label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
-<input class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" id="groq-model-llama32v" type="checkbox"/>
-<div>
-<div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
-<span>llama-3.2-90b-vision-preview</span>
-<span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-<span class="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">Preview</span>
-</div>
-<p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">90B params · Vision stabil · Fallback legacy kompatibel</p>
-</div>
-</label>
-</div>
-</div>
-</div>
-<!-- Konten Tab 3: Panduan Dapatkan API Key secara Gratis -->
-<div class="space-y-3 hidden" id="content-auth-helper">
-<div class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 text-xs space-y-3 shadow-inner">
-<p class="font-extrabold text-slate-800 flex items-center">
+                    <i data-lucide="chevron-down" id="groq-vault-arrow" class="w-4 h-4 text-slate-400 transition-transform duration-300"></i>
+                  </div>
+                  <div id="groq-vault-content" class="p-4 space-y-3 bg-white">
+                    <!-- Slot 1 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
+                      <input type="password" id="groq-key-1" placeholder="gsk_... (Kunci Groq Utama)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveGroqKeys()" />
+                    </div>
+                    <!-- Slot 2 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#2</span>
+                      <input type="password" id="groq-key-2" placeholder="gsk_... (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveGroqKeys()" />
+                    </div>
+                    <!-- Slot 3 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#3</span>
+                      <input type="password" id="groq-key-3" placeholder="gsk_... (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveGroqKeys()" />
+                    </div>
+                    <!-- Slot 4 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#4</span>
+                      <input type="password" id="groq-key-4" placeholder="gsk_... (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveGroqKeys()" />
+                    </div>
+                    <!-- Slot 5 -->
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#5</span>
+                      <input type="password" id="groq-key-5" placeholder="gsk_... (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveGroqKeys()" />
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+                      <button type="button" onclick="testGroqApiKey()" class="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-extrabold transition-all flex items-center space-x-1.5">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-violet-500"></i>
+                        <span>Uji Kunci Aktif</span>
+                      </button>
+                      <span id="groq-test-status" class="text-[10px] font-bold text-slate-400">Belum diuji</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Auto Rotate Groq -->
+                <div class="flex items-center justify-between p-3 bg-[#f8fafc] rounded-2xl border border-slate-200">
+                  <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-600 cursor-pointer">
+                    <input type="checkbox" id="groq-speed-toggle" checked="checked" class="accent-violet-500 h-4 w-4 rounded" />
+                    <span>Auto Rotate &amp; Speed 3x (Parallel)</span>
+                  </label>
+                </div>
+
+                <!-- Pilihan Model Groq -->
+                <div class="space-y-2">
+                  <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Groq Aktif</label>
+                  <div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
+                    
+                    <!-- Llama 4 Scout - Vision + Text Model Utama -->
+                    <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
+                      <input type="checkbox" id="groq-model-scout" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                          <span>meta-llama/llama-4-scout-17b-16e-instruct</span>
+                          <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
+                          <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Utama</span>
+                        </div>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B aktif params · 16 Expert MoE · Multimodal vision · Konteks 128k · Analisis gambar langsung</p>
+                      </div>
+                    </label>
+
+                    <!-- Llama 4 Maverick - Vision + Text Fallback -->
+                    <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
+                      <input type="checkbox" id="groq-model-maverick" checked="checked" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                          <span>meta-llama/llama-4-maverick-17b-128e-instruct</span>
+                          <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
+                          <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Cadangan</span>
+                        </div>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">17B params · 128 Expert MoE · Multimodal vision · Versi kapasitas lebih besar</p>
+                      </div>
+                    </label>
+
+                    <!-- Llama 3.2 Vision -->
+                    <label class="flex items-start space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-2 hover:bg-slate-200/40 rounded-xl transition-all">
+                      <input type="checkbox" id="groq-model-llama32v" class="accent-violet-500 h-4 w-4 rounded mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                          <span>llama-3.2-90b-vision-preview</span>
+                          <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
+                          <span class="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">Preview</span>
+                        </div>
+                        <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">90B params · Vision stabil · Fallback legacy kompatibel</p>
+                      </div>
+                    </label>
+
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Konten Tab 3: Panduan Dapatkan API Key secara Gratis -->
+              <div id="content-auth-helper" class="space-y-3 hidden">
+                <div class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 text-xs space-y-3 shadow-inner">
+                  <p class="font-extrabold text-slate-800 flex items-center">
                     🚀 Cara Dapatkan API Key Gratis (30 Detik):
                   </p>
-<div class="space-y-2 text-slate-600 font-medium leading-relaxed">
-<p class="font-bold border-b border-orange-200/50 pb-1">Google Gemini Key:</p>
-<ol class="list-decimal list-inside pl-1 space-y-1">
-<li>Kunjungi <a class="text-orange-600 underline font-bold hover:text-orange-700" href="https://aistudio.google.com/" target="_blank">Google AI Studio ↗</a></li>
-<li>Klik <strong>"Create API Key"</strong> dan salin kodenya.</li>
-</ol>
-<p class="font-bold border-b border-violet-200/50 pb-1 mt-3 text-violet-800">⚡ Groq API Key (Gratis):</p>
-<ol class="list-decimal list-inside pl-1 space-y-1 text-slate-600">
-<li>Kunjungi <a class="text-violet-600 underline font-bold hover:text-violet-700" href="https://console.groq.com/keys" target="_blank">Groq Console ↗</a></li>
-<li>Login / Daftar akun gratis.</li>
-<li>Klik <strong>"Create API Key"</strong>, beri nama, dan salin kunci <span class="font-mono text-[9px] bg-violet-50 px-1 rounded">gsk_...</span></li>
-<li>Paste ke tab <strong>⚡ Groq</strong> di atas (hingga 5 kunci).</li>
-</ol>
-<p class="text-[10px] text-violet-700 bg-violet-50 p-2 rounded-xl border border-violet-100 font-bold mt-2">💡 Model <strong>meta-llama/llama-4-scout-17b-16e-instruct</strong> mendukung analisis gambar (vision) secara langsung — bebas digunakan di tier gratis Groq.</p>
-</div>
-</div>
-</div>
-</div>
-<!-- 3. Area Unggah Batch -->
-<div class="pt-2 border-t border-slate-100">
-<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center mb-3">
-<i class="w-4 h-4 mr-2 text-orange-500" data-lucide="upload"></i>
+                  <div class="space-y-2 text-slate-600 font-medium leading-relaxed">
+                    <p class="font-bold border-b border-orange-200/50 pb-1">Google Gemini Key:</p>
+                    <ol class="list-decimal list-inside pl-1 space-y-1">
+                      <li>Kunjungi <a href="https://aistudio.google.com/" target="_blank" class="text-orange-600 underline font-bold hover:text-orange-700">Google AI Studio ↗</a></li>
+                      <li>Klik <strong>"Create API Key"</strong> dan salin kodenya.</li>
+                    </ol>
+                    <p class="font-bold border-b border-violet-200/50 pb-1 mt-3 text-violet-800">⚡ Groq API Key (Gratis):</p>
+                    <ol class="list-decimal list-inside pl-1 space-y-1 text-slate-600">
+                      <li>Kunjungi <a href="https://console.groq.com/keys" target="_blank" class="text-violet-600 underline font-bold hover:text-violet-700">Groq Console ↗</a></li>
+                      <li>Login / Daftar akun gratis.</li>
+                      <li>Klik <strong>"Create API Key"</strong>, beri nama, dan salin kunci <span class="font-mono text-[9px] bg-violet-50 px-1 rounded">gsk_...</span></li>
+                      <li>Paste ke tab <strong>⚡ Groq</strong> di atas (hingga 5 kunci).</li>
+                    </ol>
+                    <p class="text-[10px] text-violet-700 bg-violet-50 p-2 rounded-xl border border-violet-100 font-bold mt-2">💡 Model <strong>meta-llama/llama-4-scout-17b-16e-instruct</strong> mendukung analisis gambar (vision) secara langsung — bebas digunakan di tier gratis Groq.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 3. Area Unggah Batch -->
+            <div class="pt-2 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center mb-3">
+                <i data-lucide="upload" class="w-4 h-4 mr-2 text-orange-500"></i>
                 2. Area Unggah Batch
               </h3>
-<div class="border-2 border-dashed border-slate-200 hover:border-orange-500 hover:bg-orange-50/5 rounded-2xl p-7 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-md" onclick="triggerFileSelect()">
-<div class="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:scale-110 group-hover:bg-orange-100 group-hover:text-orange-600 transition-all duration-300 shadow-sm border border-slate-200/50" id="upload-icon-container">
-<i class="w-7 h-7" data-lucide="image" id="upload-icon"></i>
-</div>
-<div>
-<p class="text-xs font-extrabold text-slate-800">Klik atau seret berkas Anda</p>
-<p class="text-[10px] text-slate-400 mt-1 font-bold" id="accept-label">Format JPG, PNG, WEBP</p>
-</div>
-</div>
-<input class="hidden" id="file-input" multiple="multiple" onchange="handleBatchFiles(event)" type="file"/>
-</div>
-<!-- 4. Preferensi AI -->
-<div class="space-y-4 pt-4 border-t border-slate-100">
-<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
-<i class="w-4 h-4 mr-2 text-orange-500" data-lucide="settings"></i>
+              <div onclick="triggerFileSelect()" class="border-2 border-dashed border-slate-200 hover:border-orange-500 hover:bg-orange-50/5 rounded-2xl p-7 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-md">
+                <div id="upload-icon-container" class="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:scale-110 group-hover:bg-orange-100 group-hover:text-orange-600 transition-all duration-300 shadow-sm border border-slate-200/50">
+                  <i id="upload-icon" data-lucide="image" class="w-7 h-7"></i>
+                </div>
+                <div>
+                  <p class="text-xs font-extrabold text-slate-800">Klik atau seret berkas Anda</p>
+                  <p id="accept-label" class="text-[10px] text-slate-400 mt-1 font-bold">Format JPG, PNG, WEBP</p>
+                </div>
+              </div>
+              <input type="file" id="file-input" class="hidden" multiple="multiple" onchange="handleBatchFiles(event)" />
+            </div>
+
+            <!-- 4. Preferensi AI -->
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                <i data-lucide="settings" class="w-4 h-4 mr-2 text-orange-500"></i>
                 3. Preferensi Output AI
               </h3>
-<!-- Slider Panjang Judul -->
-<div class="space-y-1.5">
-<div class="flex justify-between text-xs font-bold">
-<span class="text-slate-600">Panjang Judul SEO</span>
-<span class="text-orange-600" id="title-val">80 Karakter (ch)</span>
-</div>
-<input class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" id="title-slider" max="300" min="10" oninput="updateSliderLabel('title', this.value)" step="5" type="range" value="80"/>
-</div>
-<!-- Slider Panjang Deskripsi -->
-<div class="space-y-1.5">
-<div class="flex justify-between text-xs font-bold">
-<span class="text-slate-600">Panjang Deskripsi</span>
-<span class="text-orange-600" id="desc-val">200 Karakter (ch)</span>
-</div>
-<input class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" id="desc-slider" max="500" min="10" oninput="updateSliderLabel('desc', this.value)" step="10" type="range" value="200"/>
-</div>
-<!-- Slider Jumlah Keywords -->
-<div class="space-y-1.5">
-<div class="flex justify-between text-xs font-bold">
-<span class="text-neutral-600">Target Keywords</span>
-<span class="text-orange-600" id="keywords-val">40 Kata</span>
-</div>
-<input class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" id="keywords-slider" max="50" min="20" oninput="updateSliderLabel('keywords', this.value)" step="5" type="range" value="40"/>
-</div>
-<!-- Key Concepts -->
-<div class="space-y-1.5">
-<label class="text-xs font-bold text-slate-600">Prioritas Konsep (Key Concept)</label>
-<input class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 transition-colors" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" type="text"/>
-</div>
-</div>
-<!-- Tombol Generate Utama -->
-<div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
-<button class="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all" id="btn-generate-all" onclick="processAllPending()">
-<i class="w-4 h-4 text-amber-200 animate-pulse" data-lucide="sparkles" id="generate-all-icon"></i>
-<span id="generate-all-text">GENERATE SEMUA METADATA (BATCH)</span>
-</button>
-</div>
-<!-- 5. Target Platform -->
-<div class="space-y-3 pt-4 border-t border-slate-100">
-<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
-<i class="w-4 h-4 mr-2 text-orange-500" data-lucide="check-square"></i>
+
+              <!-- Slider Panjang Judul -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-600">Panjang Judul SEO</span>
+                  <span id="title-val" class="text-orange-600">80 Karakter (ch)</span>
+                </div>
+                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Slider Panjang Deskripsi -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-600">Panjang Deskripsi</span>
+                  <span id="desc-val" class="text-orange-600">200 Karakter (ch)</span>
+                </div>
+                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Slider Jumlah Keywords -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-neutral-600">Target Keywords</span>
+                  <span id="keywords-val" class="text-orange-600">40 Kata</span>
+                </div>
+                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Key Concepts -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-600">Prioritas Konsep (Key Concept)</label>
+                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 transition-colors" />
+              </div>
+            </div>
+
+            <!-- Tombol Generate Utama -->
+            <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
+              <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
+                <i id="generate-all-icon" data-lucide="sparkles" class="w-4 h-4 text-amber-200 animate-pulse"></i>
+                <span id="generate-all-text">GENERATE SEMUA METADATA (BATCH)</span>
+              </button>
+            </div>
+
+            <!-- 5. Target Platform -->
+            <div class="space-y-3 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                <i data-lucide="check-square" class="w-4 h-4 mr-2 text-orange-500"></i>
                 4. Platform Target
               </h3>
-<div class="grid grid-cols-2 gap-2" id="platform-checkboxes">
-<!-- Checklist platform target di-render di sini secara dinamis -->
-</div>
-</div>
-</div>
-</div>
-<!-- KOLOM KANAN: DAFTAR ANTREAN DAN EDITOR METADATA TERINTEGRASI -->
-<div class="lg:col-span-8 space-y-6">
-<div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 flex flex-col min-h-[670px]">
-<div class="flex items-center justify-between pb-4 border-b border-slate-100">
-<div>
-<h3 class="text-base font-extrabold text-slate-950 flex items-center">
-<i class="w-5 h-5 mr-2 text-orange-500" data-lucide="folder-open"></i>
+              <div class="grid grid-cols-2 gap-2" id="platform-checkboxes">
+                <!-- Checklist platform target di-render di sini secara dinamis -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- KOLOM KANAN: DAFTAR ANTREAN DAN EDITOR METADATA TERINTEGRASI -->
+        <div class="lg:col-span-8 space-y-6">
+          <div class="bg-white rounded-3xl p-6 shadow-md shadow-slate-100 border border-slate-200/50 flex flex-col min-h-[670px]">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-950 flex items-center">
+                  <i data-lucide="folder-open" class="w-5 h-5 mr-2 text-orange-500"></i>
                   Daftar Antrean &amp; Editor Metadata (<span id="queue-count">0</span>)
                 </h3>
-<p class="text-xs text-slate-500 mt-0.5">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
-</div>
-<!-- Tombol Reset / Clear All Antrean -->
-<button class="hidden p-2.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-600 transition-all flex items-center space-x-1.5" id="btn-clear-queue" onclick="clearAllQueue()" title="Kosongkan Antrean">
-<i class="w-4.5 h-4.5" data-lucide="trash-2"></i>
-<span class="text-[10px] font-bold">Clear All</span>
-</button>
-</div>
-<!-- PANEL UNDUH CSV BATCH -->
-<div class="hidden mt-4 p-5 bg-gradient-to-r from-amber-50/30 to-orange-50/10 rounded-2xl border border-amber-100/40 flex flex-col lg:flex-row items-center justify-between gap-4" id="csv-download-panel">
-<div class="flex items-center space-x-2.5">
-<div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg shadow-sm">
-<i class="w-4 h-4" data-lucide="check"></i>
-</div>
-<div>
-<span class="block text-xs font-extrabold text-slate-850">Metadata Batch Sukses Dibuat!</span>
-<span class="block text-[10px] text-slate-400 font-bold">Unduh CSV sesuai agensi target:</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-1.5" id="csv-download-buttons">
-<!-- Tombol download CSV per platform -->
-</div>
-</div>
-<!-- AREA LIST ANTREAN -->
-<div class="flex-1 overflow-y-auto mt-6 space-y-4 pr-1 custom-scrollbar" id="queue-list">
-<div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
-<i class="w-12 h-12 text-orange-300 mb-3 animate-pulse" data-lucide="sparkles"></i>
-<h4 class="text-sm font-extrabold text-slate-800">Antrean Aset Kosong</h4>
-<p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
+                <p class="text-xs text-slate-500 mt-0.5">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
+              </div>
+              
+              <!-- Tombol Reset / Clear All Antrean -->
+              <button onclick="clearAllQueue()" id="btn-clear-queue" class="hidden p-2.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-600 transition-all flex items-center space-x-1.5" title="Kosongkan Antrean">
+                <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
+                <span class="text-[10px] font-bold">Clear All</span>
+              </button>
+            </div>
+
+            <!-- PANEL UNDUH CSV BATCH -->
+            <div id="csv-download-panel" class="hidden mt-4 p-5 bg-gradient-to-r from-amber-50/30 to-orange-50/10 rounded-2xl border border-amber-100/40 flex flex-col lg:flex-row items-center justify-between gap-4">
+              <div class="flex items-center space-x-2.5">
+                <div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg shadow-sm">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block text-xs font-extrabold text-slate-850">Metadata Batch Sukses Dibuat!</span>
+                  <span class="block text-[10px] text-slate-400 font-bold">Unduh CSV sesuai agensi target:</span>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-1.5" id="csv-download-buttons">
+                <!-- Tombol download CSV per platform -->
+              </div>
+            </div>
+
+            <!-- AREA LIST ANTREAN -->
+            <div id="queue-list" class="flex-1 overflow-y-auto mt-6 space-y-4 pr-1 custom-scrollbar">
+              <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
+                <i data-lucide="sparkles" class="w-12 h-12 text-orange-300 mb-3 animate-pulse"></i>
+                <h4 class="text-sm font-extrabold text-slate-800">Antrean Aset Kosong</h4>
+                <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
                   Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
                 </p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- Footer Premium yang Selalu di Pojok Bawah -->
-<footer class="mt-auto bg-slate-900 text-slate-400 py-12 border-t border-slate-850 text-xs text-center space-y-3">
-<p class="font-bold text-slate-300">© 2026 Shophub Microstock Pro AI. Sistem Berbasis Client Standalone.</p>
-<div class="flex justify-center space-x-4 text-slate-500 font-bold">
-<span>Aman Terenkripsi</span>
-<span>•</span>
-<span>Gemini 3.1/3.0/2.5 Flash &amp; Groq Llama 4 Scout Vision</span>
-</div>
-</footer>
-</div>
-<!-- KODE UTAMA JAVASCRIPT FRONTEND DIRECT EMBEDDED GEMINI API -->
-<script>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Footer Premium yang Selalu di Pojok Bawah -->
+    <footer class="mt-auto bg-slate-900 text-slate-400 py-12 border-t border-slate-850 text-xs text-center space-y-3">
+      <p class="font-bold text-slate-300">© 2026 Shophub Microstock Pro AI. Sistem Berbasis Client Standalone.</p>
+      <div class="flex justify-center space-x-4 text-slate-500 font-bold">
+        <span>Aman Terenkripsi</span>
+        <span>•</span>
+        <span>Gemini 3.1/3.0/2.5 Flash &amp; Groq Llama 4 Scout Vision</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- KODE UTAMA JAVASCRIPT FRONTEND DIRECT EMBEDDED GEMINI API -->
+  <script>
     // State Global
     let items = [];
     let expandedItemId = null;
@@ -488,20 +543,12 @@
       dreamstime: false
     };
 
-    // Daftar Brand/Trademark Terlarang (IP Protection Adobe Stock & Lainnya)
+    // Daftar Brand/Trademark Terlarang (IP Protection Adobe Stock)
     const BANNED_TRADEMARKS = [
       'iphone', 'ipad', 'apple watch', 'macbook', 'imac', 'airpods', 'playstation', 'xbox', 
       'nintendo', 'nike', 'adidas', 'puma', 'reebok', 'coca-cola', 'coke', 'pepsi', 'bmw', 
       'mercedes', 'audi', 'porsche', 'ferrari', 'lamborghini', 'toyota', 'honda', 'samsung', 
-      'canon', 'nikon', 'sony', 'google', 'microsoft', 'lego', 'disney', 'marvel', 'star wars',
-      'ford', 'tesla', 'volkswagen', 'gucci', 'prada', 'louis vuitton', 'chanel', 'hermes',
-      'rolex', 'omega', 'red bull', 'starbucks', 'mcdonalds', 'kfc', 'burger king', 'visa', 'mastercard'
-    ];
-
-    // Daftar Kata Kunci Teknis Terlarang (Adobe Stock Quality Control)
-    const BANNED_TECHNICAL_KEYWORDS = [
-      'high resolution', '4k', '8k', 'camera', 'dslr', 'uhd', 'photorealistic', 'raw', 'megapixels',
-      'full hd', '1080p', 'high definition', 'hq', 'shutter speed', 'aperture', 'iso', 'lens'
+      'canon', 'nikon', 'sony', 'google', 'microsoft', 'lego', 'disney', 'marvel', 'star wars'
     ];
 
     // Muat API Key dari penyimpanan lokal browser jika ada
@@ -610,6 +657,7 @@
       for (let i = 0; i < activeKeys.length; i++) {
         const testKey = activeKeys[i];
         try {
+          // Hemat kuota: kueri dibuat seringkas mungkin dengan maxOutputTokens terbatas
           const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${testKey}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -622,7 +670,9 @@
           if (response.ok) {
             workingKeysCount++;
           }
-        } catch (err) {}
+        } catch (err) {
+          // Lanjutkan pengujian kunci berikutnya
+        }
       }
 
       if (workingKeysCount === activeKeys.length) {
@@ -645,6 +695,8 @@
         localStorage.setItem(`shophub_api_key_${i}`, val);
       }
     }
+
+    // ===== GROQ API FUNCTIONS =====
 
     // Simpan kunci Groq ke localStorage
     function saveGroqKeys() {
@@ -700,7 +752,7 @@
             })
           });
           if (response.ok) workingKeysCount++;
-        } catch (e) {}
+        } catch (e) { /* lanjut */ }
       }
 
       if (workingKeysCount === activeKeys.length) {
@@ -740,6 +792,7 @@
         activeBtn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200";
       }
 
+      // Update placeholder area unggah
       const acceptLabel = document.getElementById("accept-label");
       const uploadIcon = document.getElementById("upload-icon");
       if (type === 'image') {
@@ -804,4 +857,1205 @@
       renderPlatformCheckboxes();
     }
 
-    function resizeAndCompressImage(base6</script></body></html>
+    // Fungsi Pembantu: Mengompresi Gambar s.d 80% sebelum dikirim ke AI (HEBAT TOKEN)
+    function resizeAndCompressImage(base64Str, maxWidth = 1024, maxHeight = 1024) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = `data:image/png;base64,${base64Str}`;
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          // Hitung rasio resolusi optimal
+          if (width > maxWidth || height > maxHeight) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Kompresi kualitas gambar s.d 75% kualitas JPEG untuk hemat token transmisi
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+          resolve(compressedDataUrl.split(',')[1]);
+        };
+        img.onerror = () => {
+          resolve(base64Str); // Fallback ke mentah jika gagal kompres
+        };
+      });
+    }
+
+    function handleBatchFiles(e) {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      const titleLength = parseInt(document.getElementById("title-slider").value);
+      const descLength = parseInt(document.getElementById("desc-slider").value);
+      const keywordsCount = parseInt(document.getElementById("keywords-slider").value);
+      const keyConcepts = document.getElementById("key-concepts-input").value;
+
+      files.forEach((file, idx) => {
+        const id = `${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`;
+        let detectedType = currentAssetType;
+
+        const item = {
+          id,
+          name: file.name,
+          type: detectedType,
+          preview: null,
+          base64: '',
+          videoFrames: [], // Array menyimpan 3 frame video hasil ekstraksi (Awal, Tengah, Akhir)
+          status: 'pending',
+          errorMsg: null,
+          metadata: { title: '', description: '', keywords: [], categories: {} },
+          settings: { titleLength, descLength, keywordsCount, keyConcepts }
+        };
+
+        if (detectedType === 'video') {
+          // Ekstrak 3 frame video secara asinkron di frontend (Awal, Tengah, Akhir)
+          extractVideoFrames(file).then(async (frames) => {
+            // Kompresi ketiga frame video agar hemat token masukan
+            const compressedFrames = [];
+            for (let frame of frames) {
+              const comp = await resizeAndCompressImage(frame, 800, 800); // Frame video diperkecil s.d 800px untuk penghematan ekstrem
+              compressedFrames.push(comp);
+            }
+            const matchIndex = items.findIndex(i => i.id === id);
+            if (matchIndex !== -1) {
+              items[matchIndex].videoFrames = compressedFrames; // 3 Frame Awal, Tengah, Akhir disimpan
+              items[matchIndex].preview = compressedFrames[1] ? `data:image/jpeg;base64,${compressedFrames[1]}` : null;
+              renderQueueList();
+            }
+          });
+        } else if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            const rawBase64 = reader.result.split(',')[1];
+            // Kompresi gambar utama langsung di browser s.d 1024px sebelum dikirim (Hemat kuota)
+            const compressedBase64 = await resizeAndCompressImage(rawBase64, 1024, 1024);
+            
+            const matchIndex = items.findIndex(i => i.id === id);
+            if (matchIndex !== -1) {
+              items[matchIndex].preview = `data:image/jpeg;base64,${compressedBase64}`;
+              items[matchIndex].base64 = compressedBase64;
+              renderQueueList();
+            }
+          };
+          reader.readAsDataURL(file);
+        } else {
+          item.preview = 'vector-placeholder';
+        }
+
+        items.push(item);
+      });
+
+      const genAllContainer = document.getElementById("generate-all-container");
+      if (genAllContainer) genAllContainer.classList.remove("hidden");
+      renderQueueList();
+      e.target.value = '';
+    }
+
+    // Melakukan pemindaian real-time terhadap potensi pelanggaran IP/Trademark pada metadata
+    function scanIPViolations(text) {
+      if (!text) return [];
+      const lowerText = text.toLowerCase();
+      const detected = [];
+      BANNED_TRADEMARKS.forEach(brand => {
+        const regex = new RegExp(`\\b${brand}\\b`, 'i');
+        if (regex.test(lowerText)) {
+          detected.push(brand);
+        }
+      });
+      return detected;
+    }
+
+    // Mengukur kualitas SEO dari Judul dan Kata Kunci
+    function measureSEOQuality(item) {
+      let score = 100;
+      const issues = [];
+      const title = item.metadata.title || "";
+      const description = item.metadata.description || "";
+      const keywords = item.metadata.keywords || [];
+
+      // Validasi panjang judul
+      if (title.length < 15) {
+        score -= 20;
+        issues.push("Judul terlalu pendek (kurang dari 15 karakter)");
+      } else if (title.length > (item.settings?.titleLength || 80) + 20) {
+        score -= 10;
+        issues.push("Judul melebihi preferensi target");
+      }
+
+      // Validasi deskripsi
+      if (description.length < 30) {
+        score -= 15;
+        issues.push("Deskripsi terlalu singkat (kurang dari 30 karakter)");
+      }
+
+      // Validasi kata kunci
+      if (keywords.length < 15) {
+        score -= 25;
+        issues.push("Jumlah kata kunci terlalu sedikit (kurang dari 15)");
+      }
+
+      // Deteksi kata kunci sampah/spam
+      const lowValueKeywords = ['cool', 'nice', 'beautiful', 'image', 'photo', 'vector', 'illustration', 'clipart', 'camera', 'dslr'];
+      const spamDetected = keywords.filter(kw => lowValueKeywords.includes(kw.toLowerCase()));
+      if (spamDetected.length > 0) {
+        score -= (spamDetected.length * 5);
+        issues.push(`Terdeteksi kata kunci bernilai rendah/spam (${spamDetected.slice(0, 3).join(', ')})`);
+      }
+
+      return {
+        score: Math.max(score, 10),
+        issues: issues
+      };
+    }
+
+    function renderQueueList() {
+      const container = document.getElementById("queue-list");
+      const countEl = document.getElementById("queue-count");
+      if (countEl) countEl.innerText = items.length;
+      
+      const clearQueueBtn = document.getElementById("btn-clear-queue");
+      const generateAllContainer = document.getElementById("generate-all-container");
+      
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
+            <i data-lucide="sparkles" class="w-12 h-12 text-orange-300 mb-3 animate-pulse"></i>
+            <h4 class="text-sm font-extrabold text-slate-850">Antrean Aset Kosong</h4>
+            <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
+              Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
+            </p>
+          </div>
+        `;
+        if (generateAllContainer) generateAllContainer.classList.add("hidden");
+        if (clearQueueBtn) clearQueueBtn.classList.add("hidden");
+        const downloadPanel = document.getElementById("csv-download-panel");
+        if (downloadPanel) downloadPanel.classList.add("hidden");
+        lucide.createIcons();
+        return;
+      }
+
+      // Tampilkan tombol Clear All dan container jika antrean berisi item
+      if (clearQueueBtn) clearQueueBtn.classList.remove("hidden");
+      if (generateAllContainer) generateAllContainer.classList.remove("hidden");
+
+      container.innerHTML = "";
+      items.forEach(item => {
+        const isExpanded = expandedItemId === item.id;
+        const itemCard = document.createElement("div");
+        itemCard.className = `border rounded-3xl transition-all duration-300 overflow-hidden ${
+          isExpanded ? 'border-orange-400 bg-orange-50/5 shadow-lg shadow-orange-100/30' : 'border-slate-200 bg-white hover:border-amber-300 shadow-sm'
+        }`;
+
+        let thumbnailHTML = '';
+        if (item.type === 'video') {
+          thumbnailHTML = item.preview ? `<img src="${item.preview}" class="w-full h-full object-cover" />` : `<i data-lucide="film" class="w-5 h-5 text-amber-500"></i>`;
+        } else if (item.type === 'vector') {
+          thumbnailHTML = `<i data-lucide="pen-tool" class="w-5 h-5 text-orange-500"></i>`;
+        } else if (item.preview) {
+          thumbnailHTML = `<img src="${item.preview}" class="w-full h-full object-cover" />`;
+        } else {
+          thumbnailHTML = `<i data-lucide="image" class="w-5 h-5 text-slate-400"></i>`;
+        }
+
+        let statusBadge = '';
+        if (item.status === 'processing') {
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-orange-50 border border-orange-100 text-orange-700 animate-pulse"><i data-lucide="refresh-cw" class="w-3.5 h-3.5 mr-1.5 animate-spin"></i>Proses AI...</span>`;
+        } else if (item.status === 'success') {
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-emerald-50 border border-emerald-100 text-emerald-800"><i data-lucide="check" class="w-3.5 h-3.5 mr-1.5"></i>Selesai</span>`;
+        } else if (item.status === 'error') {
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-red-50 border border-red-100 text-red-700" title="${item.errorMsg}"><i data-lucide="alert-circle" class="w-3.5 h-3.5 mr-1.5"></i>Error</span>`;
+        } else {
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-slate-50 border border-slate-200 text-slate-600">Antrean</span>`;
+        }
+
+        itemCard.innerHTML = `
+          <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors" onclick="toggleExpand('${item.id}')">
+            <div class="flex items-center space-x-3.5 min-w-0">
+              <div class="relative w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 flex items-center justify-center border border-slate-200 shadow-sm">
+                ${thumbnailHTML}
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center space-x-2">
+                  <span class="text-[9px] font-extrabold uppercase tracking-wider bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">
+                    ${item.type}
+                  </span>
+                  <p class="text-xs font-extrabold text-slate-800 truncate max-w-[180px] sm:max-w-[240px]">
+                    ${item.name}
+                  </p>
+                </div>
+                ${item.status === 'success' && item.metadata.title ? `<p class="text-[11px] text-slate-500 truncate italic mt-1.5 max-w-[280px]">"${item.metadata.title}"</p>` : `<p class="text-[10px] text-slate-400 mt-1 font-bold">Klik untuk merinci editor</p>`}
+              </div>
+            </div>
+            <div class="flex items-center space-x-3" onclick="event.stopPropagation()">
+              ${statusBadge}
+              <button onclick="processSingleItem('${item.id}')" ${item.status === 'processing' ? 'disabled' : ''} class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-extrabold flex items-center space-x-1 hover:shadow-md transition-all active:scale-95">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1"></i>
+                <span>Generate</span>
+              </button>
+              <button onclick="removeItem('${item.id}')" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+              <i data-lucide="${isExpanded ? 'chevron-up' : 'chevron-down'}" class="w-4.5 h-4.5 text-slate-400 cursor-pointer" onclick="toggleExpand('${item.id}')"></i>
+            </div>
+          </div>
+          ${isExpanded ? renderEditorPanel(item) : ''}
+        `;
+        container.appendChild(itemCard);
+      });
+      lucide.createIcons();
+      renderCSVDownloadPanel();
+    }
+
+    // Melakukan render formulir editor di dalam item accordion yang terekspansi
+    function renderEditorPanel(item) {
+      if (item.status === 'pending') {
+        return `
+          <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/50 text-center text-slate-500">
+            <i data-lucide="sparkles" class="w-10 h-10 text-orange-400 mx-auto mb-2 animate-bounce"></i>
+            <p class="text-xs font-extrabold text-slate-700">Metadata belum di-generate</p>
+            <p class="text-[10px] text-slate-400 mt-1 font-semibold">Klik tombol "Generate" untuk membuat metadata komersial AI secara instan.</p>
+          </div>
+        `;
+      }
+      if (item.status === 'error') {
+        return `
+          <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/50 text-center text-red-500">
+            <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-2 text-red-500"></i>
+            <p class="text-xs font-extrabold">Gagal Memproses Metadata</p>
+            <p class="text-[10px] text-slate-400 mt-1 font-semibold">${item.errorMsg}</p>
+          </div>
+        `;
+      }
+
+      // Analisis Kualitas & Pelanggaran IP langsung di Sisi Klien
+      const ipViolationsInTitle = scanIPViolations(item.metadata.title);
+      const ipViolationsInDesc = scanIPViolations(item.metadata.description);
+      const ipViolationsInKeywords = item.metadata.keywords.filter(kw => scanIPViolations(kw).length > 0);
+      const allIPViolations = [...new Set([...ipViolationsInTitle, ...ipViolationsInDesc, ...ipViolationsInKeywords])];
+
+      const seoMetrics = measureSEOQuality(item);
+
+      // Render Kategori Per Platform yang dipilih dengan penyesuaian multi-kategori Shutterstock secara eksplisit
+      let categoriesHTML = '';
+      if (item.metadata.categories && Object.keys(item.metadata.categories).length > 0) {
+        let cards = '';
+        
+        Object.entries(item.metadata.categories).forEach(([platform, val]) => {
+          if (!val) return;
+          let displayPlatformName = platform;
+          let shouldRender = false;
+
+          // Memisahkan penayangan Kategori 1 dan Kategori 2 Shutterstock secara eksplisit di UI
+          if (platform === 'shutterstock1' && targetPlatforms.shutterstock) {
+            displayPlatformName = 'Shutterstock Cat 1';
+            shouldRender = true;
+          } else if (platform === 'shutterstock2' && targetPlatforms.shutterstock) {
+            displayPlatformName = 'Shutterstock Cat 2';
+            shouldRender = true;
+          } else if (platform === 'adobeStock' && targetPlatforms.adobeStock) {
+            displayPlatformName = 'Adobe Stock';
+            shouldRender = true;
+          } else if (platform !== 'shutterstock1' && platform !== 'shutterstock2' && targetPlatforms[platform]) {
+            displayPlatformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+            shouldRender = true;
+          }
+
+          if (shouldRender) {
+            cards += `
+              <div class="bg-white border border-amber-100/60 p-3.5 rounded-2xl text-left shadow-sm">
+                <span class="block text-[8px] font-extrabold text-amber-700 capitalize tracking-wider">${displayPlatformName}</span>
+                <span class="block text-[10px] font-extrabold text-slate-800 truncate mt-1.5" title="${val}">${val}</span>
+              </div>
+            `;
+          }
+        });
+
+        if (cards) {
+          categoriesHTML = `
+            <div class="space-y-2 pt-4 border-t border-slate-100">
+              <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center">
+                <i data-lucide="layers" class="w-4 h-4 mr-2 text-amber-500"></i> Kategori Berdasarkan Platform Terpilih
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${cards}</div>
+            </div>
+          `;
+        }
+      }
+
+      // Render kata kunci sebagai tag yang bisa disalin tunggal
+      let keywordsHTML = '';
+      item.metadata.keywords.forEach((kw, i) => {
+        keywordsHTML += `
+          <span onclick="copyTextDirect('${kw}', 'kw-${item.id}-${i}')" id="kw-${item.id}-${i}" class="text-[10px] bg-slate-50 hover:bg-orange-500/10 border border-slate-200 hover:border-orange-300 text-slate-600 hover:text-orange-600 font-extrabold px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer select-none">
+            ${kw}
+          </span>
+        `;
+      });
+
+      // Panel Kualitas SEO & IP Safety
+      let qualityIndicatorHTML = `
+        <div class="p-4 rounded-2xl border ${allIPViolations.length > 0 ? 'bg-red-50/50 border-red-200' : 'bg-emerald-50/20 border-emerald-100'} flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold text-slate-700">Kepatuhan IP &amp; Trademark:</span>
+              ${allIPViolations.length > 0 
+                ? `<span class="px-2 py-0.5 text-[9px] font-extrabold bg-red-100 text-red-700 rounded-md">⚠️ Terdeteksi Pelanggaran (${allIPViolations.length})</span>`
+                : `<span class="px-2 py-0.5 text-[9px] font-extrabold bg-emerald-100 text-emerald-850 rounded-md">✓ Aman (Trademark Free)</span>`
+              }
+            </div>
+            ${allIPViolations.length > 0 
+              ? `<p class="text-[10px] text-red-600 font-bold">Segera hapus nama brand berikut sebelum unggah: <span class="underline">${allIPViolations.join(', ')}</span></p>`
+              : `<p class="text-[10px] text-slate-400 font-bold">Bebas hak cipta merek dagang. Lolos validasi Adobe Stock.</p>`
+            }
+          </div>
+          <div class="flex items-center space-x-3 flex-shrink-0">
+            <div class="text-right">
+              <span class="block text-[10px] font-extrabold text-slate-400 uppercase">Kualitas SEO</span>
+              <span class="block text-sm font-extrabold ${seoMetrics.score > 80 ? 'text-emerald-600' : seoMetrics.score > 50 ? 'text-orange-500' : 'text-red-500'}">${seoMetrics.score}% / 100</span>
+            </div>
+            <div class="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div class="h-full ${seoMetrics.score > 80 ? 'bg-emerald-500' : seoMetrics.score > 50 ? 'bg-orange-500' : 'bg-red-500'}" style="width: ${seoMetrics.score}%"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      return `
+        <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/30 space-y-5">
+          
+          <!-- Metrik Evaluator Klien -->
+          ${qualityIndicatorHTML}
+
+          <div class="space-y-1.5">
+            <div class="flex justify-between items-center text-xs font-bold">
+              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Judul SEO (Title)</label>
+              <button onclick="copyTextDirect('${item.metadata.title.replace(/'/g, "\\'")}', '${item.id}-copy-title')" id="${item.id}-copy-title" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
+            </div>
+            <input type="text" value="${item.metadata.title}" onchange="updateItemField('${item.id}', 'title', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 shadow-inner">
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex justify-between items-center text-xs font-bold">
+              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Deskripsi (Description)</label>
+              <button onclick="copyTextDirect('${item.metadata.description.replace(/'/g, "\\'")}', '${item.id}-copy-desc')" id="${item.id}-copy-desc" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
+            </div>
+            <textarea rows="2" onchange="updateItemField('${item.id}', 'description', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 resize-none shadow-inner">${item.metadata.description}</textarea>
+          </div>
+
+          ${categoriesHTML}
+
+          <div class="space-y-1.5 pt-3 border-t border-slate-100">
+            <div class="flex justify-between items-center text-xs font-bold">
+              <label class="text-slate-600 flex items-center"><i data-lucide="tag" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Keywords (${item.metadata.keywords.length})</label>
+              <button onclick="copyTextDirect('${item.metadata.keywords.join(', ').replace(/'/g, "\\'")}', '${item.id}-copy-kw')" id="${item.id}-copy-kw" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin Semua (Koma)</span></button>
+            </div>
+            <div class="p-3 bg-white rounded-2xl border border-neutral-200 max-h-32 overflow-y-auto shadow-inner">
+              <div class="flex flex-wrap gap-1.5">${keywordsHTML}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleExpand(id) {
+      expandedItemId = expandedItemId === id ? null : id;
+      renderQueueList();
+    }
+
+    function updateItemField(itemId, field, value) {
+      const idx = items.findIndex(i => i.id === itemId);
+      if (idx !== -1) {
+        if (field === 'keywords') {
+          items[idx].metadata.keywords = value.split(',').map(k => k.trim()).filter(Boolean);
+        } else {
+          items[idx].metadata[field] = value;
+        }
+      }
+    }
+
+    function removeItem(id) {
+      items = items.filter(i => i.id !== id);
+      if (expandedItemId === id) {
+        expandedItemId = items.length > 0 ? items[0].id : null;
+      }
+      renderQueueList();
+    }
+
+    // Pembersihan Antrean / Reset Semua
+    function clearAllQueue() {
+      items = [];
+      expandedItemId = null;
+      renderQueueList();
+    }
+
+    // MEMROSES TAGGING DENGAN DIRECT FETCH KE GEMINI API (SISI KLIEN)
+    async function processSingleItem(itemId) {
+      const targetItem = items.find(i => i.id === itemId);
+      if (!targetItem) return;
+
+      // Update status ke processing
+      items = items.map(i => i.id === itemId ? { ...i, status: 'processing', errorMsg: null } : i);
+      renderQueueList();
+
+      const base64ImagesPayload = [];
+      // Jika bertipe video, kirimkan secara penuh 3 frame (Awal, Tengah, Akhir) untuk dianalisis oleh AI
+      if (targetItem.type === 'video' && targetItem.videoFrames && targetItem.videoFrames.length > 0) {
+        targetItem.videoFrames.forEach(frame => base64ImagesPayload.push(frame));
+      } else if (targetItem.base64) {
+        base64ImagesPayload.push(targetItem.base64);
+      }
+
+      // ✅ FIX: Selalu baca nilai slider & key-concepts terkini saat generate,
+      // bukan nilai saat file di-upload (yang sudah basi jika user mengubah slider).
+      const settingsPayload = {
+        assetType: targetItem.type,
+        titleLength: parseInt(document.getElementById("title-slider")?.value) || targetItem.settings.titleLength || 80,
+        descLength: parseInt(document.getElementById("desc-slider")?.value) || targetItem.settings.descLength || 200,
+        keywordsCount: parseInt(document.getElementById("keywords-slider")?.value) || targetItem.settings.keywordsCount || 40,
+        keyConcepts: document.getElementById("key-concepts-input")?.value || targetItem.settings.keyConcepts || "",
+        targetPlatforms: targetPlatforms
+      };
+
+      try {
+        let responseJsonText;
+        if (activeAuthProvider === 'gemini') {
+          responseJsonText = await callGeminiDirectClient(base64ImagesPayload, settingsPayload, targetItem.name);
+        } else if (activeAuthProvider === 'groq') {
+          responseJsonText = await callGroqDirectClient(base64ImagesPayload, settingsPayload, targetItem.name);
+        } else {
+          throw new Error("Pilih provider API (Gemini atau Groq) dan masukkan API Key terlebih dahulu!");
+        }
+
+        const parsed = JSON.parse(responseJsonText);
+        
+        // ✅ VALIDASI & NORMALISASI OUTPUT
+        const normalized = validateAndNormalizeOutput(parsed, settingsPayload);
+        
+        items = items.map(i => i.id === itemId ? {
+          ...i,
+          status: 'success',
+          metadata: {
+            title: normalized.title || '',
+            description: normalized.description || '',
+            keywords: Array.isArray(normalized.keywords) ? normalized.keywords : [],
+            categories: typeof normalized.categories === 'object' ? normalized.categories : {}
+          }
+        } : i);
+      } catch (err) {
+        items = items.map(i => i.id === itemId ? { ...i, status: 'error', errorMsg: err.message || "Gagal memproses AI." } : i);
+      }
+      
+      renderQueueList();
+    }
+
+    // PROMPT SYSTEM UTAMA (KETAT & TERUKUR UNTUK GROQ & GEMINI)
+    function buildSystemPrompt(settings) {
+      const targetPlatformsStr = Object.keys(settings.targetPlatforms || {}).filter(p => settings.targetPlatforms[p]).join(', ');
+      const minTitle = Math.floor(settings.titleLength * 0.8);
+      const maxTitle = Math.ceil(settings.titleLength * 1.2);
+      const minDesc = Math.floor(settings.descLength * 0.8);
+      const maxDesc = Math.ceil(settings.descLength * 1.2);
+      
+      let assetSpecificInstructions = "";
+      if (settings.assetType === "video") {
+        assetSpecificInstructions = `
+PANDUAN VIDEO SINEMATIK / FOOTAGE:
+1. Analisis ke-3 frame (awal, tengah, akhir) untuk memahami alur visual, gerak, pencahayaan, suasana.
+2. Gunakan keyword video: "footage", "slow motion", "4k resolution", "cinematic", "b-roll", "background loop".
+3. DILARANG: "still photo", "illustration", "vector", "drawing".`;
+      } else if (settings.assetType === "vector") {
+        assetSpecificInstructions = `
+PANDUAN VEKTOR / ILUSTRASI / DESAIN GRAFIS:
+1. Fokus pada gaya desain: "flat vector", "isometric design", "line art", "minimalist icon", "geometric shapes".
+2. Gunakan keyword desain: "scalable", "customizable", "vector illustration", "graphic design element".
+3. DILARANG: "photo", "realistic photograph", "camera shot".`;
+      } else {
+        assetSpecificInstructions = `
+PANDUAN FOTO NYATA / GAMBAR DIGITAL:
+1. Analisis detail fotografi: tekstur, pencahayaan, komposisi, depth of field.
+2. Gunakan keyword foto: "professional photography", "studio shot", "macro closeup", "high resolution", "selective focus".
+3. DILARANG: "vector", "clipart", "flat illustration", "cartoon".`;
+      }
+
+      return `ROLE: SEO Microstock Expert
+AGENSI: ${targetPlatformsStr || 'Shutterstock, Adobe Stock'}
+ASET: ${settings.assetType}
+
+═══════════════════════════════════════════════════════════════════════════════════
+PERSYARATAN KETAT WAJIB DIPATUHI 100%:
+═══════════════════════════════════════════════════════════════════════════════════
+
+[TITLE] Panjang WAJIB ${minTitle}-${maxTitle} karakter (target: ${settings.titleLength})
+[DESCRIPTION] Panjang WAJIB ${minDesc}-${maxDesc} karakter (target: ${settings.descLength})
+[KEYWORDS] TEPAT ${settings.keywordsCount} item unik, BUKAN LEBIH, BUKAN KURANG
+${settings.keyConcepts ? `[KEY CONCEPTS] WAJIB sertakan "${settings.keyConcepts}" di title & 5 keyword pertama` : ''}
+
+═══════════════════════════════════════════════════════════════════════════════════
+DETAIL SETIAP FIELD:
+═══════════════════════════════════════════════════════════════════════════════════
+
+1. TITLE (Judul SEO):
+   - Panjang: ${minTitle}-${maxTitle} karakter (BUKAN KURANG/LEBIH)
+   - Bahasa: Inggris
+   - Format: Kalimat alami, NO keyword stuffing
+   - IP Safety: Forbidden = iPhone, iPad, Nike, Adidas, BMW, Sony, Disney, Marvel, LEGO, Coca-Cola, etc.
+   - Strategy: Lead dengan core keyword, ikuti dengan descriptive phrase
+   ${settings.keyConcepts ? `   - WAJIB: Embed "${settings.keyConcepts}" di judul` : ''}
+
+2. DESCRIPTION (Deskripsi Marketing):
+   - Panjang: ${minDesc}-${maxDesc} karakter (BUKAN KURANG/LEBIH)
+   - Bahasa: Inggris
+   - Format: Kalimat lengkap, jelas, benefit-focused
+   - Isi: Deskripsikan kegunaan, style, mood, technical specs (resolution, lighting, etc.)
+
+3. KEYWORDS (${settings.keywordsCount} kata kunci unik):
+   - JUMLAH: TEPAT ${settings.keywordsCount} (tidak boleh 39, tidak boleh 41, TEPAT ${settings.keywordsCount})
+   - UNIQUE: Setiap keyword beda, NO duplikat, NO synonym overlap
+   - ORDER: Core keywords duluan (paling relevan), variant & long-tail di akhir
+   - FORMAT: ["keyword1", "keyword2", "keyword3", ... (ARRAY JSON)]
+   ${settings.keyConcepts ? `   - MUST: "${settings.keyConcepts}" di urutan 1-5` : ''}
+
+4. CATEGORIES (Kategori Platform):
+   - Shutterstock: 2 kategori BERBEDA (shutterstock1 ≠ shutterstock2)
+     Valid: Abstract, Animals/Wildlife, The Arts, Backgrounds/Textures, Beauty/Fashion, Buildings/Landmarks, Business/Finance, Education, Food and Drink, Healthcare/Medical, Industrial, Interiors, Nature, Objects, People, Science, Sports/Recreation, Technology, Transportation, Vectors
+   - Adobe Stock: 1 kategori
+     Valid: Animals, Buildings and Architecture, Business, Environment, Food, Graphic Resources, Science, Technology, Transport, Travel, Art, Other
+   - Dreamstime: 1 kategori
+     Valid: Abstract, Animals, Architecture, Business, Editorial, Holiday, Illustrations, Industrial, Landscapes, Nature, Objects, People, Technology, Travel, Vectors
+   - Vecteezy: 1 kategori
+     Valid: Backgrounds, Icons, Patterns, Banners, Vectors, Illustrations, Templates, UI/UX, Elements
+   - Canva: 1 kategori
+     Valid: Backgrounds, Elements, Illustrations, Icons, Social Media, Graphics, Templates, Textured, Minimalist
+
+5. IP/TRADEMARK SAFETY (MUTLAK):
+   - DILARANG: iPhone, iPad, Apple Watch, AirPods, PlayStati on, Xbox, Nintendo, Nike, Adidas, Puma, Reebok, Coca-Cola, Pepsi, BMW, Mercedes, Audi, Porsche, Ferrari, LEGO, Disney, Marvel, Star Wars, Sony, Canon, Nikon, Samsung, Google, Microsoft, Amazon
+   - GUNAKAN: modern smartphone, smart wearable, athletic footwear, luxury sports car, plastic building blocks, soft drink, etc.
+
+${assetSpecificInstructions}
+
+═══════════════════════════════════════════════════════════════════════════════════
+OUTPUT JSON (EXACT FORMAT):
+═══════════════════════════════════════════════════════════════════════════════════
+
+{
+  "title": "(string: ${minTitle}-${maxTitle} chars, English, IP-safe)",
+  "description": "(string: ${minDesc}-${maxDesc} chars, English, marketing-friendly)",
+  "keywords": ["kw1", "kw2", "kw3", ... TOTAL EXACTLY ${settings.keywordsCount} ITEMS],
+  "categories": {
+    "shutterstock1": "valid category from list",
+    "shutterstock2": "DIFFERENT valid category from list",
+    "adobeStock": "valid category",
+    "dreamstime": "valid category",
+    "vecteezy": "valid category",
+    "canva": "valid category"
+  }
+}
+
+═══════════════════════════════════════════════════════════════════════════════════
+INSTRUKSI AKHIR:
+═══════════════════════════════════════════════════════════════════════════════════
+✓ OUTPUT HANYA JSON, tanpa markdown, tanpa teks apapun
+✓ keywords.length === ${settings.keywordsCount} (HARUS EXACT)
+✓ title.length ∈ [${minTitle}, ${maxTitle}] (HARUS dalam range)
+✓ description.length ∈ [${minDesc}, ${maxDesc}] (HARUS dalam range)
+✓ Tidak ada trailing comma
+✓ Tidak ada JSON syntax error
+✓ Jika ada key concepts: HARUS di-embed di title & top 5 keywords`;
+    }
+
+    // ✅ POST-PROCESSING: Validasi & Normalisasi Output agar sesuai preferensi user
+    function validateAndNormalizeOutput(parsed, settings) {
+      console.log("🔍 [Validation] Input parsed:", { titleLen: parsed.title?.length, descLen: parsed.description?.length, keywordCount: parsed.keywords?.length, expected: settings.keywordsCount });
+      
+      // Validasi & repair title length
+      if (!parsed.title || typeof parsed.title !== "string") {
+        throw new Error("Title field missing or invalid type");
+      }
+      const titleLen = parsed.title.trim().length;
+      const minTitle = Math.floor(settings.titleLength * 0.8);
+      const maxTitle = Math.ceil(settings.titleLength * 1.2);
+      
+      if (titleLen < minTitle) {
+        console.warn(`⚠️ Title terlalu pendek (${titleLen} chars, min ${minTitle}). Normalizing...`);
+        // Jika title terlalu pendek, tambahkan deskripsi singkat
+        parsed.title = parsed.title.trim() + ", professional quality asset";
+      } else if (titleLen > maxTitle) {
+        console.warn(`⚠️ Title terlalu panjang (${titleLen} chars, max ${maxTitle}). Trimming...`);
+        // Trim ke panjang maksimal
+        parsed.title = parsed.title.trim().substring(0, maxTitle).trim();
+      }
+
+      // Validasi & repair description length
+      if (!parsed.description || typeof parsed.description !== "string") {
+        throw new Error("Description field missing or invalid type");
+      }
+      const descLen = parsed.description.trim().length;
+      const minDesc = Math.floor(settings.descLength * 0.8);
+      const maxDesc = Math.ceil(settings.descLength * 1.2);
+      
+      if (descLen < minDesc) {
+        console.warn(`⚠️ Description terlalu pendek (${descLen} chars, min ${minDesc}). Expanding...`);
+        // Tambahkan generic description extension
+        parsed.description = parsed.description.trim() + " Ideal for commercial projects and creative portfolios.";
+      } else if (descLen > maxDesc) {
+        console.warn(`⚠️ Description terlalu panjang (${descLen} chars, max ${maxDesc}). Trimming...`);
+        parsed.description = parsed.description.trim().substring(0, maxDesc).trim();
+      }
+
+      // Validasi & repair keywords (CRITICAL)
+      if (!Array.isArray(parsed.keywords)) {
+        throw new Error("Keywords must be an array");
+      }
+      
+      // Remove duplicates & empty keywords
+      parsed.keywords = [...new Set(parsed.keywords.map(kw => (kw || "").trim()).filter(Boolean))];
+      
+      const keywordCount = parsed.keywords.length;
+      const expectedCount = settings.keywordsCount;
+      
+      if (keywordCount < expectedCount) {
+        console.warn(`⚠️ Keywords kurang: ${keywordCount} / ${expectedCount}. Padding dengan filler keywords...`);
+        // Generate filler keywords yang relevan (generic)
+        const fillers = [
+          "asset", "stock photo", "commercial use", "background", "design element",
+          "high quality", "professional", "creative", "modern", "minimalist",
+          "lifestyle", "detail shot", "composition", "digital", "artistic",
+          "visual", "contemporary", "clean", "clear", "isolated"
+        ];
+        while (parsed.keywords.length < expectedCount && fillers.length > 0) {
+          const filler = fillers.shift();
+          if (!parsed.keywords.includes(filler)) {
+            parsed.keywords.push(filler);
+          }
+        }
+      } else if (keywordCount > expectedCount) {
+        console.warn(`⚠️ Keywords berlebihan: ${keywordCount} / ${expectedCount}. Trimming ke ${expectedCount} items...`);
+        // Keep the first N keywords (paling relevan)
+        parsed.keywords = parsed.keywords.slice(0, expectedCount);
+      }
+
+      // Ensure key concepts are in title & top 5 keywords
+      if (settings.keyConcepts && settings.keyConcepts.trim().length > 0) {
+        const concepts = settings.keyConcepts.toLowerCase().split(',').map(c => c.trim()).filter(Boolean);
+        const titleLower = parsed.title.toLowerCase();
+        const conceptsInTitle = concepts.filter(c => titleLower.includes(c));
+        
+        if (conceptsInTitle.length === 0) {
+          console.warn(`⚠️ Key concepts "${settings.keyConcepts}" tidak ada di title. Adding to start...`);
+          parsed.title = concepts[0].charAt(0).toUpperCase() + concepts[0].slice(1) + " - " + parsed.title;
+        }
+        
+        // Ensure concepts in top 5 keywords
+        const topKeywords = parsed.keywords.slice(0, 5);
+        const topKeywordsLower = topKeywords.map(kw => kw.toLowerCase());
+        for (let concept of concepts) {
+          if (!topKeywordsLower.some(kw => kw.includes(concept))) {
+            // Insert concept at position 5 or at the end
+            if (parsed.keywords.length < expectedCount) {
+              parsed.keywords.push(concept);
+            } else {
+              parsed.keywords[4] = concept; // Override 5th keyword
+            }
+          }
+        }
+      }
+
+      // Final validation
+      if (!parsed.categories || typeof parsed.categories !== "object") {
+        parsed.categories = {};
+      }
+
+      console.log("✅ [Validation] Output normalized:", { titleLen: parsed.title.length, descLen: parsed.description.length, keywordCount: parsed.keywords.length });
+      return parsed;
+    }
+    
+    async function callGeminiDirectClient(base64Images, settings, fileName) {
+      let headers = { "Content-Type": "application/json" };
+      let baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
+
+      const activeModels = getPrioritizedModels();
+      const activeKeys = getActiveApiKeys();
+
+      if (activeKeys.length === 0) {
+        throw new Error("Mohon masukkan minimal 1 API Key Gemini aktif di tab pengaturan!");
+      }
+
+      const systemPrompt = buildSystemPrompt(settings);
+      const userPrompt = `Analisis aset bernama "${fileName}" ini secara komersial dan terperinci. Berikan struktur metadata JSON komersial yang aman dari pelanggaran IP/Merek Dagang sesuai agensi Adobe Stock.`;
+
+      const parts = [{ text: userPrompt }];
+      base64Images.forEach((base64Str) => {
+        parts.push({
+          inlineData: {
+            mimeType: "image/png",
+            data: base64Str
+          }
+        });
+      });
+
+      const payload = {
+        contents: [{ role: "user", parts }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: { 
+          responseMimeType: "application/json",
+          temperature: 0.3
+        }
+      };
+
+      let lastError = null;
+
+      for (let m = 0; m < activeModels.length; m++) {
+        const modelName = activeModels[m];
+
+        for (let k = 0; k < activeKeys.length; k++) {
+          // Mendistribusikan rotasi kunci global secara asinkron di antara pekerja paralel
+          const keyIndex = (k + currentApiKeyIndex) % activeKeys.length;
+          const apiKey = activeKeys[keyIndex];
+          const url = `${baseUrl}/${modelName}:generateContent?key=${apiKey}`;
+          
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: headers,
+              body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+              if (resultText) {
+                // Simpan indeks kunci terakhir yang berhasil untuk mempercepat pekerja berikutnya
+                currentApiKeyIndex = keyIndex;
+                return resultText;
+              }
+            } else {
+              const errBody = await response.json().catch(() => ({}));
+              lastError = `Model [${modelName}] - Key Slot #${keyIndex + 1}: ${errBody.error?.message || response.statusText}`;
+            }
+          } catch (err) {
+            lastError = `Model [${modelName}] - Key Slot #${keyIndex + 1}: ${err.message}`;
+          }
+
+          // Gunakan jeda failover super cepat dalam mode Speed 3x (50ms vs 200ms)
+          const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
+          await new Promise(resolve => setTimeout(resolve, useSpeed3x ? 50 : 200));
+        }
+      }
+
+      throw new Error(`Semua kunci API & skema fallback model gagal memproses. Kesalahan terakhir: ${lastError}`);
+    }
+
+    // ===== ENGINE DIRECT CLIENT CALL KE API GROQ =====
+    // Setara penuh dengan Gemini: prompt identik (buildSystemPrompt), kategori resmi per platform,
+    // video 3-frame (awal/tengah/akhir), rotasi kunci paralel, JSON robust, validasi output.
+    async function callGroqDirectClient(base64Images, settings, fileName) {
+      const activeModels = getPrioritizedGroqModels();
+      const activeKeys   = getActiveGroqApiKeys();
+
+      if (activeKeys.length === 0) {
+        throw new Error("Mohon masukkan minimal 1 API Key Groq (gsk_...) di tab ⚡ Groq!");
+      }
+      if (activeModels.length === 0) {
+        throw new Error("Pilih minimal 1 model Groq aktif di tab ⚡ Groq!");
+      }
+
+      // PROMPT IDENTIK GEMINI: buildSystemPrompt mengandung semua aturan SEO, IP safety,
+      // kategori resmi per platform (Shutterstock 1+2, Adobe Stock, Dreamstime, Vecteezy, Canva),
+      // panduan aset video 3-frame, vektor, dan foto profesional.
+      const systemPrompt = buildSystemPrompt(settings);
+
+      // User prompt — memperjelas konteks video 3-frame untuk model
+      const frameCtx = base64Images.length > 1
+        ? `Terdapat ${base64Images.length} frame gambar yang dikirim — ini adalah frame awal, tengah, dan akhir dari sebuah video. Analisis ketiganya untuk memahami alur visual, gerak subjek, suasana, pencahayaan, dan konten secara menyeluruh.\n`
+        : "";
+      // ✅ FIX: Sertakan batasan numerik eksplisit di user message agar model Groq
+      // mematuhi pengaturan slider user (bukan hanya di system prompt).
+      const userPromptText =
+        `Analisis aset visual bernama "${fileName}" ini secara komersial dan mendalam.\n` +
+        frameCtx +
+        `Hasilkan metadata microstock berkualitas tinggi, aman dari pelanggaran IP/Merek Dagang.\n` +
+        `WAJIB PATUHI PERSIS:\n` +
+        `- title: tepat mendekati ${settings.titleLength} karakter (bukan lebih pendek dari setengahnya)\n` +
+        `- description: tepat mendekati ${settings.descLength} karakter\n` +
+        `- keywords: TEPAT ${settings.keywordsCount} kata kunci unik (tidak boleh kurang, tidak boleh lebih)\n` +
+        (settings.keyConcepts ? `- Prioritas konsep yang WAJIB ada di title dan 5 keyword pertama: "${settings.keyConcepts}"\n` : '') +
+        `WAJIB: Kembalikan HANYA objek JSON murni (RFC 8259). ` +
+        `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
+
+      // BUILD CONTENT ARRAY — OpenAI Vision Format
+      // Llama 4 Scout/Maverick: image_url HARUS sebelum text agar model membaca semua frame
+      const userContent = [];
+      base64Images.forEach((b64) => {
+        userContent.push({
+          type: "image_url",
+          image_url: { url: `data:image/jpeg;base64,${b64}` }
+        });
+      });
+      userContent.push({ type: "text", text: userPromptText });
+
+      const useSpeed3x = document.getElementById("groq-speed-toggle")?.checked;
+      let lastError = null;
+
+      // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
+      for (let m = 0; m < activeModels.length; m++) {
+        const modelName = activeModels[m];
+
+        for (let k = 0; k < activeKeys.length; k++) {
+          // Rotasi kunci global antar pekerja paralel — identik dengan Gemini
+          const keyIndex = (k + currentGroqKeyIndex) % activeKeys.length;
+          const apiKey   = activeKeys[keyIndex];
+
+          const reqBody = {
+            model: modelName,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user",   content: userContent }
+            ],
+            temperature: 0.25,
+            max_tokens: 4096,
+            top_p: 0.9,
+            response_format: { type: "json_object" }
+          };
+
+          try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+              },
+              body: JSON.stringify(reqBody)
+            });
+
+            if (response.ok) {
+              const data    = await response.json();
+              const rawText = (data.choices?.[0]?.message?.content || "").trim();
+
+              if (rawText) {
+                // JSON ROBUST EXTRACTOR
+                let jsonStr = rawText;
+
+                // 1. Hapus wrapper markdown ```json ... ``` jika ada
+                const mdMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+                if (mdMatch) jsonStr = mdMatch[1].trim();
+
+                // 2. Ekstrak objek {} pertama yang valid
+                const bStart = jsonStr.indexOf("{");
+                const bEnd   = jsonStr.lastIndexOf("}");
+                if (bStart !== -1 && bEnd > bStart) {
+                  jsonStr = jsonStr.slice(bStart, bEnd + 1);
+                }
+
+                // 3. Parse — throws jika JSON invalid, langsung ke catch
+                const parsed = JSON.parse(jsonStr);
+
+                // 4. Validasi struktur output (identik ekspektasi Gemini)
+                if (!parsed.title || typeof parsed.title !== "string" || parsed.title.trim().length < 5) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "title" kosong/tidak valid.`;
+                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                  continue;
+                }
+                // ✅ FIX: Validation lebih lenient — 50% dari keywordsCount adalah acceptable
+                // post-processing akan pad/trim sesuai preferensi user
+                const minAcceptableKeywords = Math.max(5, Math.floor((settings.keywordsCount || 40) * 0.5));
+                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < minAcceptableKeywords) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: keywords hanya ${parsed.keywords?.length || 0}, min ${minAcceptableKeywords} (target ${settings.keywordsCount}).`;
+                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                  continue;
+                }
+                // Also check description exists
+                if (!parsed.description || typeof parsed.description !== "string" || parsed.description.trim().length < 10) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: description invalid/too short.`;
+                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                  continue;
+                }
+
+                // 5. Simpan indeks kunci sukses untuk pekerja berikutnya
+                currentGroqKeyIndex = keyIndex;
+                return jsonStr;
+              }
+            } else {
+              const errBody = await response.json().catch(() => ({}));
+              lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errBody?.error?.message || response.statusText}`;
+            }
+          } catch (err) {
+            lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
+          }
+
+          await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+        }
+      }
+
+      throw new Error(`Groq: Semua model & kunci API gagal. Error terakhir: ${lastError}`);
+    }
+    // Memicu seluruh antrean secara sequential atau paralel
+    async function processAllPending() {
+      const pending = items.filter(i => i.status === 'pending' || i.status === 'error');
+      if (pending.length === 0) return;
+
+      isProcessingAll = true;
+      document.getElementById("btn-generate-all").disabled = true;
+      
+      const genIcon = document.getElementById("generate-all-icon");
+      const genText = document.getElementById("generate-all-text");
+      
+      if (genIcon) genIcon.classList.add("animate-spin");
+      if (genText) genText.innerText = "MENGANALISIS BATCH...";
+      
+      hideError();
+
+      const useSpeed3x = document.getElementById("speed-3x-toggle")?.checked;
+      const concurrencyLimit = useSpeed3x ? 3 : 1;
+
+      // Inisialisasi pool pekerja paralel
+      let index = 0;
+      async function worker() {
+        while (index < pending.length) {
+          const currentIdx = index++;
+          const item = pending[currentIdx];
+          await processSingleItem(item.id);
+        }
+      }
+
+      // Jalankan pool pekerja sesuai batas konkurensi (3x lebih cepat)
+      const workers = [];
+      const activeWorkersCount = Math.min(concurrencyLimit, pending.length);
+      for (let i = 0; i < activeWorkersCount; i++) {
+        workers.push(worker());
+      }
+
+      await Promise.all(workers);
+
+      isProcessingAll = false;
+      const genAllBtn = document.getElementById("btn-generate-all");
+      if (genAllBtn) genAllBtn.disabled = false;
+      if (genIcon) genIcon.classList.remove("animate-spin");
+      if (genText) genText.innerText = "GENERATE SEMUA METADATA (BATCH)";
+      renderQueueList();
+    }
+
+    function renderCSVDownloadPanel() {
+      const panel = document.getElementById("csv-download-panel");
+      const btnContainer = document.getElementById("csv-download-buttons");
+      const successItems = items.filter(i => i.status === 'success');
+      
+      if (successItems.length === 0) {
+        if (panel) panel.classList.add("hidden");
+        return;
+      }
+
+      if (panel) panel.classList.remove("hidden");
+      if (btnContainer) {
+        btnContainer.innerHTML = "";
+
+        Object.keys(targetPlatforms).forEach(platform => {
+          if (targetPlatforms[platform]) {
+            const btn = document.createElement("button");
+            btn.className = "px-3.5 py-2 bg-white hover:bg-slate-55 text-slate-800 text-[10px] font-extrabold rounded-xl border border-slate-200 transition-all shadow-sm active:scale-95";
+            btn.innerText = platform === 'adobeStock' ? 'Adobe Stock CSV' : platform.toUpperCase() + ' CSV';
+            btn.onclick = () => downloadPlatformCSV(platform);
+            btnContainer.appendChild(btn);
+          }
+        });
+      }
+      lucide.createIcons();
+    }
+
+    // Ekspor CSV Sesuai Templat Masing-Masing Agensi
+    function downloadPlatformCSV(platformKey) {
+      const successItems = items.filter(i => i.status === 'success');
+      if (successItems.length === 0) return;
+
+      let csvContent = "";
+      let fileName = "";
+
+      switch (platformKey) {
+        case 'shutterstock':
+          // Shutterstock secara resmi mendukung kolom Category 1 dan Category 2
+          csvContent = "Filename,Description,Keywords,Category 1,Category 2\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.description.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.shutterstock1 || 'Abstract').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.shutterstock2 || '').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `shutterstock_batch_${Date.now()}.csv`;
+          break;
+
+        case 'adobeStock':
+          csvContent = "Filename,Title,Keywords,Category\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.title.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.adobeStock || 'Graphics').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `adobe_stock_batch_${Date.now()}.csv`;
+          break;
+
+        case 'freepik':
+          csvContent = "Filename,Title,Keywords\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.title.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `freepik_batch_${Date.now()}.csv`;
+          break;
+
+        case 'istock':
+          csvContent = "Filename,Title,Description,Keywords\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.title.replace(/"/g, '""')}"`,
+              `"${i.metadata.description.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `istock_getty_batch_${Date.now()}.csv`;
+          break;
+
+        case 'vecteezy':
+          csvContent = "Filename,Title,Description,Keywords,Category\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.title.replace(/"/g, '""')}"`,
+              `"${i.metadata.description.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.vecteezy || 'Backgrounds').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `vecteezy_batch_${Date.now()}.csv`;
+          break;
+
+        case 'canva':
+          csvContent = "Filename,Title,Description,Keywords,Theme\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.title.replace(/"/g, '""')}"`,
+              `"${i.metadata.description.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.canva || 'Elements').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `canva_batch_${Date.now()}.csv`;
+          break;
+
+        case 'dreamstime':
+          csvContent = "Filename,Title,Description,Keywords,Category\n" + 
+            successItems.map(i => [
+              i.name,
+              `"${i.metadata.title.replace(/"/g, '""')}"`,
+              `"${i.metadata.description.replace(/"/g, '""')}"`,
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.dreamstime || 'Abstract').replace(/"/g, '""')}"`
+            ].join(",")).join("\n");
+          fileName = `dreamstime_batch_${Date.now()}.csv`;
+          break;
+
+        default:
+          return;
+      }
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Fungsi utilitas salin instan
+    function copyTextDirect(text, fieldName) {
+      if (!text) return;
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+
+      const targetBtn = document.getElementById(fieldName);
+      if (targetBtn) {
+        const prevHTML = targetBtn.innerHTML;
+        targetBtn.innerHTML = `<span>Tersalin! ✓</span>`;
+        targetBtn.classList.add("text-emerald-605");
+        setTimeout(() => {
+          targetBtn.innerHTML = prevHTML;
+          targetBtn.classList.remove("text-emerald-605");
+        }, 1500);
+      }
+    }
+
+    // Utilitas ekstraksi frame video dari browser langsung
+    function extractVideoFrames(file) {
+      return new Promise((resolve) => {
+        const video = document.createElement('video');
+        video.src = URL.createObjectURL(file);
+        video.muted = true;
+        video.playsInline = true;
+        video.crossOrigin = 'anonymous';
+
+        video.onloadedmetadata = () => {
+          const duration = video.duration;
+          const timestamps = [duration * 0.1, duration * duration > 1 ? 0.5 : 0.4, duration * 0.9];
+          const frames = [];
+          let index = 0;
+
+          const captureFrame = () => {
+            if (index >= timestamps.length) {
+              URL.revokeObjectURL(video.src);
+              resolve(frames);
+              return;
+            }
+            video.currentTime = timestamps[index];
+          };
+
+          video.onseeked = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/png');
+            frames.push(dataUrl.split(',')[1]);
+            index++;
+            captureFrame();
+          };
+
+          captureFrame();
+        };
+
+        video.onerror = () => {
+          resolve([]);
+        };
+      });
+    }
+
+    function showError(msg) {
+      const banner = document.getElementById("error-banner");
+      const message = document.getElementById("error-message");
+      if (message) message.innerText = msg;
+      if (banner) banner.classList.remove("hidden");
+    }
+
+    // Menghilangkan banner error
+    function hideError() {
+      const banner = document.getElementById("error-banner");
+      if (banner) banner.classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
