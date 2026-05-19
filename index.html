@@ -1373,20 +1373,22 @@
         assetSpecificInstructions = `
 PANDUAN VIDEO SINEMATIK / FOOTAGE:
 1. Analisis ke-3 frame (awal, tengah, akhir) untuk memahami alur visual, gerak, pencahayaan, suasana.
-2. Gunakan keyword video: "footage", "slow motion", "4k resolution", "cinematic", "b-roll", "background loop".
-3. DILARANG: "still photo", "illustration", "vector", "drawing".`;
+2. Gunakan keyword video: "footage", "slow motion", "cinematic", "b-roll", "background loop", "motion video".
+3. DILARANG KERAS: "still photo", "illustration", "vector", "drawing", "4k", "4k resolution", "high resolution", "camera", "shot on", "DSLR".
+4. Fokus pada gerakan, emosi, cerita visual, dan kegunaan komersial footage.`;
       } else if (settings.assetType === "vector") {
         assetSpecificInstructions = `
 PANDUAN VEKTOR / ILUSTRASI / DESAIN GRAFIS:
 1. Fokus pada gaya desain: "flat vector", "isometric design", "line art", "minimalist icon", "geometric shapes".
 2. Gunakan keyword desain: "scalable", "customizable", "vector illustration", "graphic design element".
-3. DILARANG: "photo", "realistic photograph", "camera shot".`;
+3. DILARANG KERAS: "photo", "realistic photograph", "camera shot", "4k", "high resolution", "DSLR".`;
       } else {
         assetSpecificInstructions = `
 PANDUAN FOTO NYATA / GAMBAR DIGITAL:
-1. Analisis detail fotografi: tekstur, pencahayaan, komposisi, depth of field.
-2. Gunakan keyword foto: "professional photography", "studio shot", "macro closeup", "high resolution", "selective focus".
-3. DILARANG: "vector", "clipart", "flat illustration", "cartoon".`;
+1. Analisis detail visual: tekstur, pencahayaan, komposisi, depth of field, warna.
+2. Gunakan keyword deskriptif: "professional", "studio", "macro", "selective focus", "commercial use".
+3. DILARANG KERAS: "vector", "clipart", "flat illustration", "cartoon", "4k", "4k resolution", "high resolution", "camera", "shot on", "DSLR", "megapixel".
+4. Fokus pada subjek, konsep, mood, dan aplikasi komersial - BUKAN spesifikasi teknis.`;
       }
 
       return `ROLE: SEO Microstock Expert
@@ -1418,13 +1420,16 @@ DETAIL SETIAP FIELD:
    - Panjang: ${minDesc}-${maxDesc} karakter (BUKAN KURANG/LEBIH)
    - Bahasa: Inggris
    - Format: Kalimat lengkap, jelas, benefit-focused
-   - Isi: Deskripsikan kegunaan, style, mood, technical specs (resolution, lighting, etc.)
+   - Isi: Deskripsikan kegunaan, style, mood, konsep visual, aplikasi komersial
+   - PENTING: JANGAN sertakan spesifikasi teknis seperti "4K", "high resolution", "camera"
 
 3. KEYWORDS (${settings.keywordsCount} kata kunci unik):
    - JUMLAH: TEPAT ${settings.keywordsCount} (tidak boleh 39, tidak boleh 41, TEPAT ${settings.keywordsCount})
    - UNIQUE: Setiap keyword beda, NO duplikat, NO synonym overlap
    - ORDER: Core keywords duluan (paling relevan), variant & long-tail di akhir
    - FORMAT: ["keyword1", "keyword2", "keyword3", ... (ARRAY JSON)]
+   - DILARANG KERAS: "4k", "4k resolution", "high resolution", "HD", "ultra HD", "camera", "DSLR", "megapixel", "shot on", "photograph", "photo shoot"
+   - RELEVANSI: Keyword HARUS menggambarkan konten visual aset (subjek, konsep, mood, warna, gaya) - BUKAN spesifikasi teknis
    ${settings.keyConcepts ? `   - MUST: "${settings.keyConcepts}" di urutan 1-5` : ''}
 
 4. CATEGORIES (Kategori Platform):
@@ -1442,6 +1447,13 @@ DETAIL SETIAP FIELD:
 5. IP/TRADEMARK SAFETY (MUTLAK):
    - DILARANG: iPhone, iPad, Apple Watch, AirPods, PlayStati on, Xbox, Nintendo, Nike, Adidas, Puma, Reebok, Coca-Cola, Pepsi, BMW, Mercedes, Audi, Porsche, Ferrari, LEGO, Disney, Marvel, Star Wars, Sony, Canon, Nikon, Samsung, Google, Microsoft, Amazon
    - GUNAKAN: modern smartphone, smart wearable, athletic footwear, luxury sports car, plastic building blocks, soft drink, etc.
+
+6. SPESIFIKASI TEKNIS - DILARANG KERAS DI KEYWORDS & TITLE:
+   - JANGAN PERNAH gunakan: "4k", "4K", "4k resolution", "high resolution", "HD", "ultra HD", "8K"
+   - JANGAN PERNAH gunakan: "camera", "DSLR", "mirrorless", "megapixel", "MP", "shot on", "photograph", "photo shoot"
+   - JANGAN PERNAH gunakan: nama brand kamera (Canon, Nikon, Sony, Fujifilm, Panasonic, Leica, Hasselblad)
+   - FOKUS PADA: Subjek, konsep, mood, warna, komposisi, gaya artistik, aplikasi komersial
+   - Adobe Stock Rule: Keyword harus relevan dengan KONTEN VISUAL, bukan spesifikasi file/teknis
 
 ${assetSpecificInstructions}
 
@@ -1527,12 +1539,13 @@ INSTRUKSI AKHIR:
       
       if (keywordCount < expectedCount) {
         console.warn(`⚠️ Keywords kurang: ${keywordCount} / ${expectedCount}. Padding dengan filler keywords...`);
-        // Generate filler keywords yang relevan (generic)
+        // Generate filler keywords yang relevan (generic) - TANPA istilah teknis terlarang
         const fillers = [
-          "asset", "stock photo", "commercial use", "background", "design element",
-          "high quality", "professional", "creative", "modern", "minimalist",
-          "lifestyle", "detail shot", "composition", "digital", "artistic",
-          "visual", "contemporary", "clean", "clear", "isolated"
+          "asset", "commercial use", "background", "design element",
+          "professional", "creative", "modern", "minimalist",
+          "lifestyle", "composition", "digital", "artistic",
+          "visual", "contemporary", "clean", "clear", "isolated",
+          "concept", "style", "graphic", "illustration", "template"
         ];
         while (parsed.keywords.length < expectedCount && fillers.length > 0) {
           const filler = fillers.shift();
@@ -1544,6 +1557,33 @@ INSTRUKSI AKHIR:
         console.warn(`⚠️ Keywords berlebihan: ${keywordCount} / ${expectedCount}. Trimming ke ${expectedCount} items...`);
         // Keep the first N keywords (paling relevan)
         parsed.keywords = parsed.keywords.slice(0, expectedCount);
+      }
+
+      // FILTER: Hapus keyword terlarang (technical specs, camera terms, resolution terms)
+      const forbiddenKeywords = [
+        "4k", "4k resolution", "high resolution", "HD", "ultra HD", "8K", "UHD",
+        "camera", "DSLR", "mirrorless", "megapixel", "MP", "shot on", "photograph", "photo shoot",
+        "canon", "nikon", "sony", "fujifilm", "panasonic", "leica", "hasselblad",
+        "high res", "hi-res", "resolution", "pixel", "dpi"
+      ];
+      const originalKeywordCount = parsed.keywords.length;
+      parsed.keywords = parsed.keywords.filter(kw => {
+        const kwLower = kw.toLowerCase();
+        return !forbiddenKeywords.some(forbidden => kwLower.includes(forbidden));
+      });
+      if (parsed.keywords.length !== originalKeywordCount) {
+        console.warn(`🚫 [Filter] Menghapus ${originalKeywordCount - parsed.keywords.length} keyword terlarang (technical specs/camera terms)`);
+      }
+      
+      // Jika setelah filter jadi kurang, tambahkan filler lagi
+      if (parsed.keywords.length < expectedCount) {
+        const additionalFillers = ["concept art", "visual design", "creative asset", "stock media", "commercial graphic"];
+        for (const filler of additionalFillers) {
+          if (parsed.keywords.length >= expectedCount) break;
+          if (!parsed.keywords.includes(filler)) {
+            parsed.keywords.push(filler);
+          }
+        }
       }
 
       // Ensure key concepts are in title & top 5 keywords
