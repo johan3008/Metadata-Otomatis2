@@ -584,6 +584,11 @@
     let currentApiKeyIndex = 0; // Rotasi kunci global Gemini
     let currentGroqKeyIndex = 0; // Rotasi kunci global Groq
     
+    // ✅ GLOBAL RATE LIMIT TRACKER — Simpan waktu kapan model boleh dicoba lagi
+    // Format: { "modelName": timestampMs } — skip model jika Date.now() < nilai ini
+    const modelCooldownUntil = {};
+    const modelRateLimitMsg = {}; // Pesan error rate limit per model untuk UI
+    
     // Progress Bar State
     let progressInterval = null;
     let currentProgress = 0;
@@ -1799,6 +1804,43 @@ INSTRUKSI AKHIR:
       return parsed;
     }
     
+    // ✅ Tampilkan banner peringatan TPD habis di UI
+    function showGroqRateLimitBanner(modelName, waitSeconds) {
+      const waitMin = Math.ceil(waitSeconds / 60);
+      const shortModel = modelName.includes('scout') ? 'Llama 4 Scout' :
+                         modelName.includes('maverick') ? 'Llama 4 Maverick' :
+                         modelName.includes('vision') ? 'Llama 3.2 Vision' :
+                         modelName.includes('mixtral') ? 'Mixtral 8x7B' : modelName;
+
+      // Coba tampilkan di error banner utama
+      const banner = document.getElementById("error-banner");
+      const msg = document.getElementById("error-message");
+      if (banner && msg) {
+        msg.innerHTML = `⚠️ <b>${shortModel}</b>: Token harian habis (500K TPD). ` +
+          `Reset dalam <b id="tpd-countdown">~${waitMin} menit</b>. ` +
+          `💡 Aktifkan model lain (llama-3.1-8b / mixtral) di tab ⚡ Groq, ` +
+          `atau daftarkan API key Groq cadangan.`;
+        banner.classList.remove('hidden');
+
+        // Countdown timer di banner
+        if (waitSeconds > 60) {
+          let remaining = waitSeconds;
+          const interval = setInterval(() => {
+            remaining -= 10;
+            const el = document.getElementById('tpd-countdown');
+            if (el && remaining > 0) {
+              const m = Math.floor(remaining / 60);
+              const s = Math.floor(remaining % 60);
+              el.textContent = m > 0 ? `~${m}m ${s}s` : `~${s}s`;
+            } else {
+              clearInterval(interval);
+              if (banner) banner.classList.add('hidden');
+            }
+          }, 10000);
+        }
+      }
+    }
+
     async function callGeminiDirectClient(base64Images, settings, fileName) {
       let headers = { "Content-Type": "application/json" };
       let baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -1958,6 +2000,21 @@ INSTRUKSI AKHIR:
 
         const keyId = `${apiKey.substring(0,8)}_${modelName}`;
         
+        // ✅ SKIP MODEL YANG MASIH COOLDOWN TPD (Token Per Day habis)
+        if (modelCooldownUntil[modelName] && Date.now() < modelCooldownUntil[modelName]) {
+          const remainMs = modelCooldownUntil[modelName] - Date.now();
+          const remainMin = Math.ceil(remainMs / 60000);
+          console.log(`⏭️ Skip [${modelName}] — TPD cooldown ${remainMin} menit lagi.`);
+          lastError = `[${modelName}]: TOKEN HARIAN HABIS. Reset dalam ~${remainMin} menit. Gunakan model lain.`;
+          continue;
+        }
+        
+        // ✅ SKIP KEY-MODEL YANG MASIH COOLDOWN RATE LIMIT PER MENIT
+        if (keyRateLimitTracker[keyId] && Date.now() < keyRateLimitTracker[keyId]) {
+          console.log(`⏭️ Skip Key#${keyIndex+1}+[${modelName}] — masih cooldown per menit.`);
+          continue;
+        }
+        
         // ✅ FIX: Vision model (Scout/Maverick) butuh lebih banyak token untuk JSON lengkap
         // response_format json_object TIDAK kompatibel dengan vision model Groq → dihapus untuk vision
         const isVisionModel = modelName.includes('scout') || modelName.includes('maverick') || modelName.includes('vision');
@@ -2058,48 +2115,50 @@ INSTRUKSI AKHIR:
             const errBody = await response.json().catch(() => ({}));
             const errMsg = errBody?.error?.message || response.statusText;
             
-            // ✅ DETEKSI RATE LIMIT ERROR
-            const isRateLimitError = errMsg.includes("Rate limit reached") ||
-                                     response.status === 429;
+            // ✅ DETEKSI JENIS RATE LIMIT
+            const isRateLimitError = response.status === 429 || errMsg.includes("Rate limit reached");
+
+            // ✅ DETEKSI TPD (Token Per Day) HABIS — butuh cooldown berjam-jam
+            const isTPDExhausted = isRateLimitError && (
+              errMsg.includes("tokens per day") ||
+              errMsg.includes("on tokens per day (TPD)")
+            );
 
             if (isRateLimitError) {
-              lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit. ${errMsg}`;
-
-              // ✅ EKSTRAK WAKTU TUNGGU DARI PESAN ERROR GROQ
-              const waitTimeMatch = errMsg.match(/try again in ([\d.]+)s/i);
-              let waitSeconds = 5; // Default lebih pendek
-
-              if (waitTimeMatch && waitTimeMatch[1]) {
-                waitSeconds = parseFloat(waitTimeMatch[1]);
-                // Gunakan waktu yang disarankan + buffer kecil, max 15 detik
-                waitSeconds = Math.min(waitSeconds + 2, 15);
+              // Ekstrak waktu tunggu dari pesan Groq ("try again in Xm Ys" atau "try again in Xs")
+              const waitMinMatch = errMsg.match(/try again in (\d+)m([\d.]+)s/i);
+              const waitSecMatch = !waitMinMatch && errMsg.match(/try again in ([\d.]+)s/i);
+              
+              let waitSeconds = 30;
+              if (waitMinMatch) {
+                waitSeconds = parseInt(waitMinMatch[1]) * 60 + parseFloat(waitMinMatch[2]);
+              } else if (waitSecMatch) {
+                waitSeconds = parseFloat(waitSecMatch[1]);
               }
 
-              console.warn(`⏳ Rate limit pada [${modelName}] Key#${keyIndex+1}. Tunggu ${waitSeconds.toFixed(1)}s`);
-
-              // Cek apakah key-model ini baru saja kena rate limit (cooldown 20s)
-              const now = Date.now();
-              if (keyRateLimitTracker[keyId] && (now - keyRateLimitTracker[keyId]) < 20000) {
-                console.log(`🔑 Key ${keyIndex+1} + model masih cooldown. Skip ke kombinasi lain...`);
+              if (isTPDExhausted) {
+                // TPD habis = model ini tidak bisa dipakai sampai reset (berjam-jam)
+                const cooldownMs = (waitSeconds + 60) * 1000;
+                modelCooldownUntil[modelName] = Date.now() + cooldownMs;
+                const waitMin = Math.ceil(waitSeconds / 60);
+                lastError = `[${modelName}]: TOKEN HARIAN HABIS! Reset dalam ~${waitMin} menit. Aktifkan model lain di tab Groq.`;
+                console.warn(`🔴 TPD Exhausted [${modelName}]. Cooldown ${waitMin} menit. Skip model ini sepenuhnya.`);
+                showGroqRateLimitBanner(modelName, waitSeconds);
+                // Skip langsung — TPD tidak pulih dalam hitungan detik
                 continue;
+              } else {
+                // Rate limit per menit biasa
+                const actualWait = Math.min(waitSeconds + 2, 30);
+                lastError = `[${modelName}] Key#${keyIndex+1}: Rate limit per menit. Tunggu ${actualWait.toFixed(0)}s...`;
+                console.warn(`⏳ Rate limit [${modelName}] Key#${keyIndex+1}. Tunggu ${actualWait}s`);
+                keyRateLimitTracker[keyId] = Date.now() + (actualWait * 1000);
+                await new Promise(r => setTimeout(r, actualWait * 1000));
+                globalRetryCount++;
+                if (globalRetryCount <= MAX_GLOBAL_RETRIES) continue;
               }
-
-              // Set timestamp rate limit untuk kombinasi ini
-              keyRateLimitTracker[keyId] = now;
-
-              // Tunggu sesuai anjuran Groq (lebih pendek agar cepat retry dengan key/model lain)
-              await new Promise(r => setTimeout(r, waitSeconds * 1000));
-              globalRetryCount++;
-
-              // Langsung lanjut ke kombinasi berikutnya tanpa throw
-              if (globalRetryCount <= MAX_GLOBAL_RETRIES) {
-                continue;
-              }
-              // Jangan langsung throw, biarkan loop mencoba semua kombinasi dulu
             } else {
-              lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
-              // Delay lebih pendek untuk error non-rate-limit
-              await new Promise(r => setTimeout(r, 150));
+              lastError = `[${modelName}] Key#${keyIndex+1}: ${errMsg}`;
+              await new Promise(r => setTimeout(r, 200));
             }
           }
         } catch (err) {
@@ -2114,7 +2173,21 @@ INSTRUKSI AKHIR:
       }
 
       // Jika semua kombinasi sudah dicoba dan masih gagal
-      throw new Error(`Groq: Semua ${totalAttempts} percobaan (${activeModels.length} model × ${activeKeys.length} key × 4 iterasi) gagal. Error terakhir: ${lastError}`);
+      // ✅ PESAN ERROR LEBIH INFORMATIF: Cek apakah semua model kena TPD
+      const allTPD = activeModels.every(m => modelCooldownUntil[m] && Date.now() < modelCooldownUntil[m]);
+      if (allTPD) {
+        const minReset = Math.ceil(Math.min(...activeModels.map(m => 
+          (modelCooldownUntil[m] - Date.now()) / 1000 / 60
+        )));
+        throw new Error(
+          `🔴 Semua model Groq aktif sudah habis token harian (500K TPD). ` +
+          `Reset paling cepat dalam ~${minReset} menit. ` +
+          `💡 Solusi: (1) Aktifkan model llama-3.1-8b atau mixtral-8x7b di tab Groq, ` +
+          `(2) Tambah API key Groq cadangan dari akun berbeda, ` +
+          `(3) Gunakan Gemini sambil menunggu reset.`
+        );
+      }
+      throw new Error(`Groq: Semua ${totalAttempts} percobaan gagal. Error terakhir: ${lastError}`);
     }
     // Memicu seluruh antrean secara sequential atau paralel
     async function processAllPending() {
