@@ -67,6 +67,40 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
+    
+    /* ===== VIDEO PREVIEW HOVER PLAYER ===== */
+    .video-preview-hover {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.5rem;
+      background: #0f172a;
+      cursor: pointer;
+    }
+
+    .video-preview-hover video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    .video-preview-hover:hover video {
+      transform: scale(1.03);
+    }
+
+    .video-preview-large {
+      width: 100%;
+      min-height: 260px;
+      max-height: 340px;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      background: #020617;
+      box-shadow: 0 10px 35px rgba(0,0,0,.15);
+    }
+
+
     /* Scrollbar Custom */
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
@@ -761,6 +795,50 @@
       renderPlatformCheckboxes();
       setupDragAndDrop();
     });
+
+    
+    
+    // ===== RENDER VIDEO PREVIEW LARGE =====
+    function createLargeVideoPreview(src) {
+      return `
+        <div class="video-preview-large video-preview-hover">
+          <video
+            src="${src}"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+        </div>
+      `;
+    }
+
+
+    // ===== VIDEO HOVER AUTOPLAY =====
+    function setupVideoHoverAutoplay() {
+      document.querySelectorAll('.video-preview-hover video').forEach(video => {
+        if (video.dataset.hoverReady === '1') return;
+
+        video.dataset.hoverReady = '1';
+
+        const parent = video.closest('.video-preview-hover');
+
+        parent.addEventListener('mouseenter', async () => {
+          try {
+            video.muted = true;
+            video.play();
+          } catch(e) {
+            console.warn('Autoplay gagal:', e);
+          }
+        });
+
+        parent.addEventListener('mouseleave', () => {
+          video.pause();
+          video.currentTime = 0;
+        });
+      });
+    }
+
 
     // Toggle Akordeon API Vault (support Gemini & Groq vault)
     function toggleAccordion(id) {
@@ -2843,3 +2921,14 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
   </script>
 </body>
 </html>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (typeof setupVideoHoverAutoplay === 'function') {
+      setupVideoHoverAutoplay();
+    }
+  }, 800);
+});
+</script>
