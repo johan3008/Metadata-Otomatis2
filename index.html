@@ -1812,7 +1812,7 @@ OUTPUT FORMAT — HANYA JSON, TANPA APAPUN DI LUAR JSON:
 {
   "title": "string — ${minTitle}-${maxTitle} chars — berisi Lapisan 1 + 2 + 3",
   "description": "string — ${minDesc}-${maxDesc} chars — jelaskan isi, alur, dan makna aset",
-  "keywords": ["isi_nyata_1", "isi_nyata_2", "aksi_1", "aksi_2", "konsep_1", ... TEPAT ${settings.keywordsCount} ITEM UNIK],
+  "keywords": ["singlekeyword1", "singlekeyword2", "singlekeyword3", "singlekeyword4", "singlekeyword5", ... TEPAT ${settings.keywordsCount} ITEM UNIK TANPA SPASI / SINGLE KEYWORD ONLY],
   "categories": {
     "shutterstock1": "kategori valid",
     "shutterstock2": "kategori BERBEDA dari shutterstock1",
@@ -1826,7 +1826,7 @@ OUTPUT FORMAT — HANYA JSON, TANPA APAPUN DI LUAR JSON:
 CHECKLIST FINAL SEBELUM OUTPUT:
   ✓ title mengandung ISI nyata + ALUR + KONSEP (3 lapisan)?
   ✓ title panjangnya ${minTitle}-${maxTitle} karakter?
-  ✓ keywords TEPAT ${settings.keywordsCount} item, semua relevan dengan aset ini?
+  ✓ keywords TEPAT ${settings.keywordsCount} item, SINGLE KEYWORD ONLY (tanpa spasi), semua relevan dengan aset ini?
   ✓ keywords Layer ISI (posisi 1-10) menyebut elemen yang benar-benar ada di aset?
   ✓ tidak ada spesifikasi kamera/teknis di mana pun?
   ✓ tidak ada brand/trademark?
@@ -1895,8 +1895,21 @@ CHECKLIST FINAL SEBELUM OUTPUT:
         throw new Error("Keywords must be an array");
       }
       
-      // Remove duplicates & empty keywords
-      parsed.keywords = [...new Set(parsed.keywords.map(kw => (kw || "").trim()).filter(Boolean))];
+      // Remove duplicates, paksa SINGLE KEYWORD ONLY, dan hapus keyword kosong
+      parsed.keywords = [...new Set(
+        parsed.keywords
+          .flatMap(kw => {
+            if (!kw) return [];
+
+            // Ubah jadi lowercase dan pecah berdasarkan spasi / koma
+            return String(kw)
+              .toLowerCase()
+              .replace(/[^a-z0-9,\s-]/gi, "")
+              .split(/[\s,]+/)
+              .map(k => k.trim())
+              .filter(k => k.length > 1);
+          })
+      )];
       
       const keywordCount = parsed.keywords.length;
       const expectedCount = settings.keywordsCount;
