@@ -1435,7 +1435,45 @@
           }
         } : i);
       } catch (err) {
-        items = items.map(i => i.id === itemId ? { ...i, status: 'error', errorMsg: err.message || "Gagal memproses AI." } : i);
+        const errorMsg = err.message || "Gagal memproses AI.";
+        
+        // ✅ AUTO RETRY: Jika error, coba generate lagi secara otomatis
+        console.warn(`⚠️ Error pada ${targetItem.name}: ${errorMsg}. Mencoba retry...`);
+        
+        // Tunda sebentar sebelum retry
+        await new Promise(r => setTimeout(r, 1000));
+        
+        // Coba sekali lagi
+        try {
+          let responseJsonText;
+          if (activeAuthProvider === 'gemini') {
+            responseJsonText = await callGeminiDirectClient(base64ImagesPayload, settingsPayload, targetItem.name);
+          } else if (activeAuthProvider === 'groq') {
+            responseJsonText = await callGroqDirectClient(base64ImagesPayload, settingsPayload, targetItem.name);
+          } else {
+            throw new Error("Pilih provider API (Gemini atau Groq) dan masukkan API Key terlebih dahulu!");
+          }
+
+          const parsed = JSON.parse(responseJsonText);
+          const normalized = validateAndNormalizeOutput(parsed, settingsPayload, targetItem.name);
+          
+          items = items.map(i => i.id === itemId ? {
+            ...i,
+            status: 'success',
+            metadata: {
+              title: normalized.title || '',
+              description: normalized.description || '',
+              keywords: Array.isArray(normalized.keywords) ? normalized.keywords : [],
+              categories: typeof normalized.categories === 'object' ? normalized.categories : {}
+            }
+          } : i);
+          
+          console.log(`✅ Retry berhasil untuk ${targetItem.name}`);
+        } catch (retryErr) {
+          // Jika retry juga gagal, set status error
+          console.error(`❌ Retry gagal untuk ${targetItem.name}: ${retryErr.message}`);
+          items = items.map(i => i.id === itemId ? { ...i, status: 'error', errorMsg: `${errorMsg} (Retry juga gagal: ${retryErr.message})` } : i);
+        }
       }
       
       renderQueueList();
