@@ -1925,15 +1925,15 @@ INSTRUKSI AKHIR:
       
       // ✅ COUNTER UNTUK MEMBATASI RETRY SETELAH RATE LIMIT
       let globalRetryCount = 0;
-      const MAX_GLOBAL_RETRIES = activeKeys.length * activeModels.length; // Retry sebanyak total kombinasi
+      const MAX_GLOBAL_RETRIES = activeKeys.length * activeModels.length * 2;
       
-      // ✅ DELAY AWAL UNTUK MENGHINDARI BURST REQUEST
-      const initialDelay = 500 + Math.random() * 500; // 0.5-1 detik random
-      await new Promise(r => setTimeout(r, initialDelay));
+      const initialDelay = 300 + Math.random() * 400;
 
       // ✅ LOOP ULANG SELURUH KOMBINASI SAMPAI SUKSES ATAU SEMUA GAGAL
       let totalAttempts = 0;
-      const maxTotalAttempts = activeModels.length * activeKeys.length * 3; // 3 putaran penuh
+      const maxTotalAttempts = activeModels.length * activeKeys.length * 4;
+      // Simpan timestamp untuk tracking rate limit per key-model
+      const keyRateLimitTracker = {};
       
       // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
       for (let attempt = 0; attempt < maxTotalAttempts; attempt++) {
@@ -1946,6 +1946,7 @@ INSTRUKSI AKHIR:
         const keyIndex = (k + currentGroqKeyIndex) % activeKeys.length;
         const apiKey   = activeKeys[keyIndex];
 
+        const keyId = `${apiKey.substring(0,8)}_${modelName}`;
         const reqBody = {
           model: modelName,
           messages: [
@@ -1953,7 +1954,7 @@ INSTRUKSI AKHIR:
             { role: "user",   content: userContent }
           ],
           temperature: 0.2,
-          max_tokens: 1500, // ✅ REDUKSI TOKEN lebih agresif untuk menghindari rate limit
+          max_tokens: 800, // ✅ REDUKSI TOKEN lebih agresif untuk menghindari rate limit
           top_p: 0.8,
           response_format: { type: "json_object" }
         };
@@ -2020,42 +2021,45 @@ INSTRUKSI AKHIR:
             const errMsg = errBody?.error?.message || response.statusText;
             
             // ✅ DETEKSI RATE LIMIT ERROR
-            const isRateLimitError = errMsg.includes("Rate limit reached") || 
+            const isRateLimitError = errMsg.includes("Rate limit reached") ||
                                      response.status === 429;
-            
+
             if (isRateLimitError) {
-              lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit reached. ${errMsg}`;
-              
+              lastError = `Model [${modelName}] Key#${keyIndex+1}: Rate limit. ${errMsg}`;
+
               // ✅ EKSTRAK WAKTU TUNGGU DARI PESAN ERROR GROQ
-              // Contoh: "Please try again in 13.706s"
               const waitTimeMatch = errMsg.match(/try again in ([\d.]+)s/i);
-              let waitSeconds = 15; // Default fallback lebih lama
-              
+              let waitSeconds = 8;
+
               if (waitTimeMatch && waitTimeMatch[1]) {
                 waitSeconds = parseFloat(waitTimeMatch[1]);
-                // Tambahkan buffer 3 detik untuk keamanan
-                waitSeconds = Math.min(waitSeconds + 3, 60); // Max 60 detik
+                waitSeconds = Math.min(waitSeconds + 1, 20);
               }
-              
-              console.warn(`⏳ Rate limit terdeteksi pada Model [${modelName}] Key#${keyIndex+1}. Menunggu ${waitSeconds.toFixed(1)} detik...`);
-              
-              // ✅ EXPONENTIAL BACKOFF: tunggu lebih lama setiap retry
-              const backoffMultiplier = Math.pow(1.5, globalRetryCount);
-              const actualWaitTime = waitSeconds * backoffMultiplier;
-              
+
+              console.warn(`⏳ Rate limit pada [${modelName}] Key#${keyIndex+1}. Tunggu ${waitSeconds.toFixed(1)}s`);
+
+              // Cek apakah key-model ini baru saja kena rate limit (cooldown 25s)
+              const now = Date.now();
+              if (keyRateLimitTracker[keyId] && (now - keyRateLimitTracker[keyId]) < 25000) {
+                console.log(`🔑 Key ${keyIndex+1} + model masih cooldown. Skip ke kombinasi lain...`);
+                continue;
+              }
+
+              // Set timestamp rate limit untuk kombinasi ini
+              keyRateLimitTracker[keyId] = now;
+
+              // Tunggu sesuai anjuran Groq
+              await new Promise(r => setTimeout(r, waitSeconds * 1000));
               globalRetryCount++;
-              
+
               if (globalRetryCount <= MAX_GLOBAL_RETRIES) {
-                console.log(`🔄 Retry global ke-${globalRetryCount}/${MAX_GLOBAL_RETRIES}. Menunggu ${actualWaitTime.toFixed(1)} detik...`);
-                await new Promise(r => setTimeout(r, actualWaitTime * 1000));
-                continue; // Coba kombinasi model/key berikutnya
+                continue;
               } else {
-                throw new Error(`Groq: Semua model & kunci API gagal setelah ${MAX_GLOBAL_RETRIES}x retry. Error terakhir: ${lastError}`);
+                throw new Error(`Groq: Semua kombinasi gagal. Error: ${lastError}`);
               }
             } else {
               lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
-              // Untuk error non-rate-limit, coba key/model berikutnya dengan delay singkat
-              await new Promise(r => setTimeout(r, 500));
+              await new Promise(r => setTimeout(r, 300));
             }
           }
         } catch (err) {
