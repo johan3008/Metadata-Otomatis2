@@ -528,8 +528,8 @@
 
               <!-- Key Concepts -->
               <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-600">Prioritas Konsep (Key Concept)</label>
-                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 transition-colors" />
+                <label class="text-xs font-bold text-slate-600">Prioritas Konsep SEO Microstock</label><p class="text-[10px] text-slate-400 font-semibold mt-1">Gunakan niche buyer intent & keyword volume tinggi agar ranking lebih kuat di Shutterstock, Adobe Stock, Freepik, dan Canva.</p>
+                <input type="text" id="key-concepts-input" placeholder="misal: business, luxury, medical, technology, ai, finance, lifestyle" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 transition-colors" />
               </div>
             </div>
 
@@ -650,6 +650,27 @@
     };
 
     // Daftar Brand/Trademark Terlarang (IP Protection Adobe Stock)
+    
+    // SEO MICROSTOCK OPTIMIZATION RULES
+    const MICROSTOCK_SEO_RULES = {
+      title: [
+        "Gunakan keyword volume tinggi di awal judul",
+        "Prioritaskan niche komersial dan buyer intent",
+        "Hindari keyword spam dan pengulangan",
+        "Gunakan struktur: Subject + Action + Style + Usage",
+        "Optimalkan CTR pencarian Shutterstock & Adobe Stock"
+      ],
+      keywords: [
+        "Single keyword only",
+        "Keyword paling penting di urutan awal",
+        "Gunakan keyword buyer intent & trending",
+        "Gunakan keyword niche dan long-tail intent",
+        "Hindari keyword tidak relevan",
+        "Prioritaskan keyword yang sering dicari buyer microstock"
+      ]
+    };
+
+
     const BANNED_TRADEMARKS = [
       'iphone', 'ipad', 'apple watch', 'macbook', 'imac', 'airpods', 'playstation', 'xbox', 
       'nintendo', 'nike', 'adidas', 'puma', 'reebok', 'coca-cola', 'coke', 'pepsi', 'bmw', 
@@ -1827,6 +1848,7 @@ CHECKLIST FINAL SEBELUM OUTPUT:
   ✓ title mengandung ISI nyata + ALUR + KONSEP (3 lapisan)?
   ✓ title panjangnya ${minTitle}-${maxTitle} karakter?
   ✓ keywords TEPAT ${settings.keywordsCount} item, SINGLE KEYWORD ONLY (tanpa spasi), semua relevan dengan aset ini?
+      ✓ Keyword paling penting wajib berada di urutan awal seperti algoritma microstock SEO ranking
   ✓ keywords Layer ISI (posisi 1-10) menyebut elemen yang benar-benar ada di aset?
   ✓ tidak ada spesifikasi kamera/teknis di mana pun?
   ✓ tidak ada brand/trademark?
