@@ -225,22 +225,46 @@
                 <!-- Pilihan Model Gemini -->
                 <div class="space-y-2">
                   <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
+                  
+                  <!-- Gemini 3 Series -->
+                  <div class="px-2 pt-1 pb-0.5">
+                    <span class="text-[9px] font-extrabold text-purple-600 uppercase tracking-widest flex items-center gap-1">
+                      <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500"></span> Gemini 3 (Terbaru)
+                    </span>
+                  </div>
+                  <div class="space-y-1.5 bg-gradient-to-br from-purple-50/60 to-pink-50/40 p-3 rounded-2xl border border-purple-200/60">
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-purple-100/40 rounded transition-all">
+                      <input type="checkbox" id="model-g31pro" class="accent-purple-500 h-4 w-4 rounded" />
+                      <span>gemini-3.1-pro-preview <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Pro 🆕</span></span>
+                    </label>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-purple-100/40 rounded transition-all">
+                      <input type="checkbox" id="model-g3flash" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
+                      <span>gemini-3-flash-preview <span class="text-[8px] bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full ml-1 font-bold">Flash 🆕</span></span>
+                    </label>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-purple-100/40 rounded transition-all">
+                      <input type="checkbox" id="model-g31lite" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
+                      <span>gemini-3.1-flash-lite <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1 font-bold">Lite Gratis 🆕</span></span>
+                    </label>
+                  </div>
+
+                  <!-- Gemini 2.x Series -->
+                  <div class="px-2 pt-1 pb-0.5">
+                    <span class="text-[9px] font-extrabold text-blue-500 uppercase tracking-widest flex items-center gap-1">
+                      <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-400"></span> Gemini 2.x (Stabil)
+                    </span>
+                  </div>
                   <div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-                      <input type="checkbox" id="model-g31" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
-                      <span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full ml-1 font-bold">Ultra Baru</span></span>
-                    </label>
-                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-                      <input type="checkbox" id="model-g3" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
-                      <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Baru</span></span>
-                    </label>
-                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
                       <input type="checkbox" id="model-g25" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
-                      <span>gemini-2.5-flash <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1 font-bold">Utama</span></span>
+                      <span>gemini-2.5-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-1 font-bold">Utama ✓</span></span>
                     </label>
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
                       <input type="checkbox" id="model-g20" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
-                      <span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-1 font-bold">Cadangan</span></span>
+                      <span>gemini-2.0-flash <span class="text-[8px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full ml-1 font-bold">Stabil ✓</span></span>
+                    </label>
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
+                      <input type="checkbox" id="model-g15" class="accent-purple-500 h-4 w-4 rounded" />
+                      <span>gemini-1.5-flash <span class="text-[8px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full ml-1 font-bold">Cadangan</span></span>
                     </label>
                   </div>
                 </div>
@@ -568,7 +592,7 @@
       <div class="flex justify-center space-x-4 text-slate-500 font-bold">
         <span>Aman Terenkripsi</span>
         <span>•</span>
-        <span>Gemini 3.1/3.0/2.5 Flash &amp; Groq Llama 4 Scout Vision</span>
+        <span>Gemini 3.1 Pro/Flash · 2.5/2.0 Flash &amp; Groq Llama 4 Scout Vision</span>
       </div>
     </footer>
   </div>
@@ -615,12 +639,15 @@
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
       
+      let geminiKeysFound = 0;
+      let groqKeysFound = 0;
+
       // Ambil kelima kunci API Gemini dari penyimpanan lokal
       for (let i = 1; i <= 5; i++) {
         const keyVal = localStorage.getItem(`shophub_api_key_${i}`);
         if (keyVal) {
           const inputEl = document.getElementById(`api-key-${i}`);
-          if (inputEl) inputEl.value = keyVal;
+          if (inputEl) { inputEl.value = keyVal; geminiKeysFound++; }
         }
       }
 
@@ -629,12 +656,35 @@
         const keyVal = localStorage.getItem(`shophub_groq_key_${i}`);
         if (keyVal) {
           const inputEl = document.getElementById(`groq-key-${i}`);
-          if (inputEl) inputEl.value = keyVal;
+          if (inputEl) { inputEl.value = keyVal; groqKeysFound++; }
         }
       }
       
-      switchAuthTab('gemini');
+      // ✅ Auto-buka vault Gemini jika ada key tersimpan
+      if (geminiKeysFound > 0) {
+        const vaultContent = document.getElementById('api-vault-content');
+        const vaultArrow = document.getElementById('api-vault-arrow');
+        if (vaultContent) vaultContent.classList.remove('hidden');
+        if (vaultArrow) vaultArrow.classList.add('rotate-180');
+      }
+      
+      // ✅ Auto-buka vault Groq jika ada key tersimpan
+      if (groqKeysFound > 0) {
+        const groqVault = document.getElementById('groq-vault-content');
+        const groqArrow = document.getElementById('groq-vault-arrow');
+        if (groqVault) groqVault.classList.remove('hidden');
+        if (groqArrow) groqArrow.classList.add('rotate-180');
+      }
+
+      // ✅ Auto-switch ke Groq tab jika Groq punya key tapi Gemini tidak
+      if (groqKeysFound > 0 && geminiKeysFound === 0) {
+        switchAuthTab('groq');
+      } else {
+        switchAuthTab('gemini');
+      }
+      
       renderPlatformCheckboxes();
+      setupDragAndDrop();
     });
 
     // Toggle Akordeon API Vault (support Gemini & Groq vault)
@@ -718,7 +768,7 @@
         const testKey = activeKeys[i];
         try {
           // Hemat kuota: kueri dibuat seringkas mungkin dengan maxOutputTokens terbatas
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${testKey}`, {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${testKey}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -797,8 +847,7 @@
         // Default: gunakan model paling stabil dengan rate limit tertinggi
         models.push("llama-3.1-8b-instant");
         models.push("mixtral-8x7b-32768");
-      }
-      return models;
+      }      return models;
     }
 
     // Uji konektivitas kunci API Groq
@@ -844,15 +893,30 @@
 
     function getPrioritizedModels() {
       const models = [];
-      const m31 = document.getElementById("model-g31");
-      const m3 = document.getElementById("model-g3");
-      const m25 = document.getElementById("model-g25");
-      const m20 = document.getElementById("model-g20");
+      
+      // ✅ GEMINI 3 — Prioritas tertinggi (terbaru, paling kapabel)
+      const mg31pro   = document.getElementById("model-g31pro");
+      const mg3flash  = document.getElementById("model-g3flash");
+      const mg31lite  = document.getElementById("model-g31lite");
+      // ✅ GEMINI 2.x — Stabil & rate limit lebih longgar
+      const mg25      = document.getElementById("model-g25");
+      const mg20      = document.getElementById("model-g20");
+      const mg15      = document.getElementById("model-g15");
 
-      if (m31 && m31.checked) models.push("gemini-3.1-flash");
-      if (m3 && m3.checked) models.push("gemini-3.0-flash");
-      if (m25 && m25.checked) models.push("gemini-2.5-flash");
-      if (m20 && m20.checked) models.push("gemini-2.0-flash");
+      if (mg31pro  && mg31pro.checked)  models.push("gemini-3.1-pro-preview");
+      if (mg3flash && mg3flash.checked) models.push("gemini-3-flash-preview");
+      if (mg31lite && mg31lite.checked) models.push("gemini-3.1-flash-lite");
+      if (mg25     && mg25.checked)     models.push("gemini-2.5-flash-preview-05-20");
+      if (mg20     && mg20.checked)     models.push("gemini-2.0-flash");
+      if (mg15     && mg15.checked)     models.push("gemini-1.5-flash");
+
+      // Fallback otomatis jika tidak ada yang dipilih
+      if (models.length === 0) {
+        models.push("gemini-3-flash-preview");
+        models.push("gemini-3.1-flash-lite");
+        models.push("gemini-2.5-flash-preview-05-20");
+        models.push("gemini-2.0-flash");
+      }
       return models;
     }
 
@@ -2021,11 +2085,15 @@ INSTRUKSI AKHIR:
         // Scout/Maverick butuh ~1200-1500 token untuk output JSON penuh (40 keywords + title + desc + categories)
         const maxTokens = isVisionModel ? 1500 : 1000;
         
+        // ✅ FIX KRITIS: Model text-only (llama-3.1-8b, mixtral) TIDAK bisa terima gambar
+        // Jika model bukan vision, kirim hanya teks (tanpa image_url)
+        const userContentForModel = isVisionModel ? userContent : [{ type: "text", text: userPromptText }];
+        
         const reqBody = {
           model: modelName,
           messages: [
             { role: "system", content: systemPrompt },
-            { role: "user",   content: userContent }
+            { role: "user",   content: userContentForModel }
           ],
           temperature: 0.2,
           max_tokens: maxTokens,
@@ -2435,10 +2503,10 @@ INSTRUKSI AKHIR:
       if (targetBtn) {
         const prevHTML = targetBtn.innerHTML;
         targetBtn.innerHTML = `<span>Tersalin! ✓</span>`;
-        targetBtn.classList.add("text-emerald-605");
+        targetBtn.classList.add("text-emerald-600");
         setTimeout(() => {
           targetBtn.innerHTML = prevHTML;
-          targetBtn.classList.remove("text-emerald-605");
+          targetBtn.classList.remove("text-emerald-600");
         }, 1500);
       }
     }
