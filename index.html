@@ -778,15 +778,18 @@
       const models = [];
       // ✅ PRIORITAS MODEL: Urutan dari yang paling stabil & rate limit tinggi ke rendah
       // Model text-only lebih stabil untuk batch processing daripada vision models
+      // PENTING: Model vision (Scout/Maverick) dipindah ke akhir karena rate limit sangat ketat
       if (document.getElementById("groq-model-llama31-8b")?.checked)   models.push("llama-3.1-8b-instant");
       if (document.getElementById("groq-model-mixtral")?.checked)      models.push("mixtral-8x7b-32768");
-      if (document.getElementById("groq-model-scout")?.checked)        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
-      if (document.getElementById("groq-model-maverick")?.checked)     models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
+      // Fallback vision models hanya jika model text gagal
       if (document.getElementById("groq-model-llama32v")?.checked)     models.push("llama-3.2-90b-vision-preview");
+      if (document.getElementById("groq-model-maverick")?.checked)     models.push("meta-llama/llama-4-maverick-17b-128e-instruct");
+      // Scout dipaling akhir karena rate limit paling ketat
+      if (document.getElementById("groq-model-scout")?.checked)        models.push("meta-llama/llama-4-scout-17b-16e-instruct");
       
       // ✅ Fallback tambahan jika tidak ada yang dipilih
       if (models.length === 0) {
-        // Default: gunakan model paling stabil
+        // Default: gunakan model paling stabil dengan rate limit tertinggi
         models.push("llama-3.1-8b-instant");
         models.push("mixtral-8x7b-32768");
       }
@@ -1910,15 +1913,16 @@ INSTRUKSI AKHIR:
         `Dilarang keras menambahkan teks apapun di luar JSON, tanpa markdown, tanpa komentar, tanpa backtick.`;
 
       // BUILD CONTENT ARRAY — OpenAI Vision Format
-      // Llama 4 Scout/Maverick: image_url HARUS sebelum text agar model membaca semua frame
+      // ✅ FIX: Urutan content dioptimalkan untuk model Groq - text dulu baru gambar
+      // agar model memahami instruksi sebelum memproses gambar
       const userContent = [];
+      userContent.push({ type: "text", text: userPromptText });
       base64Images.forEach((b64) => {
         userContent.push({
           type: "image_url",
           image_url: { url: `data:image/jpeg;base64,${b64}` }
         });
       });
-      userContent.push({ type: "text", text: userPromptText });
 
       const useSpeed3x = document.getElementById("groq-speed-toggle")?.checked;
       let lastError = null;
@@ -1927,13 +1931,17 @@ INSTRUKSI AKHIR:
       let globalRetryCount = 0;
       const MAX_GLOBAL_RETRIES = activeKeys.length * activeModels.length * 2;
       
-      const initialDelay = 300 + Math.random() * 400;
+      // Delay awal lebih pendek untuk responsivitas
+      const initialDelay = 100 + Math.random() * 200;
 
       // ✅ LOOP ULANG SELURUH KOMBINASI SAMPAI SUKSES ATAU SEMUA GAGAL
       let totalAttempts = 0;
       const maxTotalAttempts = activeModels.length * activeKeys.length * 4;
       // Simpan timestamp untuk tracking rate limit per key-model
       const keyRateLimitTracker = {};
+      
+      // Tunda sedikit sebelum mulai untuk menghindari burst request
+      await new Promise(r => setTimeout(r, initialDelay));
       
       // LOOP MODEL → LOOP KUNCI (pola identik Gemini)
       for (let attempt = 0; attempt < maxTotalAttempts; attempt++) {
@@ -1947,6 +1955,11 @@ INSTRUKSI AKHIR:
         const apiKey   = activeKeys[keyIndex];
 
         const keyId = `${apiKey.substring(0,8)}_${modelName}`;
+        
+        // ✅ REDUKSI TOKEN lebih agresif untuk model vision yang rate limit ketat
+        const isVisionModel = modelName.includes('scout') || modelName.includes('maverick') || modelName.includes('vision');
+        const maxTokens = isVisionModel ? 600 : 800;
+        
         const reqBody = {
           model: modelName,
           messages: [
@@ -1954,7 +1967,7 @@ INSTRUKSI AKHIR:
             { role: "user",   content: userContent }
           ],
           temperature: 0.2,
-          max_tokens: 800, // ✅ REDUKSI TOKEN lebih agresif untuk menghindari rate limit
+          max_tokens: maxTokens,
           top_p: 0.8,
           response_format: { type: "json_object" }
         };
@@ -2029,18 +2042,19 @@ INSTRUKSI AKHIR:
 
               // ✅ EKSTRAK WAKTU TUNGGU DARI PESAN ERROR GROQ
               const waitTimeMatch = errMsg.match(/try again in ([\d.]+)s/i);
-              let waitSeconds = 8;
+              let waitSeconds = 5; // Default lebih pendek
 
               if (waitTimeMatch && waitTimeMatch[1]) {
                 waitSeconds = parseFloat(waitTimeMatch[1]);
-                waitSeconds = Math.min(waitSeconds + 1, 20);
+                // Gunakan waktu yang disarankan + buffer kecil, max 15 detik
+                waitSeconds = Math.min(waitSeconds + 2, 15);
               }
 
               console.warn(`⏳ Rate limit pada [${modelName}] Key#${keyIndex+1}. Tunggu ${waitSeconds.toFixed(1)}s`);
 
-              // Cek apakah key-model ini baru saja kena rate limit (cooldown 25s)
+              // Cek apakah key-model ini baru saja kena rate limit (cooldown 20s)
               const now = Date.now();
-              if (keyRateLimitTracker[keyId] && (now - keyRateLimitTracker[keyId]) < 25000) {
+              if (keyRateLimitTracker[keyId] && (now - keyRateLimitTracker[keyId]) < 20000) {
                 console.log(`🔑 Key ${keyIndex+1} + model masih cooldown. Skip ke kombinasi lain...`);
                 continue;
               }
@@ -2048,18 +2062,19 @@ INSTRUKSI AKHIR:
               // Set timestamp rate limit untuk kombinasi ini
               keyRateLimitTracker[keyId] = now;
 
-              // Tunggu sesuai anjuran Groq
+              // Tunggu sesuai anjuran Groq (lebih pendek agar cepat retry dengan key/model lain)
               await new Promise(r => setTimeout(r, waitSeconds * 1000));
               globalRetryCount++;
 
+              // Langsung lanjut ke kombinasi berikutnya tanpa throw
               if (globalRetryCount <= MAX_GLOBAL_RETRIES) {
                 continue;
-              } else {
-                throw new Error(`Groq: Semua kombinasi gagal. Error: ${lastError}`);
               }
+              // Jangan langsung throw, biarkan loop mencoba semua kombinasi dulu
             } else {
               lastError = `Model [${modelName}] Key#${keyIndex+1}: ${errMsg}`;
-              await new Promise(r => setTimeout(r, 300));
+              // Delay lebih pendek untuk error non-rate-limit
+              await new Promise(r => setTimeout(r, 150));
             }
           }
         } catch (err) {
@@ -2068,11 +2083,13 @@ INSTRUKSI AKHIR:
             throw err; // Re-throw error final
           }
           lastError = `Model [${modelName}] Key#${keyIndex+1}: ${err.message}`;
-          await new Promise(r => setTimeout(r, 500));
+          // Delay lebih pendek untuk retry cepat
+          await new Promise(r => setTimeout(r, 200));
         }
       }
 
-      throw new Error(`Groq: Semua model & kunci API gagal. Error terakhir: ${lastError}`);
+      // Jika semua kombinasi sudah dicoba dan masih gagal
+      throw new Error(`Groq: Semua ${totalAttempts} percobaan (${activeModels.length} model × ${activeKeys.length} key × 4 iterasi) gagal. Error terakhir: ${lastError}`);
     }
     // Memicu seluruh antrean secara sequential atau paralel
     async function processAllPending() {
