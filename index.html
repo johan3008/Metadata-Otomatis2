@@ -1340,14 +1340,17 @@
 
         const parsed = JSON.parse(responseJsonText);
         
+        // ✅ VALIDASI & NORMALISASI OUTPUT
+        const normalized = validateAndNormalizeOutput(parsed, settingsPayload);
+        
         items = items.map(i => i.id === itemId ? {
           ...i,
           status: 'success',
           metadata: {
-            title: parsed.title || '',
-            description: parsed.description || '',
-            keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
-            categories: typeof parsed.categories === 'object' ? parsed.categories : {}
+            title: normalized.title || '',
+            description: normalized.description || '',
+            keywords: Array.isArray(normalized.keywords) ? normalized.keywords : [],
+            categories: typeof normalized.categories === 'object' ? normalized.categories : {}
           }
         } : i);
       } catch (err) {
@@ -1357,79 +1360,227 @@
       renderQueueList();
     }
 
-    // PROMPT SYSTEM UTAMA (SINKRON DENGAN API)
+    // PROMPT SYSTEM UTAMA (KETAT & TERUKUR UNTUK GROQ & GEMINI)
     function buildSystemPrompt(settings) {
       const targetPlatformsStr = Object.keys(settings.targetPlatforms || {}).filter(p => settings.targetPlatforms[p]).join(', ');
+      const minTitle = Math.floor(settings.titleLength * 0.8);
+      const maxTitle = Math.ceil(settings.titleLength * 1.2);
+      const minDesc = Math.floor(settings.descLength * 0.8);
+      const maxDesc = Math.ceil(settings.descLength * 1.2);
       
       let assetSpecificInstructions = "";
       if (settings.assetType === "video") {
         assetSpecificInstructions = `
-PANDUAN KURASI KHUSUS VIDEO SINEMATIK / FOOTAGE:
-1. Deskripsikan visual dari perspektif video komersial dinamis berdasarkan ke-3 gambar frame yang Anda terima (awal, tengah, akhir dari video tersebut). Analisis alur waktu, transisi, pergerakan subjek, pergantian warna, pencahayaan (cinematic lighting, natural sun flare), sudut kamera (low angle, macro closeup, aerial drone shot), serta suasana hati / mood emosional (mood, atmosphere, cinematic feel).
-2. Gunakan kata kunci SEO video yang dicari editor profesional, seperti: "slow motion", "footage", "4k resolution", "real-time", "b-roll", "cinematic", "commercial video", "background loop", "establishing shot".
-3. DILARANG menggunakan kata kunci yang merujuk pada gambar diam statis, seperti "still photo", "illustration", "vector", "drawing".`;
+PANDUAN VIDEO SINEMATIK / FOOTAGE:
+1. Analisis ke-3 frame (awal, tengah, akhir) untuk memahami alur visual, gerak, pencahayaan, suasana.
+2. Gunakan keyword video: "footage", "slow motion", "4k resolution", "cinematic", "b-roll", "background loop".
+3. DILARANG: "still photo", "illustration", "vector", "drawing".`;
       } else if (settings.assetType === "vector") {
         assetSpecificInstructions = `
-PANDUAN KURASI KHUSUS VEKTOR / ILUSTRASI / DESAIN GRAFIS:
-1. Deskripsikan visual dari segi struktur desain grafis modern. Fokus pada gaya desain (gaya seni), seperti: "flat vector", "isometric design", "line art", "minimalist icon", "corporate style", "geometric shapes", "cartoon illustration", "abstract pattern", "infographic elements".
-2. Jelaskan fleksibilitas teknis kegunaan berkas vektor untuk para desainer, gunakan kata kunci seperti: "scalable", "customizable", "vector illustration", "isolated on white", "graphic design element", "infographic template", "clean layers", "creative asset".
-3. DILARANG menggunakan kata kunci fotografi nyata, seperti "photo", "realistic photograph", "camera shot", "shutter speed", "depth of field".`;
+PANDUAN VEKTOR / ILUSTRASI / DESAIN GRAFIS:
+1. Fokus pada gaya desain: "flat vector", "isometric design", "line art", "minimalist icon", "geometric shapes".
+2. Gunakan keyword desain: "scalable", "customizable", "vector illustration", "graphic design element".
+3. DILARANG: "photo", "realistic photograph", "camera shot".`;
       } else {
         assetSpecificInstructions = `
-PANDUAN KURASI KHUSUS FOTO NYATA / GAMBAR DIGITAL:
-1. Deskripsikan visual dari aspek fotografi profesional nyata. Fokus pada detail nyata objek (closeup detail), tekstur permukaan (texture, surface, macro), pencahayaan (studio lighting, natural soft light, dramatic shadow), kedalaman ruang tajam (depth of field, bokeh, blurred background), komposisi (rule of thirds, center-focused), serta ekspresi emosi manusia jika ada subjek orang.
-2. Gunakan kata kunci SEO fotografi bernilai jual tinggi, seperti: "professional photography", "studio shot", "macro closeup", "high resolution", "selective focus", "authentic lifestyle", "copyspace for text".
-3. DILARANG menggunakan kata-gaya grafis abstrak non-realistis, seperti "vector eps", "clipart drawing", "flat illustration", "cartoon graphic".`;
+PANDUAN FOTO NYATA / GAMBAR DIGITAL:
+1. Analisis detail fotografi: tekstur, pencahayaan, komposisi, depth of field.
+2. Gunakan keyword foto: "professional photography", "studio shot", "macro closeup", "high resolution", "selective focus".
+3. DILARANG: "vector", "clipart", "flat illustration", "cartoon".`;
       }
 
-      return `Anda adalah pakar optimasi SEO Microstock kelas dunia untuk agensi: ${targetPlatformsStr || 'Shutterstock, Adobe Stock, Freepik'}.
-Tugas utama Anda adalah menerjemahkan visual menjadi Judul (Title) dan Kata Kunci (Keywords) berskala komersial tinggi agar aset ini mendapatkan eksposur maksimum dan muncul di HALAMAN PERTAMA (First Page Search) mesin pencari Adobe Stock and Shutterstock.
+      return `ROLE: SEO Microstock Expert
+AGENSI: ${targetPlatformsStr || 'Shutterstock, Adobe Stock'}
+ASET: ${settings.assetType}
 
-ATURAN PERLINDUNGAN KEKAYAAN INTELEKTUAL & MEREK DAGANG MUTLAK (HAK IP / TRADEMARK SAFETY):
-1. DILARANG KERAS menyebutkan nama merek, perusahaan, logo, atau nama model produk komersial terdaftar dalam judul maupun kata kunci (Contoh: jangan gunakan "iPhone", "Apple Watch", "PlayStation", "Nike", "Adidas", "BMW", "Porsche", "LEGO", "Coca-Cola").
-2. Gunakan terminologi generik secara kreatif untuk mendeskripsikan subjek (Contoh: gunakan "modern smartphone", "smart wearable device", "video game controller", "athletic footwear", "luxury sports car", "plastic toy blocks", "soft drink can").
-3. Jangan sebut nama arsitektur atau landmark berhak cipta (seperti Menara Eiffel malam hari, Burj Al Arab, dll) atau nama tokoh/selebritas hidup kecuali dalam konteks editorial (karena ini aset komersial, buatlah deskripsi konseptual generik).
+═══════════════════════════════════════════════════════════════════════════════════
+PERSYARATAN KETAT WAJIB DIPATUHI 100%:
+═══════════════════════════════════════════════════════════════════════════════════
+
+[TITLE] Panjang WAJIB ${minTitle}-${maxTitle} karakter (target: ${settings.titleLength})
+[DESCRIPTION] Panjang WAJIB ${minDesc}-${maxDesc} karakter (target: ${settings.descLength})
+[KEYWORDS] TEPAT ${settings.keywordsCount} item unik, BUKAN LEBIH, BUKAN KURANG
+${settings.keyConcepts ? `[KEY CONCEPTS] WAJIB sertakan "${settings.keyConcepts}" di title & 5 keyword pertama` : ''}
+
+═══════════════════════════════════════════════════════════════════════════════════
+DETAIL SETIAP FIELD:
+═══════════════════════════════════════════════════════════════════════════════════
+
+1. TITLE (Judul SEO):
+   - Panjang: ${minTitle}-${maxTitle} karakter (BUKAN KURANG/LEBIH)
+   - Bahasa: Inggris
+   - Format: Kalimat alami, NO keyword stuffing
+   - IP Safety: Forbidden = iPhone, iPad, Nike, Adidas, BMW, Sony, Disney, Marvel, LEGO, Coca-Cola, etc.
+   - Strategy: Lead dengan core keyword, ikuti dengan descriptive phrase
+   ${settings.keyConcepts ? `   - WAJIB: Embed "${settings.keyConcepts}" di judul` : ''}
+
+2. DESCRIPTION (Deskripsi Marketing):
+   - Panjang: ${minDesc}-${maxDesc} karakter (BUKAN KURANG/LEBIH)
+   - Bahasa: Inggris
+   - Format: Kalimat lengkap, jelas, benefit-focused
+   - Isi: Deskripsikan kegunaan, style, mood, technical specs (resolution, lighting, etc.)
+
+3. KEYWORDS (${settings.keywordsCount} kata kunci unik):
+   - JUMLAH: TEPAT ${settings.keywordsCount} (tidak boleh 39, tidak boleh 41, TEPAT ${settings.keywordsCount})
+   - UNIQUE: Setiap keyword beda, NO duplikat, NO synonym overlap
+   - ORDER: Core keywords duluan (paling relevan), variant & long-tail di akhir
+   - FORMAT: ["keyword1", "keyword2", "keyword3", ... (ARRAY JSON)]
+   ${settings.keyConcepts ? `   - MUST: "${settings.keyConcepts}" di urutan 1-5` : ''}
+
+4. CATEGORIES (Kategori Platform):
+   - Shutterstock: 2 kategori BERBEDA (shutterstock1 ≠ shutterstock2)
+     Valid: Abstract, Animals/Wildlife, The Arts, Backgrounds/Textures, Beauty/Fashion, Buildings/Landmarks, Business/Finance, Education, Food and Drink, Healthcare/Medical, Industrial, Interiors, Nature, Objects, People, Science, Sports/Recreation, Technology, Transportation, Vectors
+   - Adobe Stock: 1 kategori
+     Valid: Animals, Buildings and Architecture, Business, Environment, Food, Graphic Resources, Science, Technology, Transport, Travel, Art, Other
+   - Dreamstime: 1 kategori
+     Valid: Abstract, Animals, Architecture, Business, Editorial, Holiday, Illustrations, Industrial, Landscapes, Nature, Objects, People, Technology, Travel, Vectors
+   - Vecteezy: 1 kategori
+     Valid: Backgrounds, Icons, Patterns, Banners, Vectors, Illustrations, Templates, UI/UX, Elements
+   - Canva: 1 kategori
+     Valid: Backgrounds, Elements, Illustrations, Icons, Social Media, Graphics, Templates, Textured, Minimalist
+
+5. IP/TRADEMARK SAFETY (MUTLAK):
+   - DILARANG: iPhone, iPad, Apple Watch, AirPods, PlayStati on, Xbox, Nintendo, Nike, Adidas, Puma, Reebok, Coca-Cola, Pepsi, BMW, Mercedes, Audi, Porsche, Ferrari, LEGO, Disney, Marvel, Star Wars, Sony, Canon, Nikon, Samsung, Google, Microsoft, Amazon
+   - GUNAKAN: modern smartphone, smart wearable, athletic footwear, luxury sports car, plastic building blocks, soft drink, etc.
 
 ${assetSpecificInstructions}
 
-PANDUAN STRUKTUR SEO HALAMAN PERTAMA (FIRST PAGE SEARCH ALGORITHM):
-1. Judul (Title):
-   - Tulis judul dalam Bahasa Inggris yang mengalir secara alami dan profesional dengan target panjang mendekati **${settings.titleLength}** karakter.
-   - HINDARI keyword stuffing atau penulisan kata kunci berulang yang tidak terstruktur secara tata bahasa.
-2. Deskripsi (Description):
-   - Tulis deskripsi pemasaran fungsional dalam Bahasa Inggris yang relevan.
-   - Target panjang deskripsi adalah mendekati **${settings.descLength}** karakter.
-3. Kata Kunci (Keywords):
-   - Hasilkan tepat **${settings.keywordsCount}** kata kunci unik yang dipisahkan dengan koma.
-   - Urutan kata kunci sangat penting! Letakkan kata kunci yang paling relevan dengan subjek inti di urutan pertama (Core Keywords).
-4. Klasifikasi Kategori Resmi Berdasarkan Masing-Masing Platform (DILARANG NGAWUR):
-   Wajib memilih kategori yang paling akurat dari daftar taksonomi resmi di bawah ini:
-   - "adobeStock" (Pilih salah satu saja): "Animals", "Buildings and Architecture", "Business", "Drinks", "Environment", "States of Mind", "Food", "Graphic Resources", "Religions and Culture", "Science", "Social Issues", "Sports", "Technology", "Transport", "Travel", "Trendy", "Art", "Other".
-   - "shutterstock" (Wajib pilih tepat DUA kategori yang paling relevan dari daftar di bawah. Kategori ke-2 wajib berbeda dari kategori ke-1. Kembalikan secara terpisah di JSON sebagai "shutterstock1" dan "shutterstock2"):
-     Daftar Resmi Kategori Shutterstock: "Abstract", "Animals/Wildlife", "The Arts", "Backgrounds/Textures", "Beauty/Fashion", "Buildings/Landmarks", "Business/Finance", "Celebrities", "Education", "Food and Drink", "Healthcare/Medical", "Holidays", "Industrial", "Interiors", "Miscellaneous", "Nature", "Objects", "Parks/Outdoor", "People", "Religion", "Science", "Signs/Symbols", "Sports/Recreation", "Technology", "Transportation", "Vectors", "Vintage".
-   - "dreamstime" (Pilih salah satu saja): "Abstract", "Animals", "Architecture", "Business", "Editorial", "Holiday", "Illustrations", "Industrial", "Landscapes", "Nature", "Objects", "People", "Technology", "Travel", "Vectors".
-   - "vecteezy" (Pilih salah satu saja): "Backgrounds", "Icons", "Patterns", "Banners", "Vectors", "Illustrations", "Templates", "UI/UX", "Elements".
-   - "canva" (Pilih salah satu saja): "Backgrounds", "Elements", "Illustrations", "Icons", "Social Media", "Graphics", "Templates", "Textured", "Minimalist".
+═══════════════════════════════════════════════════════════════════════════════════
+OUTPUT JSON (EXACT FORMAT):
+═══════════════════════════════════════════════════════════════════════════════════
 
-${settings.keyConcepts ? `- PRIORITAS UTAMA: Wajib menyertakan konsep prioritas berikut di dalam judul serta di urutan 5 kata kunci pertama: "${settings.keyConcepts}".` : ''}
-
-Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau komentar pembuka:
 {
-  "title": "Judul SEO aman dari IP dalam Bahasa Inggris",
-  "description": "Deskripsi pemasaran yang ramah agensi dalam Bahasa Inggris",
-  "keywords": ["tag1", "tag2", "tag3", "..."],
+  "title": "(string: ${minTitle}-${maxTitle} chars, English, IP-safe)",
+  "description": "(string: ${minDesc}-${maxDesc} chars, English, marketing-friendly)",
+  "keywords": ["kw1", "kw2", "kw3", ... TOTAL EXACTLY ${settings.keywordsCount} ITEMS],
   "categories": {
-    "shutterstock1": "Kategori Pertama dari daftar resmi Shutterstock",
-    "shutterstock2": "Kategori Kedua dari daftar resmi Shutterstock",
-    "adobeStock": "Kategori Adobe Stock resmi",
-    "dreamstime": "Kategori Dreamstime resmi",
-    "vecteezy": "Kategori Vecteezy resmi",
-    "canva": "Koleksi Canva resmi"
+    "shutterstock1": "valid category from list",
+    "shutterstock2": "DIFFERENT valid category from list",
+    "adobeStock": "valid category",
+    "dreamstime": "valid category",
+    "vecteezy": "valid category",
+    "canva": "valid category"
   }
-}`;
+}
+
+═══════════════════════════════════════════════════════════════════════════════════
+INSTRUKSI AKHIR:
+═══════════════════════════════════════════════════════════════════════════════════
+✓ OUTPUT HANYA JSON, tanpa markdown, tanpa teks apapun
+✓ keywords.length === ${settings.keywordsCount} (HARUS EXACT)
+✓ title.length ∈ [${minTitle}, ${maxTitle}] (HARUS dalam range)
+✓ description.length ∈ [${minDesc}, ${maxDesc}] (HARUS dalam range)
+✓ Tidak ada trailing comma
+✓ Tidak ada JSON syntax error
+✓ Jika ada key concepts: HARUS di-embed di title & top 5 keywords`;
     }
 
-    // ENGINE DIRECT CLIENT CALL KE API GEMINI
+    // ✅ POST-PROCESSING: Validasi & Normalisasi Output agar sesuai preferensi user
+    function validateAndNormalizeOutput(parsed, settings) {
+      console.log("🔍 [Validation] Input parsed:", { titleLen: parsed.title?.length, descLen: parsed.description?.length, keywordCount: parsed.keywords?.length, expected: settings.keywordsCount });
+      
+      // Validasi & repair title length
+      if (!parsed.title || typeof parsed.title !== "string") {
+        throw new Error("Title field missing or invalid type");
+      }
+      const titleLen = parsed.title.trim().length;
+      const minTitle = Math.floor(settings.titleLength * 0.8);
+      const maxTitle = Math.ceil(settings.titleLength * 1.2);
+      
+      if (titleLen < minTitle) {
+        console.warn(`⚠️ Title terlalu pendek (${titleLen} chars, min ${minTitle}). Normalizing...`);
+        // Jika title terlalu pendek, tambahkan deskripsi singkat
+        parsed.title = parsed.title.trim() + ", professional quality asset";
+      } else if (titleLen > maxTitle) {
+        console.warn(`⚠️ Title terlalu panjang (${titleLen} chars, max ${maxTitle}). Trimming...`);
+        // Trim ke panjang maksimal
+        parsed.title = parsed.title.trim().substring(0, maxTitle).trim();
+      }
+
+      // Validasi & repair description length
+      if (!parsed.description || typeof parsed.description !== "string") {
+        throw new Error("Description field missing or invalid type");
+      }
+      const descLen = parsed.description.trim().length;
+      const minDesc = Math.floor(settings.descLength * 0.8);
+      const maxDesc = Math.ceil(settings.descLength * 1.2);
+      
+      if (descLen < minDesc) {
+        console.warn(`⚠️ Description terlalu pendek (${descLen} chars, min ${minDesc}). Expanding...`);
+        // Tambahkan generic description extension
+        parsed.description = parsed.description.trim() + " Ideal for commercial projects and creative portfolios.";
+      } else if (descLen > maxDesc) {
+        console.warn(`⚠️ Description terlalu panjang (${descLen} chars, max ${maxDesc}). Trimming...`);
+        parsed.description = parsed.description.trim().substring(0, maxDesc).trim();
+      }
+
+      // Validasi & repair keywords (CRITICAL)
+      if (!Array.isArray(parsed.keywords)) {
+        throw new Error("Keywords must be an array");
+      }
+      
+      // Remove duplicates & empty keywords
+      parsed.keywords = [...new Set(parsed.keywords.map(kw => (kw || "").trim()).filter(Boolean))];
+      
+      const keywordCount = parsed.keywords.length;
+      const expectedCount = settings.keywordsCount;
+      
+      if (keywordCount < expectedCount) {
+        console.warn(`⚠️ Keywords kurang: ${keywordCount} / ${expectedCount}. Padding dengan filler keywords...`);
+        // Generate filler keywords yang relevan (generic)
+        const fillers = [
+          "asset", "stock photo", "commercial use", "background", "design element",
+          "high quality", "professional", "creative", "modern", "minimalist",
+          "lifestyle", "detail shot", "composition", "digital", "artistic",
+          "visual", "contemporary", "clean", "clear", "isolated"
+        ];
+        while (parsed.keywords.length < expectedCount && fillers.length > 0) {
+          const filler = fillers.shift();
+          if (!parsed.keywords.includes(filler)) {
+            parsed.keywords.push(filler);
+          }
+        }
+      } else if (keywordCount > expectedCount) {
+        console.warn(`⚠️ Keywords berlebihan: ${keywordCount} / ${expectedCount}. Trimming ke ${expectedCount} items...`);
+        // Keep the first N keywords (paling relevan)
+        parsed.keywords = parsed.keywords.slice(0, expectedCount);
+      }
+
+      // Ensure key concepts are in title & top 5 keywords
+      if (settings.keyConcepts && settings.keyConcepts.trim().length > 0) {
+        const concepts = settings.keyConcepts.toLowerCase().split(',').map(c => c.trim()).filter(Boolean);
+        const titleLower = parsed.title.toLowerCase();
+        const conceptsInTitle = concepts.filter(c => titleLower.includes(c));
+        
+        if (conceptsInTitle.length === 0) {
+          console.warn(`⚠️ Key concepts "${settings.keyConcepts}" tidak ada di title. Adding to start...`);
+          parsed.title = concepts[0].charAt(0).toUpperCase() + concepts[0].slice(1) + " - " + parsed.title;
+        }
+        
+        // Ensure concepts in top 5 keywords
+        const topKeywords = parsed.keywords.slice(0, 5);
+        const topKeywordsLower = topKeywords.map(kw => kw.toLowerCase());
+        for (let concept of concepts) {
+          if (!topKeywordsLower.some(kw => kw.includes(concept))) {
+            // Insert concept at position 5 or at the end
+            if (parsed.keywords.length < expectedCount) {
+              parsed.keywords.push(concept);
+            } else {
+              parsed.keywords[4] = concept; // Override 5th keyword
+            }
+          }
+        }
+      }
+
+      // Final validation
+      if (!parsed.categories || typeof parsed.categories !== "object") {
+        parsed.categories = {};
+      }
+
+      console.log("✅ [Validation] Output normalized:", { titleLen: parsed.title.length, descLen: parsed.description.length, keywordCount: parsed.keywords.length });
+      return parsed;
+    }
+    
     async function callGeminiDirectClient(base64Images, settings, fileName) {
       let headers = { "Content-Type": "application/json" };
       let baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -1616,10 +1767,17 @@ Kembalikan respons wajib berupa objek JSON murni tanpa pembungkus markdown atau 
                   await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
                   continue;
                 }
-                // ✅ FIX: Validasi jumlah keyword berdasarkan settings user, bukan nilai hardcode
-                const minExpectedKeywords = Math.max(5, Math.floor((settings.keywordsCount || 40) * 0.5));
-                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < minExpectedKeywords) {
-                  lastError = `Model [${modelName}] Key#${keyIndex+1}: field "keywords" hanya ${parsed.keywords?.length || 0} item, diharapkan ${settings.keywordsCount}.`;
+                // ✅ FIX: Validation lebih lenient — 50% dari keywordsCount adalah acceptable
+                // post-processing akan pad/trim sesuai preferensi user
+                const minAcceptableKeywords = Math.max(5, Math.floor((settings.keywordsCount || 40) * 0.5));
+                if (!Array.isArray(parsed.keywords) || parsed.keywords.length < minAcceptableKeywords) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: keywords hanya ${parsed.keywords?.length || 0}, min ${minAcceptableKeywords} (target ${settings.keywordsCount}).`;
+                  await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
+                  continue;
+                }
+                // Also check description exists
+                if (!parsed.description || typeof parsed.description !== "string" || parsed.description.trim().length < 10) {
+                  lastError = `Model [${modelName}] Key#${keyIndex+1}: description invalid/too short.`;
                   await new Promise(r => setTimeout(r, useSpeed3x ? 50 : 200));
                   continue;
                 }
