@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- Semantic & Technical SEO Meta Tags (Google Indexing & High CTR Optimization) -->
-  <title>Shophub Microstock Pro AI - Free Batch Metadata Generator</title>
+  <title>Metazo Ai - Free Batch Metadata Generator</title>
   <meta name="description" content="Sistem otomatis penata metadata microstock berbasis visi AI. Hasilkan judul SEO komersial, klasifikasi kategori ganda Shutterstock &amp; tag kata kunci bebas trademark secara massal untuk Adobe Stock, Freepik, dan Canva gratis." />
   <meta name="keywords" content="microstock metadata generator, otomatis keyword shutterstock, adobe stock tag generator, csv batch upload microstock, auto keywording tool, image seo workflow ai, csv freepik metadata" />
   <meta name="robots" content="index, follow" />
-  <meta name="author" content="Shophub AI Enterprise" />
+  <meta name="author" content="Metazo Ai Enterprise" />
   
   <!-- Open Graph / Facebook SEO -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Shophub Microstock Pro AI - Batch Keyword &amp; Metadata Generator" />
+  <meta property="og:title" content="Metazo Ai - Batch Keyword &amp; Metadata Generator" />
   <meta property="og:description" content="Alat penata metadata microstock massal otomatis bebas trademark. Ekspor CSV instan untuk Shutterstock, Adobe Stock, Freepik, dan Canva." />
   <meta property="og:image" content="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" />
   
   <!-- Twitter SEO -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Shophub Microstock Pro AI - Auto Keywording Tool" />
+  <meta name="twitter:title" content="Metazo Ai - Auto Keywording Tool" />
   <meta name="twitter:description" content="Kompresi visual cerdas hemat token. Hasilkan metadata massal microstock ramah SEO bebas klaim hak cipta." />
 
   <!-- Load Tailwind CSS -->
@@ -62,7 +62,7 @@
     }
   </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-orange-500/10 selection:text-orange-600">
+<body class="bg-[#f8fafc] text-slate-800 antialiased selection:bg-purple-500/10 selection:text-purple-600">
 
   <!-- Penggunaan min-h-screen untuk fleksibilitas tinggi di Netlify Sandbox -->
   <div id="app" class="min-h-screen flex flex-col w-full">
@@ -71,14 +71,14 @@
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/85 border-b border-slate-200/80 shadow-sm transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <div class="bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-500 p-2.5 rounded-2xl text-white shadow-lg shadow-orange-500/25 transform hover:scale-105 transition-all">
-            <i data-lucide="sparkles" class="w-6 h-6 animate-pulse"></i>
+          <div class="bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 p-2.5 rounded-2xl text-white shadow-lg shadow-purple-500/25 transform hover:scale-105 transition-all">
+            <i data-lucide="zap" class="w-6 h-6 animate-pulse"></i>
           </div>
           <div>
-            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-orange-600 to-amber-500 bg-clip-text text-transparent">
-              Shophub Microstock Pro AI
+            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              Metazo Ai
             </h1>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Enterprise Suite • Standalone Client Mode</p>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Next-Gen Suite • Standalone Client Mode</p>
           </div>
         </div>
         <div class="flex items-center space-x-3">
@@ -108,11 +108,11 @@
             <!-- 1. Tipe Aset -->
             <div>
               <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center mb-3">
-                <i data-lucide="sliders" class="w-4 h-4 mr-2 text-orange-500"></i>
+                <i data-lucide="sliders" class="w-4 h-4 mr-2 text-purple-500"></i>
                 1. Pilih Tipe Aset
               </h3>
               <div class="grid grid-cols-3 gap-2 bg-slate-100/80 p-1.5 rounded-2xl" id="asset-type-container">
-                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200">
+                <button onclick="setAssetType('image')" id="btn-image" class="type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-purple-600 shadow-md shadow-slate-200">
                   <i data-lucide="image" class="w-4 h-4"></i>
                   <span>Gambar</span>
                 </button>
@@ -131,14 +131,14 @@
             <div class="pt-2 border-t border-slate-100">
               <div class="flex items-center justify-between mb-3">
                 <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center">
-                  <i data-lucide="key-round" class="w-4 h-4 mr-2 text-orange-500"></i>
+                  <i data-lucide="key-round" class="w-4 h-4 mr-2 text-purple-500"></i>
                   Koneksi Gemini AI (5 Kunci)
                 </h3>
               </div>
 
               <!-- Tab Pemilih Menu API -->
               <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-2xl mb-4 text-center">
-                <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm">
+                <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-purple-600 shadow-sm">
                   🔮 Gemini
                 </button>
                 <button onclick="switchAuthTab('groq')" id="tab-auth-groq" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
@@ -166,31 +166,31 @@
                     <!-- Slot 1 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#1</span>
-                      <input type="password" id="api-key-1" placeholder="Masukkan API Key ke-1 (Utama)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                      <input type="password" id="api-key-1" placeholder="Masukkan API Key ke-1 (Utama)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
                     </div>
 
                     <!-- Slot 2 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#2</span>
-                      <input type="password" id="api-key-2" placeholder="Masukkan API Key ke-2 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                      <input type="password" id="api-key-2" placeholder="Masukkan API Key ke-2 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
                     </div>
 
                     <!-- Slot 3 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#3</span>
-                      <input type="password" id="api-key-3" placeholder="Masukkan API Key ke-3 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                      <input type="password" id="api-key-3" placeholder="Masukkan API Key ke-3 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
                     </div>
 
                     <!-- Slot 4 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#4</span>
-                      <input type="password" id="api-key-4" placeholder="Masukkan API Key ke-4 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                      <input type="password" id="api-key-4" placeholder="Masukkan API Key ke-4 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
                     </div>
 
                     <!-- Slot 5 -->
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[10px] font-extrabold text-slate-400">#5</span>
-                      <input type="password" id="api-key-5" placeholder="Masukkan API Key ke-5 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
+                      <input type="password" id="api-key-5" placeholder="Masukkan API Key ke-5 (Cadangan)" class="w-full text-xs pl-8 pr-3 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 font-mono transition-colors" onchange="saveApiKeys()" />
                     </div>
 
                     <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
@@ -206,7 +206,7 @@
                 <!-- Fitur Kecepatan & Rotasi Lanjutan -->
                 <div class="flex items-center justify-between p-3 bg-[#f8fafc] rounded-2xl border border-slate-200">
                   <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-600 cursor-pointer">
-                    <input type="checkbox" id="speed-3x-toggle" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                    <input type="checkbox" id="speed-3x-toggle" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
                     <span>Auto Rotate &amp; Speed 3x (Parallel)</span>
                   </label>
                 </div>
@@ -227,19 +227,19 @@
                   <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
                   <div class="space-y-1.5 bg-[#f8fafc] p-3 rounded-2xl border border-slate-200">
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-                      <input type="checkbox" id="model-g31" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <input type="checkbox" id="model-g31" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
                       <span>gemini-3.1-flash <span class="text-[8px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full ml-1 font-bold">Ultra Baru</span></span>
                     </label>
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-                      <input type="checkbox" id="model-g3" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <input type="checkbox" id="model-g3" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
                       <span>gemini-3.0-flash <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Baru</span></span>
                     </label>
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-                      <input type="checkbox" id="model-g25" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <input type="checkbox" id="model-g25" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
                       <span>gemini-2.5-flash <span class="text-[8px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1 font-bold">Utama</span></span>
                     </label>
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-slate-200/40 rounded transition-all">
-                      <input type="checkbox" id="model-g20" checked="checked" class="accent-orange-500 h-4 w-4 rounded" />
+                      <input type="checkbox" id="model-g20" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
                       <span>gemini-2.0-flash <span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full ml-1 font-bold">Cadangan</span></span>
                     </label>
                   </div>
@@ -351,7 +351,7 @@
                         <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
                           <span>llama-3.2-90b-vision-preview</span>
                           <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">Vision+Text</span>
-                          <span class="text-[8px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">Preview</span>
+                          <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">Preview</span>
                         </div>
                         <p class="text-[9px] text-slate-400 font-semibold mt-0.5 leading-relaxed">90B params · Vision stabil · Fallback legacy kompatibel</p>
                       </div>
@@ -364,14 +364,14 @@
 
               <!-- Konten Tab 3: Panduan Dapatkan API Key secara Gratis -->
               <div id="content-auth-helper" class="space-y-3 hidden">
-                <div class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 text-xs space-y-3 shadow-inner">
+                <div class="p-4 bg-purple-50/50 rounded-2xl border border-purple-100 text-xs space-y-3 shadow-inner">
                   <p class="font-extrabold text-slate-800 flex items-center">
                     🚀 Cara Dapatkan API Key Gratis (30 Detik):
                   </p>
                   <div class="space-y-2 text-slate-600 font-medium leading-relaxed">
-                    <p class="font-bold border-b border-orange-200/50 pb-1">Google Gemini Key:</p>
+                    <p class="font-bold border-b border-purple-200/50 pb-1">Google Gemini Key:</p>
                     <ol class="list-decimal list-inside pl-1 space-y-1">
-                      <li>Kunjungi <a href="https://aistudio.google.com/" target="_blank" class="text-orange-600 underline font-bold hover:text-orange-700">Google AI Studio ↗</a></li>
+                      <li>Kunjungi <a href="https://aistudio.google.com/" target="_blank" class="text-purple-600 underline font-bold hover:text-purple-700">Google AI Studio ↗</a></li>
                       <li>Klik <strong>"Create API Key"</strong> dan salin kodenya.</li>
                     </ol>
                     <p class="font-bold border-b border-violet-200/50 pb-1 mt-3 text-violet-800">⚡ Groq API Key (Gratis):</p>
@@ -391,11 +391,11 @@
             <!-- 3. Area Unggah Batch -->
             <div class="pt-2 border-t border-slate-100">
               <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center mb-3">
-                <i data-lucide="upload" class="w-4 h-4 mr-2 text-orange-500"></i>
+                <i data-lucide="upload" class="w-4 h-4 mr-2 text-purple-500"></i>
                 2. Area Unggah Batch
               </h3>
-              <div onclick="triggerFileSelect()" class="border-2 border-dashed border-slate-200 hover:border-orange-500 hover:bg-orange-50/5 rounded-2xl p-7 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-md">
-                <div id="upload-icon-container" class="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:scale-110 group-hover:bg-orange-100 group-hover:text-orange-600 transition-all duration-300 shadow-sm border border-slate-200/50">
+              <div onclick="triggerFileSelect()" class="border-2 border-dashed border-slate-200 hover:border-purple-500 hover:bg-purple-50/5 rounded-2xl p-7 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-3 group hover:shadow-md">
+                <div id="upload-icon-container" class="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:scale-110 group-hover:bg-purple-100 group-hover:text-purple-600 transition-all duration-300 shadow-sm border border-slate-200/50">
                   <i id="upload-icon" data-lucide="image" class="w-7 h-7"></i>
                 </div>
                 <div>
@@ -409,7 +409,7 @@
             <!-- 4. Preferensi AI -->
             <div class="space-y-4 pt-4 border-t border-slate-100">
               <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
-                <i data-lucide="settings" class="w-4 h-4 mr-2 text-orange-500"></i>
+                <i data-lucide="settings" class="w-4 h-4 mr-2 text-purple-500"></i>
                 3. Preferensi Output AI
               </h3>
 
@@ -417,40 +417,40 @@
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
                   <span class="text-slate-600">Panjang Judul SEO</span>
-                  <span id="title-val" class="text-orange-600">80 Karakter (ch)</span>
+                  <span id="title-val" class="text-purple-600">80 Karakter (ch)</span>
                 </div>
-                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Slider Panjang Deskripsi -->
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
                   <span class="text-slate-600">Panjang Deskripsi</span>
-                  <span id="desc-val" class="text-orange-600">200 Karakter (ch)</span>
+                  <span id="desc-val" class="text-purple-600">200 Karakter (ch)</span>
                 </div>
-                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Slider Jumlah Keywords -->
               <div class="space-y-1.5">
                 <div class="flex justify-between text-xs font-bold">
                   <span class="text-neutral-600">Target Keywords</span>
-                  <span id="keywords-val" class="text-orange-600">40 Kata</span>
+                  <span id="keywords-val" class="text-purple-600">40 Kata</span>
                 </div>
-                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-orange-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
 
               <!-- Key Concepts -->
               <div class="space-y-1.5">
                 <label class="text-xs font-bold text-slate-600">Prioritas Konsep (Key Concept)</label>
-                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 bg-[#f8fafc]/50 transition-colors" />
+                <input type="text" id="key-concepts-input" placeholder="misal: premium, flat vector, red shoe" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 transition-colors" />
               </div>
             </div>
 
             <!-- Tombol Generate Utama -->
             <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
-              <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
-                <i id="generate-all-icon" data-lucide="sparkles" class="w-4 h-4 text-amber-200 animate-pulse"></i>
+              <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
+                <i id="generate-all-icon" data-lucide="sparkles" class="w-4 h-4 text-purple-200 animate-pulse"></i>
                 <span id="generate-all-text">GENERATE SEMUA METADATA (BATCH)</span>
               </button>
             </div>
@@ -458,7 +458,7 @@
             <!-- 5. Target Platform -->
             <div class="space-y-3 pt-4 border-t border-slate-100">
               <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
-                <i data-lucide="check-square" class="w-4 h-4 mr-2 text-orange-500"></i>
+                <i data-lucide="check-square" class="w-4 h-4 mr-2 text-purple-500"></i>
                 4. Platform Target
               </h3>
               <div class="grid grid-cols-2 gap-2" id="platform-checkboxes">
@@ -476,7 +476,7 @@
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
                 <h3 class="text-base font-extrabold text-slate-950 flex items-center">
-                  <i data-lucide="folder-open" class="w-5 h-5 mr-2 text-orange-500"></i>
+                  <i data-lucide="folder-open" class="w-5 h-5 mr-2 text-purple-500"></i>
                   Daftar Antrean &amp; Editor Metadata (<span id="queue-count">0</span>)
                 </h3>
                 <p class="text-xs text-slate-500 mt-0.5">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
@@ -490,7 +490,7 @@
             </div>
 
             <!-- PANEL UNDUH CSV BATCH -->
-            <div id="csv-download-panel" class="hidden mt-4 p-5 bg-gradient-to-r from-amber-50/30 to-orange-50/10 rounded-2xl border border-amber-100/40 flex flex-col lg:flex-row items-center justify-between gap-4">
+            <div id="csv-download-panel" class="hidden mt-4 p-5 bg-gradient-to-r from-purple-50/30 to-pink-50/10 rounded-2xl border border-purple-100/40 flex flex-col lg:flex-row items-center justify-between gap-4">
               <div class="flex items-center space-x-2.5">
                 <div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg shadow-sm">
                   <i data-lucide="check" class="w-4 h-4"></i>
@@ -508,7 +508,7 @@
             <!-- AREA LIST ANTREAN -->
             <div id="queue-list" class="flex-1 overflow-y-auto mt-6 space-y-4 pr-1 custom-scrollbar">
               <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
-                <i data-lucide="sparkles" class="w-12 h-12 text-orange-300 mb-3 animate-pulse"></i>
+                <i data-lucide="sparkles" class="w-12 h-12 text-purple-300 mb-3 animate-pulse"></i>
                 <h4 class="text-sm font-extrabold text-slate-800">Antrean Aset Kosong</h4>
                 <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
                   Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
@@ -524,7 +524,7 @@
 
     <!-- Footer Premium yang Selalu di Pojok Bawah -->
     <footer class="mt-auto bg-slate-900 text-slate-400 py-12 border-t border-slate-850 text-xs text-center space-y-3">
-      <p class="font-bold text-slate-300">© 2026 Shophub Microstock Pro AI. Sistem Berbasis Client Standalone.</p>
+      <p class="font-bold text-slate-300">© 2026 Metazo Ai. Sistem Berbasis Client Standalone.</p>
       <div class="flex justify-center space-x-4 text-slate-500 font-bold">
         <span>Aman Terenkripsi</span>
         <span>•</span>
@@ -625,13 +625,13 @@
 
       // Tampilkan yang dipilih
       if (provider === 'gemini') {
-        if (tabGemini) tabGemini.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm";
+        if (tabGemini) tabGemini.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-purple-600 shadow-sm";
         if (contentGemini) contentGemini.classList.remove('hidden');
       } else if (provider === 'groq') {
         if (tabGroq) tabGroq.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-violet-600 shadow-sm";
         if (contentGroq) contentGroq.classList.remove('hidden');
       } else {
-        if (tabHelper) tabHelper.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-orange-600 shadow-sm";
+        if (tabHelper) tabHelper.className = "py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-purple-600 shadow-sm";
         if (contentHelper) contentHelper.classList.remove('hidden');
       }
     }
@@ -660,7 +660,7 @@
         return;
       }
       
-      statusEl.className = "text-[10px] font-bold text-amber-600 animate-pulse";
+      statusEl.className = "text-[10px] font-bold text-purple-600 animate-pulse";
       statusEl.innerText = `⏳ Memeriksa ${activeKeys.length} Kunci...`;
       
       let workingKeysCount = 0;
@@ -690,7 +690,7 @@
         statusEl.className = "text-[10px] font-bold text-emerald-600";
         statusEl.innerText = `✅ Semua Aktif (${workingKeysCount}/${activeKeys.length})`;
       } else if (workingKeysCount > 0) {
-        statusEl.className = "text-[10px] font-bold text-orange-500";
+        statusEl.className = "text-[10px] font-bold text-purple-500";
         statusEl.innerText = `⚠️ Sebagian Aktif (${workingKeysCount}/${activeKeys.length})`;
       } else {
         statusEl.className = "text-[10px] font-bold text-red-500";
@@ -770,7 +770,7 @@
         statusEl.className = "text-[10px] font-bold text-emerald-600";
         statusEl.innerText = `✅ Semua Aktif (${workingKeysCount}/${activeKeys.length})`;
       } else if (workingKeysCount > 0) {
-        statusEl.className = "text-[10px] font-bold text-orange-500";
+        statusEl.className = "text-[10px] font-bold text-purple-500";
         statusEl.innerText = `⚠️ Sebagian Aktif (${workingKeysCount}/${activeKeys.length})`;
       } else {
         statusEl.className = "text-[10px] font-bold text-red-500";
@@ -800,7 +800,7 @@
       
       const activeBtn = document.getElementById(`btn-${type}`);
       if (activeBtn) {
-        activeBtn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-orange-600 shadow-md shadow-slate-200";
+        activeBtn.className = "type-btn py-3 px-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex flex-col items-center gap-1.5 bg-white text-purple-600 shadow-md shadow-slate-200";
       }
 
       // Update placeholder area unggah
@@ -851,11 +851,11 @@
         btn.type = "button";
         btn.onclick = () => togglePlatform(platform);
         btn.className = `flex items-center space-x-2.5 p-3 border rounded-2xl text-left transition-all ${
-          checked ? 'border-orange-200 bg-orange-50/20 text-slate-900 shadow-sm' : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'
+          checked ? 'border-purple-200 bg-purple-50/20 text-slate-900 shadow-sm' : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'
         }`;
         
         btn.innerHTML = `
-          <i data-lucide="${checked ? 'check-square' : 'square'}" class="w-3.5 h-3.5 ${checked ? 'text-orange-500' : 'text-slate-300'} flex-shrink-0"></i>
+          <i data-lucide="${checked ? 'check-square' : 'square'}" class="w-3.5 h-3.5 ${checked ? 'text-purple-500' : 'text-slate-300'} flex-shrink-0"></i>
           <span class="text-[11px] font-bold capitalize truncate">${friendlyName}</span>
         `;
         container.appendChild(btn);
@@ -1042,7 +1042,7 @@
       if (items.length === 0) {
         container.innerHTML = `
           <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
-            <i data-lucide="sparkles" class="w-12 h-12 text-orange-300 mb-3 animate-pulse"></i>
+            <i data-lucide="sparkles" class="w-12 h-12 text-purple-300 mb-3 animate-pulse"></i>
             <h4 class="text-sm font-extrabold text-slate-850">Antrean Aset Kosong</h4>
             <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
               Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
@@ -1066,14 +1066,14 @@
         const isExpanded = expandedItemId === item.id;
         const itemCard = document.createElement("div");
         itemCard.className = `border rounded-3xl transition-all duration-300 overflow-hidden ${
-          isExpanded ? 'border-orange-400 bg-orange-50/5 shadow-lg shadow-orange-100/30' : 'border-slate-200 bg-white hover:border-amber-300 shadow-sm'
+          isExpanded ? 'border-purple-400 bg-purple-50/5 shadow-lg shadow-purple-100/30' : 'border-slate-200 bg-white hover:border-purple-300 shadow-sm'
         }`;
 
         let thumbnailHTML = '';
         if (item.type === 'video') {
-          thumbnailHTML = item.preview ? `<img src="${item.preview}" class="w-full h-full object-cover" />` : `<i data-lucide="film" class="w-5 h-5 text-amber-500"></i>`;
+          thumbnailHTML = item.preview ? `<img src="${item.preview}" class="w-full h-full object-cover" />` : `<i data-lucide="film" class="w-5 h-5 text-purple-500"></i>`;
         } else if (item.type === 'vector') {
-          thumbnailHTML = `<i data-lucide="pen-tool" class="w-5 h-5 text-orange-500"></i>`;
+          thumbnailHTML = `<i data-lucide="pen-tool" class="w-5 h-5 text-purple-500"></i>`;
         } else if (item.preview) {
           thumbnailHTML = `<img src="${item.preview}" class="w-full h-full object-cover" />`;
         } else {
@@ -1082,7 +1082,7 @@
 
         let statusBadge = '';
         if (item.status === 'processing') {
-          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-orange-50 border border-orange-100 text-orange-700 animate-pulse"><i data-lucide="refresh-cw" class="w-3.5 h-3.5 mr-1.5 animate-spin"></i>Proses AI...</span>`;
+          statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-purple-50 border border-purple-100 text-purple-700 animate-pulse"><i data-lucide="refresh-cw" class="w-3.5 h-3.5 mr-1.5 animate-spin"></i>Proses AI...</span>`;
         } else if (item.status === 'success') {
           statusBadge = `<span class="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-emerald-50 border border-emerald-100 text-emerald-800"><i data-lucide="check" class="w-3.5 h-3.5 mr-1.5"></i>Selesai</span>`;
         } else if (item.status === 'error') {
@@ -1111,7 +1111,7 @@
             </div>
             <div class="flex items-center space-x-3" onclick="event.stopPropagation()">
               ${statusBadge}
-              <button onclick="processSingleItem('${item.id}')" ${item.status === 'processing' ? 'disabled' : ''} class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-extrabold flex items-center space-x-1 hover:shadow-md transition-all active:scale-95">
+              <button onclick="processSingleItem('${item.id}')" ${item.status === 'processing' ? 'disabled' : ''} class="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white rounded-xl text-xs font-extrabold flex items-center space-x-1 hover:shadow-md transition-all active:scale-95">
                 <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1"></i>
                 <span>Generate</span>
               </button>
@@ -1134,7 +1134,7 @@
       if (item.status === 'pending') {
         return `
           <div class="p-6 border-t border-slate-100 bg-[#f8fafc]/50 text-center text-slate-500">
-            <i data-lucide="sparkles" class="w-10 h-10 text-orange-400 mx-auto mb-2 animate-bounce"></i>
+            <i data-lucide="sparkles" class="w-10 h-10 text-purple-400 mx-auto mb-2 animate-bounce"></i>
             <p class="text-xs font-extrabold text-slate-700">Metadata belum di-generate</p>
             <p class="text-[10px] text-slate-400 mt-1 font-semibold">Klik tombol "Generate" untuk membuat metadata komersial AI secara instan.</p>
           </div>
@@ -1185,8 +1185,8 @@
 
           if (shouldRender) {
             cards += `
-              <div class="bg-white border border-amber-100/60 p-3.5 rounded-2xl text-left shadow-sm">
-                <span class="block text-[8px] font-extrabold text-amber-700 capitalize tracking-wider">${displayPlatformName}</span>
+              <div class="bg-white border border-purple-100/60 p-3.5 rounded-2xl text-left shadow-sm">
+                <span class="block text-[8px] font-extrabold text-purple-700 capitalize tracking-wider">${displayPlatformName}</span>
                 <span class="block text-[10px] font-extrabold text-slate-800 truncate mt-1.5" title="${val}">${val}</span>
               </div>
             `;
@@ -1197,7 +1197,7 @@
           categoriesHTML = `
             <div class="space-y-2 pt-4 border-t border-slate-100">
               <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center">
-                <i data-lucide="layers" class="w-4 h-4 mr-2 text-amber-500"></i> Kategori Berdasarkan Platform Terpilih
+                <i data-lucide="layers" class="w-4 h-4 mr-2 text-purple-500"></i> Kategori Berdasarkan Platform Terpilih
               </label>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${cards}</div>
             </div>
@@ -1209,7 +1209,7 @@
       let keywordsHTML = '';
       item.metadata.keywords.forEach((kw, i) => {
         keywordsHTML += `
-          <span onclick="copyTextDirect('${kw}', 'kw-${item.id}-${i}')" id="kw-${item.id}-${i}" class="text-[10px] bg-slate-50 hover:bg-orange-500/10 border border-slate-200 hover:border-orange-300 text-slate-600 hover:text-orange-600 font-extrabold px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer select-none">
+          <span onclick="copyTextDirect('${kw}', 'kw-${item.id}-${i}')" id="kw-${item.id}-${i}" class="text-[10px] bg-slate-50 hover:bg-purple-500/10 border border-slate-200 hover:border-purple-300 text-slate-600 hover:text-purple-600 font-extrabold px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer select-none">
             ${kw}
           </span>
         `;
@@ -1234,10 +1234,10 @@
           <div class="flex items-center space-x-3 flex-shrink-0">
             <div class="text-right">
               <span class="block text-[10px] font-extrabold text-slate-400 uppercase">Kualitas SEO</span>
-              <span class="block text-sm font-extrabold ${seoMetrics.score > 80 ? 'text-emerald-600' : seoMetrics.score > 50 ? 'text-orange-500' : 'text-red-500'}">${seoMetrics.score}% / 100</span>
+              <span class="block text-sm font-extrabold ${seoMetrics.score > 80 ? 'text-emerald-600' : seoMetrics.score > 50 ? 'text-purple-500' : 'text-red-500'}">${seoMetrics.score}% / 100</span>
             </div>
             <div class="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
-              <div class="h-full ${seoMetrics.score > 80 ? 'bg-emerald-500' : seoMetrics.score > 50 ? 'bg-orange-500' : 'bg-red-500'}" style="width: ${seoMetrics.score}%"></div>
+              <div class="h-full ${seoMetrics.score > 80 ? 'bg-emerald-500' : seoMetrics.score > 50 ? 'bg-purple-500' : 'bg-red-500'}" style="width: ${seoMetrics.score}%"></div>
             </div>
           </div>
         </div>
@@ -1251,26 +1251,26 @@
 
           <div class="space-y-1.5">
             <div class="flex justify-between items-center text-xs font-bold">
-              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Judul SEO (Title)</label>
-              <button onclick="copyTextDirect('${item.metadata.title.replace(/'/g, "\\'")}', '${item.id}-copy-title')" id="${item.id}-copy-title" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
+              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-purple-500"></i>Judul SEO (Title)</label>
+              <button onclick="copyTextDirect('${item.metadata.title.replace(/'/g, "\\'")}', '${item.id}-copy-title')" id="${item.id}-copy-title" class="text-[10px] text-purple-600 hover:text-purple-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
             </div>
-            <input type="text" value="${item.metadata.title}" onchange="updateItemField('${item.id}', 'title', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 shadow-inner">
+            <input type="text" value="${item.metadata.title}" onchange="updateItemField('${item.id}', 'title', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 shadow-inner">
           </div>
 
           <div class="space-y-1.5">
             <div class="flex justify-between items-center text-xs font-bold">
-              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Deskripsi (Description)</label>
-              <button onclick="copyTextDirect('${item.metadata.description.replace(/'/g, "\\'")}', '${item.id}-copy-desc')" id="${item.id}-copy-desc" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
+              <label class="text-slate-600 flex items-center"><i data-lucide="file-text" class="w-3.5 h-3.5 mr-1.5 text-purple-500"></i>Deskripsi (Description)</label>
+              <button onclick="copyTextDirect('${item.metadata.description.replace(/'/g, "\\'")}', '${item.id}-copy-desc')" id="${item.id}-copy-desc" class="text-[10px] text-purple-600 hover:text-purple-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin</span></button>
             </div>
-            <textarea rows="2" onchange="updateItemField('${item.id}', 'description', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-orange-500 resize-none shadow-inner">${item.metadata.description}</textarea>
+            <textarea rows="2" onchange="updateItemField('${item.id}', 'description', this.value)" class="w-full text-xs p-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 resize-none shadow-inner">${item.metadata.description}</textarea>
           </div>
 
           ${categoriesHTML}
 
           <div class="space-y-1.5 pt-3 border-t border-slate-100">
             <div class="flex justify-between items-center text-xs font-bold">
-              <label class="text-slate-600 flex items-center"><i data-lucide="tag" class="w-3.5 h-3.5 mr-1.5 text-orange-500"></i>Keywords (${item.metadata.keywords.length})</label>
-              <button onclick="copyTextDirect('${item.metadata.keywords.join(', ').replace(/'/g, "\\'")}', '${item.id}-copy-kw')" id="${item.id}-copy-kw" class="text-[10px] text-orange-600 hover:text-orange-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin Semua (Koma)</span></button>
+              <label class="text-slate-600 flex items-center"><i data-lucide="tag" class="w-3.5 h-3.5 mr-1.5 text-purple-500"></i>Keywords (${item.metadata.keywords.length})</label>
+              <button onclick="copyTextDirect('${item.metadata.keywords.join(', ').replace(/'/g, "\\'")}', '${item.id}-copy-kw')" id="${item.id}-copy-kw" class="text-[10px] text-purple-600 hover:text-purple-700 font-extrabold flex items-center space-x-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Salin Semua (Koma)</span></button>
             </div>
             <div class="p-3 bg-white rounded-2xl border border-neutral-200 max-h-32 overflow-y-auto shadow-inner">
               <div class="flex flex-wrap gap-1.5">${keywordsHTML}</div>
