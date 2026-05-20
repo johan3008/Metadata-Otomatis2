@@ -298,13 +298,17 @@
                 <div class="space-y-2">
                   <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Model Prioritas Gemini</label>
                   
-                  <!-- Gemini 3 Series -->
+                  <!-- Gemini 3.5 Series -->
                   <div class="px-2 pt-1 pb-0.5">
                     <span class="text-[9px] font-extrabold text-purple-600 uppercase tracking-widest flex items-center gap-1">
-                      <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500"></span> Gemini 3 (Terbaru)
+                      <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500"></span> Gemini 3.5 (Terbaru ✨)
                     </span>
                   </div>
                   <div class="space-y-1.5 bg-gradient-to-br from-purple-50/60 to-pink-50/40 p-3 rounded-2xl border border-purple-200/60">
+                    <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-purple-100/40 rounded transition-all">
+                      <input type="checkbox" id="model-g35flash" checked="checked" class="accent-purple-500 h-4 w-4 rounded" />
+                      <span>gemini-3.5-flash <span class="text-[8px] bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full ml-1 font-bold">Tercerdas ⚡</span></span>
+                    </label>
                     <label class="flex items-center space-x-2.5 text-[11px] font-extrabold text-slate-700 cursor-pointer p-1 hover:bg-purple-100/40 rounded transition-all">
                       <input type="checkbox" id="model-g31pro" class="accent-purple-500 h-4 w-4 rounded" />
                       <span>gemini-3.1-pro-preview <span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full ml-1 font-bold">Pro 🆕</span></span>
@@ -993,6 +997,7 @@
       const activeModels = getPrioritizedModels();
       // Pilih model yang paling ringan & stabil untuk test
       const TEST_MODEL_PRIORITY = [
+        "gemini-3.5-flash",
         "gemini-3.1-flash-lite",
         "gemini-2.0-flash",
         "gemini-2.5-flash-preview-05-20",
@@ -1154,7 +1159,9 @@
     function getPrioritizedModels() {
       const models = [];
       
-      // ✅ GEMINI 3 — Prioritas tertinggi (terbaru, paling kapabel)
+      // ✅ GEMINI 3.5 — Prioritas tertinggi (terbaru, paling kapabel)
+      const mg35flash = document.getElementById("model-g35flash");
+      // ✅ GEMINI 3 — Prioritas kedua
       const mg31pro   = document.getElementById("model-g31pro");
       const mg3flash  = document.getElementById("model-g3flash");
       const mg31lite  = document.getElementById("model-g31lite");
@@ -1163,6 +1170,7 @@
       const mg20      = document.getElementById("model-g20");
       const mg15      = document.getElementById("model-g15");
 
+      if (mg35flash && mg35flash.checked) models.push("gemini-3.5-flash");
       if (mg31pro  && mg31pro.checked)  models.push("gemini-3.1-pro-preview");
       if (mg3flash && mg3flash.checked) models.push("gemini-3-flash-preview");
       if (mg31lite && mg31lite.checked) models.push("gemini-3.1-flash-lite");
@@ -1172,6 +1180,7 @@
 
       // Fallback otomatis jika tidak ada yang dipilih
       if (models.length === 0) {
+        models.push("gemini-3.5-flash");
         models.push("gemini-3-flash-preview");
         models.push("gemini-3.1-flash-lite");
         models.push("gemini-2.5-flash-preview-05-20");
