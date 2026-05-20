@@ -182,10 +182,31 @@
         <span id="error-message">Terjadi kesalahan sistem.</span>
       </div>
 
-      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      <div class="space-y-6">
         
-        <!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
-        <div class="xl:col-span-4 space-y-5 xl:sticky xl:top-24 order-2 xl:order-1">
+        <!-- TAB NAVIGASI FITUR UTAMA -->
+        <div class="bg-white rounded-3xl p-2 border border-slate-200 shadow-sm">
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="switchMainTab('upload')" id="tab-upload" class="py-3 px-4 rounded-2xl text-sm font-extrabold transition-all bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md flex items-center justify-center space-x-2">
+              <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+              <span>Upload & Settings</span>
+            </button>
+            <button onclick="switchMainTab('apikey')" id="tab-apikey" class="py-3 px-4 rounded-2xl text-sm font-extrabold transition-all text-slate-500 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center space-x-2">
+              <i data-lucide="key-round" class="w-5 h-5"></i>
+              <span>Pengaturan API Key</span>
+            </button>
+            <button onclick="switchMainTab('queue')" id="tab-queue" class="py-3 px-4 rounded-2xl text-sm font-extrabold transition-all text-slate-500 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center space-x-2">
+              <i data-lucide="folder-open" class="w-5 h-5"></i>
+              <span>Antrean (<span id="nav-queue-count">0</span>)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KONTEN TAB: UPLOAD & SETTINGS -->
+        <div id="content-upload" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- KOLOM KIRI: SETELAN TIPE & AREA UPLOAD -->
+          <div class="space-y-5">
           <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
             
             <!-- 1. Tipe Aset -->
@@ -671,72 +692,251 @@
               </div>
             </div>
 
-          </div>
-        </div>
 
-        <!-- KOLOM KANAN: DAFTAR ANTREAN DAN EDITOR METADATA TERINTEGRASI -->
-        <div class="xl:col-span-8 space-y-6 order-1 xl:order-2">
-          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col min-h-[670px]">
+          <!-- KOLOM KANAN: PREFERENSI AI & PLATFORM -->
+          <div class="space-y-5">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
             
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div>
-                <h3 class="text-base font-extrabold text-slate-950 flex items-center">
-                  <i data-lucide="folder-open" class="w-5 h-5 mr-2 text-purple-500"></i>
-                  Daftar Antrean &amp; Editor Metadata (<span id="queue-count">0</span>)
-                </h3>
-                <p class="text-xs text-slate-500 mt-0.5">Kelola dan sunting hasil tagging AI dalam satu panel terpadu</p>
+            <!-- 4. Preferensi AI -->
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                <i data-lucide="settings" class="w-4 h-4 mr-2 text-purple-500"></i>
+                3. Preferensi Output AI
+              </h3>
+
+              <!-- Slider Panjang Judul -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-600">Panjang Judul SEO</span>
+                  <span id="title-val" class="text-purple-600">80 Karakter (ch)</span>
+                </div>
+                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
-              
-              <!-- Tombol Reset / Clear All Antrean -->
-              <button onclick="clearAllQueue()" id="btn-clear-queue" class="hidden p-2.5 bg-red-50 hover:bg-red-100 rounded-2xl text-red-600 transition-all flex items-center space-x-1.5" title="Kosongkan Antrean">
-                <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
-                <span class="text-[10px] font-bold">Clear All</span>
+
+              <!-- Slider Panjang Deskripsi -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-600">Panjang Deskripsi</span>
+                  <span id="desc-val" class="text-purple-600">200 Karakter (ch)</span>
+                </div>
+                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Slider Jumlah Keywords -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-neutral-600">Target Keywords</span>
+                  <span id="keywords-val" class="text-purple-600">40 Kata</span>
+                </div>
+                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Key Concepts -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-600">Prioritas Konsep SEO Microstock</label><p class="text-[10px] text-slate-400 font-semibold mt-1">Gunakan niche buyer intent & keyword volume tinggi agar ranking lebih kuat di Shutterstock, Adobe Stock, Freepik, dan Canva.</p>
+                <input type="text" id="key-concepts-input" placeholder="misal: business, luxury, medical, technology, ai, finance, lifestyle" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 transition-colors" />
+              </div>
+
+              <div class="p-3 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-2xl border border-violet-200 mt-3">
+                <div class="flex items-start space-x-2">
+                  <i data-lucide="trending-up" class="w-4 h-4 text-violet-600 mt-0.5"></i>
+                  <div>
+                    <p class="text-[11px] font-extrabold text-violet-800">Trend Keyword AI</p>
+                    <p class="text-[10px] text-violet-700 font-semibold mt-1">
+                      AI otomatis menambahkan keyword buyer intent & keyword trending microstock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Video AI Analysis Info -->
+              <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 mt-3">
+                <div class="flex items-start space-x-2">
+                  <i data-lucide="film" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                  <div>
+                    <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis</p>
+                    <p class="text-[10px] text-blue-700 font-semibold leading-relaxed mt-1">
+                      Sistem mengambil frame awal, tengah, dan akhir video untuk membaca alur footage,
+                      motion, cinematic context, serta buyer intent microstock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Tombol Generate Utama -->
+            <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
+              <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
+                <i id="generate-all-icon" data-lucide="sparkles" class="w-4 h-4 text-purple-200 animate-pulse"></i>
+                <span id="generate-all-text">GENERATE SEMUA METADATA (BATCH)</span>
               </button>
             </div>
 
-            
-                <!-- AI SCORE PANEL -->
-                <div class="mt-4 p-4 rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <p class="text-[11px] font-extrabold text-emerald-800">AI Microstock Score</p>
-                      <p class="text-[10px] text-emerald-700 font-semibold">
-                        SEO • Commercial • Buyer Intent • Approval Analysis
-                      </p>
-                    </div>
-                    <div class="text-right">
-                      <div class="text-lg font-extrabold text-emerald-700">92</div>
-                      <div class="text-[9px] font-bold text-emerald-600">High Rank</div>
-                    </div>
-                  </div>
-                </div>
-
-
-            <!-- PANEL UNDUH CSV BATCH -->
-            <div id="csv-download-panel" class="hidden mt-4 p-5 bg-gradient-to-r from-purple-50/30 to-pink-50/10 rounded-2xl border border-purple-100/40 flex flex-col lg:flex-row items-center justify-between gap-4">
-              <div class="flex items-center space-x-2.5">
-                <div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg shadow-sm">
-                  <i data-lucide="check" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <span class="block text-xs font-extrabold text-slate-850">Metadata Batch Sukses Dibuat!</span>
-                  <span class="block text-[10px] text-slate-400 font-bold">Unduh CSV sesuai agensi target:</span>
-                </div>
-              </div>
-              <div class="flex flex-wrap gap-1.5" id="csv-download-buttons">
-                <!-- Tombol download CSV per platform -->
+            <!-- 5. Target Platform -->
+            <div class="space-y-3 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                <i data-lucide="check-square" class="w-4 h-4 mr-2 text-purple-500"></i>
+                4. Platform Target
+              </h3>
+              <div class="grid grid-cols-2 gap-2" id="platform-checkboxes">
+                <!-- Checklist platform target di-render di sini secara dinamis -->
               </div>
             </div>
 
-            <!-- AREA LIST ANTREAN -->
-            <div id="queue-list" class="flex-1 overflow-y-auto mt-6 space-y-4 pr-1 custom-scrollbar">
-              <div class="h-[400px] rounded-3xl flex flex-col items-center justify-center text-center text-slate-400 border-2 border-dashed border-slate-200 bg-[#f8fafc]/40">
-                <i data-lucide="sparkles" class="w-12 h-12 text-purple-300 mb-3 animate-pulse"></i>
-                <h4 class="text-sm font-extrabold text-slate-800">Antrean Aset Kosong</h4>
-                <p class="text-xs text-slate-400 mt-1.5 max-w-[280px] leading-relaxed font-semibold">
-                  Unggah berkas aset microstock Anda di sebelah kiri untuk melihat antrean dan mengedit metadata terintegrasi di sini.
-                </p>
+          </div>
+        </div>
+
+        </div>
+
+        <!-- KONTEN TAB: API KEY SETTINGS -->
+        <div id="content-apikey" class="hidden">
+          <div class="max-w-3xl mx-auto">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+            
+            <!-- Header API Key Settings -->
+            <div class="pb-4 border-b border-slate-100">
+              <h3 class="text-lg font-extrabold text-slate-950 flex items-center">
+                <i data-lucide="key-round" class="w-6 h-6 mr-2 text-purple-500"></i>
+                Pengaturan API Key
+              </h3>
+              <p class="text-sm text-slate-500 mt-1">Kelola kunci API Gemini dan Groq untuk akses ke model AI</p>
+            </div>
+
+            <!-- Tab Pemilih Menu API -->
+            <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-2xl text-center">
+              <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-purple-600 shadow-sm">
+                🔮 Gemini
+              </button>
+              <button onclick="switchAuthTab('groq')" id="tab-auth-groq" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
+                ⚡ Groq
+              </button>
+              <button onclick="switchAuthTab('helper')" id="tab-auth-helper" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
+                Bantuan
+              </button>
+            </div>
+
+          <!-- KOLOM KANAN: PREFERENSI AI & PLATFORM -->
+          <div class="space-y-5">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+            
+            <!-- 4. Preferensi AI -->
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                <i data-lucide="settings" class="w-4 h-4 mr-2 text-purple-500"></i>
+                3. Preferensi Output AI
+              </h3>
+
+              <!-- Slider Panjang Judul -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-600">Panjang Judul SEO</span>
+                  <span id="title-val" class="text-purple-600">80 Karakter (ch)</span>
+                </div>
+                <input type="range" id="title-slider" min="10" max="300" step="5" value="80" oninput="updateSliderLabel('title', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
               </div>
+
+              <!-- Slider Panjang Deskripsi -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-600">Panjang Deskripsi</span>
+                  <span id="desc-val" class="text-purple-600">200 Karakter (ch)</span>
+                </div>
+                <input type="range" id="desc-slider" min="10" max="500" step="10" value="200" oninput="updateSliderLabel('desc', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Slider Jumlah Keywords -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-neutral-600">Target Keywords</span>
+                  <span id="keywords-val" class="text-purple-600">40 Kata</span>
+                </div>
+                <input type="range" id="keywords-slider" min="20" max="50" step="5" value="40" oninput="updateSliderLabel('keywords', this.value)" class="w-full accent-purple-500 cursor-pointer h-1.5 bg-slate-200 rounded-lg appearance-none" />
+              </div>
+
+              <!-- Key Concepts -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-600">Prioritas Konsep SEO Microstock</label><p class="text-[10px] text-slate-400 font-semibold mt-1">Gunakan niche buyer intent & keyword volume tinggi agar ranking lebih kuat di Shutterstock, Adobe Stock, Freepik, dan Canva.</p>
+                <input type="text" id="key-concepts-input" placeholder="misal: business, luxury, medical, technology, ai, finance, lifestyle" class="w-full text-xs p-3.5 border border-slate-200 rounded-2xl focus:outline-none focus:border-purple-500 bg-[#f8fafc]/50 transition-colors" />
+              </div>
+
+              <div class="p-3 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-2xl border border-violet-200 mt-3">
+                <div class="flex items-start space-x-2">
+                  <i data-lucide="trending-up" class="w-4 h-4 text-violet-600 mt-0.5"></i>
+                  <div>
+                    <p class="text-[11px] font-extrabold text-violet-800">Trend Keyword AI</p>
+                    <p class="text-[10px] text-violet-700 font-semibold mt-1">
+                      AI otomatis menambahkan keyword buyer intent & keyword trending microstock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Video AI Analysis Info -->
+              <div class="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 mt-3">
+                <div class="flex items-start space-x-2">
+                  <i data-lucide="film" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                  <div>
+                    <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis</p>
+                    <p class="text-[10px] text-blue-700 font-semibold leading-relaxed mt-1">
+                      Sistem mengambil frame awal, tengah, dan akhir video untuk membaca alur footage,
+                      motion, cinematic context, serta buyer intent microstock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Tombol Generate Utama -->
+            <div class="pt-4 border-t border-slate-100 hidden" id="generate-all-container">
+              <button onclick="processAllPending()" id="btn-generate-all" class="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-extrabold py-4 px-4 rounded-2xl flex items-center justify-center space-x-2 text-xs shadow-lg active:scale-95 transition-all">
+                <i id="generate-all-icon" data-lucide="sparkles" class="w-4 h-4 text-purple-200 animate-pulse"></i>
+                <span id="generate-all-text">GENERATE SEMUA METADATA (BATCH)</span>
+              </button>
+            </div>
+
+            <!-- 5. Target Platform -->
+            <div class="space-y-3 pt-4 border-t border-slate-100">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                <i data-lucide="check-square" class="w-4 h-4 mr-2 text-purple-500"></i>
+                4. Platform Target
+              </h3>
+              <div class="grid grid-cols-2 gap-2" id="platform-checkboxes">
+                <!-- Checklist platform target di-render di sini secara dinamis -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        </div>
+
+        <!-- KONTEN TAB: API KEY SETTINGS -->
+        <div id="content-apikey" class="hidden">
+          <div class="max-w-3xl mx-auto">
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+            
+            <!-- Header API Key Settings -->
+            <div class="pb-4 border-b border-slate-100">
+              <h3 class="text-lg font-extrabold text-slate-950 flex items-center">
+                <i data-lucide="key-round" class="w-6 h-6 mr-2 text-purple-500"></i>
+                Pengaturan API Key
+              </h3>
+              <p class="text-sm text-slate-500 mt-1">Kelola kunci API Gemini dan Groq untuk akses ke model AI</p>
+            </div>
+
+            <!-- Tab Pemilih Menu API -->
+            <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-2xl text-center">
+              <button onclick="switchAuthTab('gemini')" id="tab-auth-gemini" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all bg-white text-purple-600 shadow-sm">
+                🔮 Gemini
+              </button>
+              <button onclick="switchAuthTab('groq')" id="tab-auth-groq" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
+                ⚡ Groq
+              </button>
+              <button onclick="switchAuthTab('helper')" id="tab-auth-helper" class="py-2.5 rounded-xl text-[11px] font-extrabold transition-all text-slate-500 hover:text-slate-900">
+                Bantuan
+              </button>
             </div>
 
           </div>
