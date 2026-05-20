@@ -61,18 +61,19 @@ export default function App() {
   
   // Selected Models for each engine
   const [selectedGeminiModels, setSelectedGeminiModels] = useState<Record<string, boolean>>({
-    'gemini-3-flash-preview': true,
-    'gemini-3.1-flash-lite': true,
-    'gemini-2.5-flash-preview-05-20': true,
     'gemini-2.0-flash': true,
+    'gemini-1.5-flash': true,
+    'gemini-3-flash-preview': false,
+    'gemini-3.1-flash-lite': false,
+    'gemini-2.5-flash-preview-05-20': false,
     'gemini-3.1-pro-preview': false,
-    'gemini-1.5-flash': false,
   });
 
   const [selectedGroqModels, setSelectedGroqModels] = useState<Record<string, boolean>>({
-    'llama-3.1-8b-instant': true,
     'mixtral-8x7b-32768': true,
+    'llama-3.3-70b-versatile': true,
     'llama-3.2-90b-vision-preview': false,
+    'llama-3.1-8b-instant': false,
     'meta-llama/llama-4-maverick-17b-128e-instruct': false,
     'meta-llama/llama-4-scout-17b-16e-instruct': false,
   });
@@ -200,10 +201,10 @@ export default function App() {
     }
 
     setTestGeminiStatus('testing');
-    setTestGeminiMsg(`⏳ Memeriksa ${active.length} Kunci...`);
+    setTestGeminiMsg(`⏳ Memeriksa ${active.length} Kunci Kunci...`);
 
-    // Determine testing model
-    const testModel = 'gemini-2.0-flash';
+    // Determine testing model - gemini-1.5-flash is universally supported on all accounts
+    const testModel = 'gemini-1.5-flash';
     let working = 0;
     let lastErr = '';
 
@@ -244,7 +245,7 @@ export default function App() {
       setTestGeminiMsg(`⚠️ Sebagian Aktif (${working}/${active.length})`);
     } else {
       setTestGeminiStatus('err');
-      setTestGeminiMsg(`❌ Gagal: ${lastErr.slice(0, 45)}`);
+      setTestGeminiMsg(`❌ Gagal: ${lastErr}`);
     }
   };
 
@@ -262,6 +263,8 @@ export default function App() {
 
     let working = 0;
     let lastErr = '';
+    // Use stable non-deprecated model mixtral-8x7b-32768 for testing
+    const testModel = 'mixtral-8x7b-32768';
 
     for (let i = 0; i < active.length; i++) {
       const k = active[i];
@@ -274,7 +277,7 @@ export default function App() {
           body: JSON.stringify({
             key: k,
             payload: {
-              model: 'llama-3.1-8b-instant',
+              model: testModel,
               messages: [{ role: 'user', content: 'Hi' }],
               max_tokens: 1
             }
@@ -300,7 +303,7 @@ export default function App() {
       setTestGroqMsg('⚠️ Sebagian Aktif (' + working + '/' + active.length + ')');
     } else {
       setTestGroqStatus('err');
-      setTestGroqMsg('❌ Gagal: ' + lastErr.slice(0, 45));
+      setTestGroqMsg('❌ Gagal: ' + lastErr);
     }
   };
 
@@ -1614,26 +1617,28 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
                                 ))}
 
                                 {/* Diagnose Testing Buttons */}
-                                <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100">
-                                  <button
-                                    type="button"
-                                    disabled={testGeminiStatus === 'testing'}
-                                    onClick={testGeminiConn}
-                                    className="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-bold transition-all flex items-center space-x-1.5 active:scale-95"
-                                  >
-                                    {testGeminiStatus === 'testing' ? (
-                                      <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin text-violet-500" />
-                                    ) : (
-                                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-500" />
-                                    )}
-                                    <span>Uji Koneksi Kunci</span>
-                                  </button>
-                                  <span className={`text-[10px] font-bold truncate max-w-[140px] ${
-                                    testGeminiStatus === 'success' ? 'text-emerald-600 font-semibold' :
-                                    testGeminiStatus === 'err' ? 'text-red-500 font-semibold' : 'text-slate-400'
+                                <div className="flex flex-col space-y-2 mt-3 pt-2.5 border-t border-slate-100">
+                                  <div className="flex items-center justify-between">
+                                    <button
+                                      type="button"
+                                      disabled={testGeminiStatus === 'testing'}
+                                      onClick={testGeminiConn}
+                                      className="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-bold transition-all flex items-center space-x-1.5 active:scale-95"
+                                    >
+                                      {testGeminiStatus === 'testing' ? (
+                                        <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin text-violet-500" />
+                                      ) : (
+                                        <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-500" />
+                                      )}
+                                      <span>Uji Koneksi Kunci</span>
+                                    </button>
+                                  </div>
+                                  <div className={`text-[11px] leading-relaxed break-words whitespace-pre-wrap p-2.5 rounded-xl ${
+                                    testGeminiStatus === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 font-semibold' :
+                                    testGeminiStatus === 'err' ? 'bg-rose-50 text-rose-600 border border-rose-100 font-semibold text-xs' : 'text-slate-500 bg-slate-50 border border-slate-100'
                                   }`}>
                                     {testGeminiMsg}
-                                  </span>
+                                  </div>
                                 </div>
                               </motion.div>
                             )}
@@ -1724,26 +1729,28 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
                                 ))}
 
                                 {/* Diagnose Testing Buttons */}
-                                <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100">
-                                  <button
-                                    type="button"
-                                    disabled={testGroqStatus === 'testing'}
-                                    onClick={testGroqConn}
-                                    className="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-bold transition-all flex items-center space-x-1.5 active:scale-95"
-                                  >
-                                    {testGroqStatus === 'testing' ? (
-                                      <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin text-violet-500" />
-                                    ) : (
-                                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-violet-500" />
-                                    )}
-                                    <span>Uji Koneksi Kunci</span>
-                                  </button>
-                                  <span className={`text-[10px] font-bold truncate max-w-[140px] ${
-                                    testGroqStatus === 'success' ? 'text-emerald-600 font-semibold' :
-                                    testGroqStatus === 'err' ? 'text-red-500 font-semibold' : 'text-slate-400'
+                                <div className="flex flex-col space-y-2 mt-3 pt-2.5 border-t border-slate-100">
+                                  <div className="flex items-center justify-between">
+                                    <button
+                                      type="button"
+                                      disabled={testGroqStatus === 'testing'}
+                                      onClick={testGroqConn}
+                                      className="px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-[10px] font-bold transition-all flex items-center space-x-1.5 active:scale-95"
+                                    >
+                                      {testGroqStatus === 'testing' ? (
+                                        <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin text-violet-500" />
+                                      ) : (
+                                        <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-violet-500" />
+                                      )}
+                                      <span>Uji Koneksi Kunci</span>
+                                    </button>
+                                  </div>
+                                  <div className={`text-[11px] leading-relaxed break-words whitespace-pre-wrap p-2.5 rounded-xl ${
+                                    testGroqStatus === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 font-semibold' :
+                                    testGroqStatus === 'err' ? 'bg-rose-50 text-rose-600 border border-rose-100 font-semibold text-xs' : 'text-slate-500 bg-slate-50 border border-slate-100'
                                   }`}>
                                     {testGroqMsg}
-                                  </span>
+                                  </div>
                                 </div>
                               </motion.div>
                             )}
