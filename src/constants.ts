@@ -26,3 +26,19 @@ export const ADOBE_STOCK_CATEGORIES = [
   "Landscapes", "Lifestyle", "People", "Plants and Flowers", "Culture and Religion",
   "Science", "Social Issues", "Sports", "Technology", "Transport", "Travel"
 ];
+
+export const DREAMSTIME_CATEGORIES = [
+  "Abstract", "Animals", "Architecture", "Business", "Editorial", "Illustrations", 
+  "Industrial", "Nature", "Objects", "People", "Technology", "Travel", "Holiday", "Sports"
+];
+
+export const VECTEEZY_CATEGORIES = [
+  "Backgrounds", "Icons", "Patterns", "Banners", "Infographics", "Nature", "Abstract", 
+  "Objects", "Business", "People", "Food", "Technology", "Buildings", "Transportation", 
+  "Sports", "Vintage"
+];
+
+export const CANVA_CATEGORIES = [
+  "Elements", "Templates", "Backgrounds", "Photos", "Icons", "Illustrations", "Textures"
+];
+

@@ -30,7 +30,15 @@ import { motion, AnimatePresence } from 'motion/react';
 
 // Import Types and Constants
 import { AssetType, QueueItem, AuthProvider, TargetPlatforms, Metadata } from './types';
-import { BANNED_TRADEMARKS, TRENDING_KEYWORDS } from './constants';
+import { 
+  BANNED_TRADEMARKS, 
+  TRENDING_KEYWORDS, 
+  SHUTTERSTOCK_CATEGORIES, 
+  ADOBE_STOCK_CATEGORIES, 
+  DREAMSTIME_CATEGORIES, 
+  VECTEEZY_CATEGORIES, 
+  CANVA_CATEGORIES 
+} from './constants';
 import { 
   scanIPViolations, 
   measureSEOQuality, 
@@ -202,20 +210,20 @@ export default function App() {
     for (let i = 0; i < active.length; i++) {
       const k = active[i];
       try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${testModel}:generateContent?key=${k}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-goog-api-key': k
-            },
-            body: JSON.stringify({
+        const response = await fetch('/api/proxy/gemini', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: testModel,
+            key: k,
+            payload: {
               contents: [{ parts: [{ text: "Hi" }] }],
               generationConfig: { maxOutputTokens: 5 }
-            })
-          }
-        );
+            }
+          })
+        });
 
         if (response.ok) {
           working++;
@@ -258,16 +266,18 @@ export default function App() {
     for (let i = 0; i < active.length; i++) {
       const k = active[i];
       try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        const response = await fetch('/api/proxy/groq', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${k}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
-            messages: [{ role: 'user', content: 'Hi' }],
-            max_tokens: 1
+            key: k,
+            payload: {
+              model: 'llama-3.1-8b-instant',
+              messages: [{ role: 'user', content: 'Hi' }],
+              max_tokens: 1
+            }
           })
         });
 
@@ -284,13 +294,13 @@ export default function App() {
 
     if (working === active.length) {
       setTestGroqStatus('success');
-      setTestGroqMsg(`✅ Semua Aktif (${working}/${active.length})`);
+      setTestGroqMsg('✅ Semua Aktif (' + working + '/' + active.length + ')');
     } else if (working > 0) {
       setTestGroqStatus('success');
-      setTestGroqMsg(`⚠️ Sebagian Aktif (${working}/${active.length})`);
+      setTestGroqMsg('⚠️ Sebagian Aktif (' + working + '/' + active.length + ')');
     } else {
       setTestGroqStatus('err');
-      setTestGroqMsg(`❌ Gagal: ${lastErr.slice(0,45)}`);
+      setTestGroqMsg('❌ Gagal: ' + lastErr.slice(0, 45));
     }
   };
 
@@ -422,7 +432,7 @@ export default function App() {
   };
 
   // Update field value within active elements editing form
-  const updateItemField = (itemId: string, field: 'title' | 'description' | 'keywords', val: any) => {
+  const updateItemField = (itemId: string, field: 'title' | 'description' | 'keywords' | 'categories', val: any) => {
     setItems(prev => prev.map(item => {
       if (item.id === itemId) {
         const updatedMeta = { ...item.metadata };
@@ -432,6 +442,8 @@ export default function App() {
           } else if (typeof val === 'string') {
             updatedMeta.keywords = val.split(',').map(k => k.trim()).filter(Boolean);
           }
+        } else if (field === 'categories') {
+          updatedMeta.categories = { ...updatedMeta.categories, ...val };
         } else {
           updatedMeta[field] = val;
         }
@@ -517,10 +529,12 @@ ATURAN METADATA 100% SUKSES:
    - Urutan 26-${kwTarget}: Hubungan konsep bisnis, kegunaan komersial, trend microstock.
    ${item.settings.keyConcepts ? `- ⭐ PRIORITAS UTAMA: Kata kunci "${item.settings.keyConcepts}" wajib ditempatkan di posisi 1-5!` : ''}
 4. LEGAL & TRADEMARK SAFETY: Hindari nama brand terlarang (Nike, Apple, iPhone, BMW, Sony, dsb). Ganti dengan nama generik (modern smartphone, athletic shoes, luxury car, dsb). Dilarang keras menulis brand kamera!
-5. KATEGORI PLATFORM RESMI: 
-   - Shutterstock: Berikan "shutterstock1" dan "shutterstock2" berisi 2 kategori resmi berbeda (Contoh: Business, Nature, Technology, People, dsb).
-   - Adobe Stock: Berikan kategori tunggal yang valid.
-   - Lainnya: Sesuaikan nama kategori yang relevan.
+5. KATEGORI PLATFORM RESMI (WAJIB PILIH DARI DAFTAR DI BAWAH): 
+   - Shutterstock: Berikan "shutterstock1" dan "shutterstock2" berisi 2 kategori resmi berbeda yang dipilih HANYA dari daftar ini: [${SHUTTERSTOCK_CATEGORIES.slice(0, 30).join(', ')}]
+   - Adobe Stock: Berikan "adobeStock" berisi kategori tunggal yang wajib dipilih HANYA dari daftar ini: [${ADOBE_STOCK_CATEGORIES.slice(0, 25).join(', ')}]
+   - Dreamstime: Berikan "dreamstime" berisi kategori tunggal yang wajib dipilih HANYA dari daftar ini: [${DREAMSTIME_CATEGORIES.slice(0, 20).join(', ')}]
+   - Vecteezy: Berikan "vecteezy" berisi kategori tunggal yang wajib dipilih HANYA dari daftar ini: [${VECTEEZY_CATEGORIES.slice(0, 20).join(', ')}]
+   - Canva: Berikan "canva" berisi kategori tunggal yang wajib dipilih HANYA dari daftar ini: [${CANVA_CATEGORIES.slice(0, 10).join(', ')}]
 
 ${specificGuides}
 
@@ -668,16 +682,18 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
       for (let k = 0; k < activeKeys.length; k++) {
         const kIndex = (k + activeGeminiKeyIndex) % activeKeys.length;
         const key = activeKeys[kIndex];
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
 
         try {
-          const response = await fetch(url, {
+          const response = await fetch('/api/proxy/gemini', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'x-goog-api-key': key
+              'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+              model: model,
+              key: key,
+              payload: payload
+            })
           });
 
           if (response.ok) {
@@ -746,21 +762,23 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
       }
 
       try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        const response = await fetch('/api/proxy/groq', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${key}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: model,
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: isVisionModel ? userContent : userPrompt }
-            ],
-            temperature: 0.15,
-            max_tokens: isVisionModel ? 1400 : 900,
-            ...(isVisionModel ? {} : { response_format: { type: "json_object" } })
+            key: key,
+            payload: {
+              model: model,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: isVisionModel ? userContent : userPrompt }
+              ],
+              temperature: 0.15,
+              max_tokens: isVisionModel ? 1400 : 900,
+              ...(isVisionModel ? {} : { response_format: { type: "json_object" } })
+            }
           })
         });
 
@@ -2224,23 +2242,40 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
                                     <div className="space-y-2 pt-3 border-t border-slate-150">
                                       <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest flex items-center mb-1">
                                         <Layers className="w-4 h-4 mr-1.5 text-violet-500" />
-                                        Saran Kategori Oficial Platform
+                                        Kategori Oficial Platform Target
                                       </label>
                                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                        {Object.entries(item.metadata.categories).map(([platform, name]) => {
-                                          if (!name) return null;
+                                        {Object.entries(item.metadata.categories).map(([platform, rawName]) => {
+                                          if (!rawName) return null;
+                                          const name = rawName as string;
                                           let isPlatformEnabled = false;
                                           let friendlyName = platform;
+                                          let optionsList: string[] = [];
 
                                           if (platform === 'shutterstock1' && targetPlatforms.shutterstock) {
                                             friendlyName = 'Shutterstock Cat 1';
                                             isPlatformEnabled = true;
+                                            optionsList = SHUTTERSTOCK_CATEGORIES;
                                           } else if (platform === 'shutterstock2' && targetPlatforms.shutterstock) {
                                             friendlyName = 'Shutterstock Cat 2';
                                             isPlatformEnabled = true;
+                                            optionsList = SHUTTERSTOCK_CATEGORIES;
                                           } else if (platform === 'adobeStock' && targetPlatforms.adobeStock) {
                                             friendlyName = 'Adobe Stock';
                                             isPlatformEnabled = true;
+                                            optionsList = ADOBE_STOCK_CATEGORIES;
+                                          } else if (platform === 'dreamstime' && targetPlatforms.dreamstime) {
+                                            friendlyName = 'Dreamstime';
+                                            isPlatformEnabled = true;
+                                            optionsList = DREAMSTIME_CATEGORIES;
+                                          } else if (platform === 'vecteezy' && targetPlatforms.vecteezy) {
+                                            friendlyName = 'Vecteezy';
+                                            isPlatformEnabled = true;
+                                            optionsList = VECTEEZY_CATEGORIES;
+                                          } else if (platform === 'canva' && targetPlatforms.canva) {
+                                            friendlyName = 'Canva';
+                                            isPlatformEnabled = true;
+                                            optionsList = CANVA_CATEGORIES;
                                           } else if (platform !== 'shutterstock1' && platform !== 'shutterstock2' && targetPlatforms[platform as keyof TargetPlatforms]) {
                                             friendlyName = platform.charAt(0).toUpperCase() + platform.slice(1);
                                             isPlatformEnabled = true;
@@ -2248,17 +2283,40 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
 
                                           if (!isPlatformEnabled) return null;
 
+                                          const listToUse = [...optionsList];
+                                          // Add AI-suggested category to options if not present in default options
+                                          if (name && !listToUse.includes(name)) {
+                                            listToUse.unshift(name);
+                                          }
+
                                           return (
                                             <div 
                                               key={`cat-list-${platform}`}
-                                              className="bg-white border border-violet-100 p-3 rounded-2xl shadow-sm hover:border-violet-200 transition-colors"
+                                              className="bg-slate-50 border border-slate-200/80 hover:border-violet-300 hover:bg-white p-2.5 rounded-2xl shadow-sm transition-all duration-200 flex flex-col justify-between"
                                             >
-                                              <span className="block text-[8px] font-extrabold text-slate-400 uppercase tracking-wider">
+                                              <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                                                 {friendlyName}
                                               </span>
-                                              <span className="block text-xs font-bold text-slate-800 truncate mt-1">
-                                                {name}
-                                              </span>
+                                              {listToUse.length > 0 ? (
+                                                <select
+                                                  value={name}
+                                                  onChange={(e) => updateItemField(item.id, 'categories', { [platform]: e.target.value })}
+                                                  className="block w-full text-xs font-bold text-slate-700 bg-transparent border-none p-0 focus:outline-none focus:ring-0 cursor-pointer pr-4"
+                                                >
+                                                  {listToUse.map(opt => (
+                                                    <option key={opt} value={opt} className="font-semibold text-slate-850">
+                                                      {opt}
+                                                    </option>
+                                                  ))}
+                                                </select>
+                                              ) : (
+                                                <input
+                                                  type="text"
+                                                  value={name}
+                                                  onChange={(e) => updateItemField(item.id, 'categories', { [platform]: e.target.value })}
+                                                  className="block w-full text-xs font-bold text-slate-700 bg-transparent border-none p-0 focus:outline-none focus:ring-0"
+                                                />
+                                              )}
                                             </div>
                                           );
                                         })}
