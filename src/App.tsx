@@ -61,12 +61,13 @@ export default function App() {
   
   // Selected Models for each engine
   const [selectedGeminiModels, setSelectedGeminiModels] = useState<Record<string, boolean>>({
+    'gemini-3.5-flash': true,
     'gemini-2.0-flash': true,
-    'gemini-1.5-flash': true,
-    'gemini-3-flash-preview': false,
-    'gemini-3.1-flash-lite': false,
+    'gemini-1.5-flash': false,
     'gemini-2.5-flash-preview-05-20': false,
-    'gemini-3.1-pro-preview': false,
+    'gemini-2.0-flash-lite': false,
+    'gemini-1.5-pro': false,
+    'gemini-2.0-pro-exp': false,
   });
 
   const [selectedGroqModels, setSelectedGroqModels] = useState<Record<string, boolean>>({
@@ -128,22 +129,31 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
 
+  // Safe localStorage helper (fails gracefully in restricted environments)
+  const safeGetStorage = (key: string): string | null => {
+    try { return localStorage.getItem(key); } catch { return null; }
+  };
+  const safeSetStorage = (key: string, val: string): void => {
+    try { localStorage.setItem(key, val); } catch { /* silently ignore */ }
+  };
+
   // Load API keys from LocalStorage on mount
   useEffect(() => {
-    const loadedGemini = [...geminiKeys];
+    // Use fresh arrays (not spread from state) to avoid stale closure bug
+    const loadedGemini: string[] = ['', '', '', '', ''];
     for (let i = 1; i <= 5; i++) {
-      const key = localStorage.getItem(`shophub_api_key_${i}`);
-      if (key) {
-        loadedGemini[i - 1] = key;
+      const key = safeGetStorage(`shophub_api_key_${i}`);
+      if (key && key.trim().length > 0) {
+        loadedGemini[i - 1] = key.trim();
       }
     }
     setGeminiKeys(loadedGemini);
 
-    const loadedGroq = [...groqKeys];
+    const loadedGroq: string[] = ['', '', '', '', ''];
     for (let i = 1; i <= 5; i++) {
-      const key = localStorage.getItem(`shophub_groq_key_${i}`);
-      if (key) {
-        loadedGroq[i - 1] = key;
+      const key = safeGetStorage(`shophub_groq_key_${i}`);
+      if (key && key.trim().length > 0) {
+        loadedGroq[i - 1] = key.trim();
       }
     }
     setGroqKeys(loadedGroq);
@@ -165,14 +175,14 @@ export default function App() {
     const updated = [...geminiKeys];
     updated[index] = val.trim();
     setGeminiKeys(updated);
-    localStorage.setItem(`shophub_api_key_${index + 1}`, val.trim());
+    safeSetStorage(`shophub_api_key_${index + 1}`, val.trim());
   };
 
   const handleGroqKeyChange = (index: number, val: string) => {
     const updated = [...groqKeys];
     updated[index] = val.trim();
     setGroqKeys(updated);
-    localStorage.setItem(`shophub_groq_key_${index + 1}`, val.trim());
+    safeSetStorage(`shophub_groq_key_${index + 1}`, val.trim());
   };
 
   // Toggle checklist platform
@@ -214,11 +224,12 @@ export default function App() {
     setTestGeminiMsg(`⏳ Menguji ${keysToTest.length} Kunci di berbagai model...`);
 
     const modelsToTest = [
+      'gemini-3.5-flash',
       'gemini-2.0-flash',
       'gemini-1.5-flash',
-      'gemini-2.5-flash',
-      'gemini-3.1-flash-lite',
-      'gemini-3.1-pro-preview'
+      'gemini-2.5-flash-preview-05-20',
+      'gemini-2.0-flash-lite',
+      'gemini-2.0-pro-exp'
     ];
 
     // Initialize clean diagnostics state for tested slots
@@ -1916,14 +1927,19 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
                                 />
                                 <span className="truncate flex items-center justify-between w-full">
                                   <span>{model}</span>
-                                  {model.includes('3.1-flash-lite') && (
+                                  {model.includes('3.5-flash') && (
+                                    <span className="text-[8px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-full font-bold">
+                                      Terbaru ✨
+                                    </span>
+                                  )}
+                                  {model.includes('2.0-flash-lite') && (
                                     <span className="text-[8px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-bold">
                                       Lite gratis
                                     </span>
                                   )}
-                                  {model.includes('3-flash') && (
+                                  {model.includes('2.5-flash') && (
                                     <span className="text-[8px] bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">
-                                      Flash 3
+                                      Flash 2.5
                                     </span>
                                   )}
                                   {model.includes('pro') && (
