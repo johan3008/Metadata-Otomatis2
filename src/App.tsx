@@ -109,6 +109,10 @@ export default function App() {
   const [testGroqMsg, setTestGroqMsg] = useState<string>('Belum diuji');
   const [testGroqStatus, setTestGroqStatus] = useState<'idle' | 'testing' | 'success' | 'err'>('idle');
 
+  // Multi-model detailed diagnostics
+  const [geminiDiagnostics, setGeminiDiagnostics] = useState<Record<number, Record<string, { status: 'pending' | 'testing' | 'success' | 'rate_limit' | 'not_supported' | 'error'; message: string }>>>({});
+  const [groqDiagnostics, setGroqDiagnostics] = useState<Record<number, Record<string, { status: 'pending' | 'testing' | 'success' | 'rate_limit' | 'not_supported' | 'error'; message: string }>>>({});
+
   // Loading & Progress metrics
   const [isProcessingAll, setIsProcessingAll] = useState<boolean>(false);
   const [progressPercent, setProgressPercent] = useState<number>(0);
@@ -193,117 +197,315 @@ export default function App() {
 
   // Connection testing - Gemini
   const testGeminiConn = async () => {
-    const active = getActiveKeys('gemini');
-    if (active.length === 0) {
+    const keysToTest: { key: string; index: number }[] = [];
+    geminiKeys.forEach((k, idx) => {
+      if (k.trim().length > 5) {
+        keysToTest.push({ key: k.trim(), index: idx });
+      }
+    });
+
+    if (keysToTest.length === 0) {
       setTestGeminiStatus('err');
-      setTestGeminiMsg('❌ Kode Kosong');
+      setTestGeminiMsg('❌ Kode Kosong. Mohon masukkan minimal satu API Key Gemini aktif di atas!');
       return;
     }
 
     setTestGeminiStatus('testing');
-    setTestGeminiMsg(`⏳ Memeriksa ${active.length} Kunci Kunci...`);
+    setTestGeminiMsg(`⏳ Menguji ${keysToTest.length} Kunci di berbagai model...`);
 
-    // Determine testing model - gemini-1.5-flash is universally supported on all accounts
-    const testModel = 'gemini-1.5-flash';
-    let working = 0;
-    let lastErr = '';
+    const modelsToTest = [
+      'gemini-2.0-flash',
+      'gemini-1.5-flash',
+      'gemini-2.5-flash',
+      'gemini-3.1-flash-lite',
+      'gemini-3.1-pro-preview'
+    ];
 
-    for (let i = 0; i < active.length; i++) {
-      const k = active[i];
-      try {
-        const response = await fetch('/api/proxy/gemini', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: testModel,
-            key: k,
-            payload: {
-              contents: [{ parts: [{ text: "Hi" }] }],
-              generationConfig: { maxOutputTokens: 5 }
+    // Initialize clean diagnostics state for tested slots
+    const initialDiagnostics: Record<number, Record<string, { status: 'pending' | 'testing' | 'success' | 'rate_limit' | 'not_supported' | 'error'; message: string }>> = {};
+    keysToTest.forEach(({ index }) => {
+      initialDiagnostics[index] = {};
+      modelsToTest.forEach(model => {
+        initialDiagnostics[index][model] = { status: 'pending', message: 'Antre...' };
+      });
+    });
+    setGeminiDiagnostics(initialDiagnostics);
+
+    let anySuccess = false;
+    let anyRateLimit = false;
+
+    for (const { key, index } of keysToTest) {
+      let isKeyCompletelyInvalid = false;
+
+      for (const model of modelsToTest) {
+        if (isKeyCompletelyInvalid) {
+          setGeminiDiagnostics(prev => ({
+            ...prev,
+            [index]: {
+              ...prev[index],
+              [model]: { status: 'error', message: 'Gagal (Sandi salah)' }
             }
-          })
-        });
-
-        if (response.ok) {
-          working++;
-        } else {
-          const body = await response.json().catch(() => ({}));
-          lastErr = body?.error?.message || `HTTP ${response.status}`;
+          }));
+          continue;
         }
-      } catch (e: any) {
-        lastErr = e.message || 'CORS / Network Error';
+
+        setGeminiDiagnostics(prev => ({
+          ...prev,
+          [index]: {
+            ...prev[index],
+            [model]: { status: 'testing', message: 'Memeriksa...' }
+          }
+        }));
+
+        try {
+          const response = await fetch('/api/proxy/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model,
+              key,
+              payload: {
+                contents: [{ parts: [{ text: "Hi" }] }],
+                generationConfig: { maxOutputTokens: 2 }
+              }
+            })
+          });
+
+          const resData = await response.json().catch(() => ({}));
+
+          if (response.ok) {
+            anySuccess = true;
+            setGeminiDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'success', message: '✅ Aktif' }
+              }
+            }));
+          } else if (response.status === 429) {
+            anyRateLimit = true;
+            setGeminiDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'rate_limit', message: '⚠️ Limit (429)' }
+              }
+            }));
+          } else if (response.status === 404 || response.status === 403) {
+            const serverMsg = resData?.error?.message || '';
+            let indonesiaMsg = '❌ Model Dinonaktifkan / Tidak Diizinkan';
+            if (serverMsg.toLowerCase().includes('location') || serverMsg.toLowerCase().includes('region')) {
+              indonesiaMsg = '❌ Wilayah Terblokir';
+            } else if (serverMsg.toLowerCase().includes('not found')) {
+              indonesiaMsg = '❌ Tidak Ditemukan (404)';
+            }
+            setGeminiDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'not_supported', message: indonesiaMsg }
+              }
+            }));
+          } else if (response.status === 400) {
+            const errMsg = resData?.error?.message || '';
+            if (errMsg.toLowerCase().includes('key') || errMsg.toLowerCase().includes('invalid') || errMsg.toLowerCase().includes('tidak valid')) {
+              isKeyCompletelyInvalid = true;
+              setGeminiDiagnostics(prev => ({
+                ...prev,
+                [index]: {
+                  ...prev[index],
+                  [model]: { status: 'error', message: '❌ Kunci Salah' }
+                }
+              }));
+            } else {
+              setGeminiDiagnostics(prev => ({
+                ...prev,
+                [index]: {
+                  ...prev[index],
+                  [model]: { status: 'error', message: `❌ Sandi Ditolak: ${errMsg.slice(0, 30)}` }
+                }
+              }));
+            }
+          } else {
+            setGeminiDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'error', message: `❌ HTTP ${response.status}` }
+              }
+            }));
+          }
+        } catch (e: any) {
+          setGeminiDiagnostics(prev => ({
+            ...prev,
+            [index]: {
+              ...prev[index],
+              [model]: { status: 'error', message: '❌ Jaringan' }
+            }
+          }));
+        }
+
+        // Small spacing delay between endpoints to bypass instant IP penalty
+        await new Promise(r => setTimeout(r, 150));
       }
     }
 
-    if (working === active.length) {
+    if (anySuccess) {
       setTestGeminiStatus('success');
-      setTestGeminiMsg(`✅ Semua Aktif (${working}/${active.length}) • Stable`);
-    } else if (working > 0) {
-      setTestGeminiStatus('success');
-      setTestGeminiMsg(`⚠️ Sebagian Aktif (${working}/${active.length})`);
+      setTestGeminiMsg('✅ Selesai menguji! Model sasar aktif dan siap memproses katalog Anda.');
+    } else if (anyRateLimit) {
+      setTestGeminiStatus('err');
+      setTestGeminiMsg('⚠️ Kunci Anda Valid, tetapi semua model saat ini terkena Batas Kuota (429 Rate Limit)! Sila tunggu semenit atau pakai Kunci berbayar.');
     } else {
       setTestGeminiStatus('err');
-      setTestGeminiMsg(`❌ Gagal: ${lastErr}`);
+      setTestGeminiMsg('❌ Semua tes gagal. Sila periksa kesalahan kunci di bawah.');
     }
   };
 
   // Connection testing - Groq
   const testGroqConn = async () => {
-    const active = getActiveKeys('groq');
-    if (active.length === 0) {
+    const keysToTest: { key: string; index: number }[] = [];
+    groqKeys.forEach((k, idx) => {
+      if (k.trim().length > 5) {
+        keysToTest.push({ key: k.trim(), index: idx });
+      }
+    });
+
+    if (keysToTest.length === 0) {
       setTestGroqStatus('err');
-      setTestGroqMsg('❌ Kode Kosong');
+      setTestGroqMsg('❌ Kode Kosong. Mohon masukkan minimal satu API Key Groq aktif di atas!');
       return;
     }
 
     setTestGroqStatus('testing');
-    setTestGroqMsg(`⏳ Memeriksa ${active.length} Kunci...`);
+    setTestGroqMsg(`⏳ Menguji ${keysToTest.length} Kunci Groq di berbagai model...`);
 
-    let working = 0;
-    let lastErr = '';
-    // Use stable non-deprecated model mixtral-8x7b-32768 for testing
-    const testModel = 'mixtral-8x7b-32768';
+    const modelsToTest = [
+      'mixtral-8x7b-32768',
+      'llama-3.3-70b-versatile',
+      'llama-3.2-90b-vision-preview',
+      'llama-3.1-8b-instant'
+    ];
 
-    for (let i = 0; i < active.length; i++) {
-      const k = active[i];
-      try {
-        const response = await fetch('/api/proxy/groq', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            key: k,
-            payload: {
-              model: testModel,
-              messages: [{ role: 'user', content: 'Hi' }],
-              max_tokens: 1
+    // Initialize diagnostics
+    const initialDiagnostics: Record<number, Record<string, { status: 'pending' | 'testing' | 'success' | 'rate_limit' | 'not_supported' | 'error'; message: string }>> = {};
+    keysToTest.forEach(({ index }) => {
+      initialDiagnostics[index] = {};
+      modelsToTest.forEach(model => {
+        initialDiagnostics[index][model] = { status: 'pending', message: 'Antre...' };
+      });
+    });
+    setGroqDiagnostics(initialDiagnostics);
+
+    let anySuccess = false;
+    let anyRateLimit = false;
+
+    for (const { key, index } of keysToTest) {
+      let isKeyCompletelyInvalid = false;
+
+      for (const model of modelsToTest) {
+        if (isKeyCompletelyInvalid) {
+          setGroqDiagnostics(prev => ({
+            ...prev,
+            [index]: {
+              ...prev[index],
+              [model]: { status: 'error', message: 'Gagal (Sandi salah)' }
             }
-          })
-        });
-
-        if (response.ok) {
-          working++;
-        } else {
-          const body = await response.json().catch(() => ({}));
-          lastErr = body?.error?.message || `HTTP ${response.status}`;
+          }));
+          continue;
         }
-      } catch (e: any) {
-        lastErr = e.message || 'Network / API Error';
+
+        setGroqDiagnostics(prev => ({
+          ...prev,
+          [index]: {
+            ...prev[index],
+            [model]: { status: 'testing', message: 'Memeriksa...' }
+          }
+        }));
+
+        try {
+          const response = await fetch('/api/proxy/groq', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              key,
+              payload: {
+                model,
+                messages: [{ role: 'user', content: 'Hi' }],
+                max_tokens: 2
+              }
+            })
+          });
+
+          const resData = await response.json().catch(() => ({}));
+
+          if (response.ok) {
+            anySuccess = true;
+            setGroqDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'success', message: '✅ Aktif' }
+              }
+            }));
+          } else if (response.status === 429) {
+            anyRateLimit = true;
+            setGroqDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'rate_limit', message: '⚠️ Limit (429)' }
+              }
+            }));
+          } else if (response.status === 401 || response.status === 403) {
+            isKeyCompletelyInvalid = true;
+            setGroqDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'error', message: '❌ Kunci Salah' }
+              }
+            }));
+          } else if (response.status === 404) {
+            setGroqDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'not_supported', message: '❌ Tidak Ditemukan' }
+              }
+            }));
+          } else {
+            setGroqDiagnostics(prev => ({
+              ...prev,
+              [index]: {
+                ...prev[index],
+                [model]: { status: 'error', message: `❌ HTTP ${response.status}` }
+              }
+            }));
+          }
+        } catch (e: any) {
+          setGroqDiagnostics(prev => ({
+            ...prev,
+            [index]: {
+              ...prev[index],
+              [model]: { status: 'error', message: '❌ Jaringan' }
+            }
+          }));
+        }
+
+        await new Promise(r => setTimeout(r, 150));
       }
     }
 
-    if (working === active.length) {
+    if (anySuccess) {
       setTestGroqStatus('success');
-      setTestGroqMsg('✅ Semua Aktif (' + working + '/' + active.length + ')');
-    } else if (working > 0) {
-      setTestGroqStatus('success');
-      setTestGroqMsg('⚠️ Sebagian Aktif (' + working + '/' + active.length + ')');
+      setTestGroqMsg('✅ Selesai menguji! Model Groq terdaftar aktif dan siap digunakan.');
+    } else if (anyRateLimit) {
+      setTestGroqStatus('err');
+      setTestGroqMsg('⚠️ Kunci Groq valid tetapi kuota habis (429 Rate Limit). Mohon tunggu semenit.');
     } else {
       setTestGroqStatus('err');
-      setTestGroqMsg('❌ Gagal: ' + lastErr);
+      setTestGroqMsg('❌ Koneksi Groq gagal. Sila cek rincian di bawah.');
     }
   };
 
@@ -1639,6 +1841,56 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
                                   }`}>
                                     {testGeminiMsg}
                                   </div>
+
+                                  {/* Rincian Diagnosa Berbagai Model Gemini */}
+                                  {Object.keys(geminiDiagnostics).length > 0 && (
+                                    <div className="mt-2.5 space-y-2 bg-slate-50 border border-slate-150 p-3 rounded-2xl">
+                                      <div className="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center justify-between">
+                                        <span>Status Koneksi per Model</span>
+                                        <span className="text-violet-600 font-mono">Gemini Engine</span>
+                                      </div>
+                                      
+                                      {Object.entries(geminiDiagnostics).map(([slotIdxStr, modelsRecord]) => {
+                                        const slotIdx = parseInt(slotIdxStr);
+                                        const keySnippet = geminiKeys[slotIdx]?.trim() || '';
+                                        const shortKey = keySnippet.length > 8 ? `${keySnippet.slice(0, 4)}...${keySnippet.slice(-4)}` : 'Sandi';
+
+                                        return (
+                                          <div key={`gem-dia-slot-${slotIdx}`} className="bg-white rounded-xl border border-slate-100 p-2.5 space-y-1.5 shadow-sm">
+                                            <div className="flex items-center justify-between border-b border-rose-100/10 pb-1">
+                                              <span className="text-[10px] font-extrabold text-slate-700 flex items-center">
+                                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-violet-500 mr-1.5"></span>
+                                                Kunci #{slotIdx + 1}
+                                              </span>
+                                              <span className="text-[9px] font-mono text-slate-400 font-semibold bg-slate-50 px-1.5 py-0.5 rounded border border-slate-150">
+                                                {shortKey}
+                                              </span>
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-1 gap-1">
+                                              {Object.entries(modelsRecord).map(([modelName, diag]) => {
+                                                let badgeColor = 'bg-slate-50 text-slate-500 border-slate-150';
+                                                if (diag.status === 'success') badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-100';
+                                                else if (diag.status === 'rate_limit') badgeColor = 'bg-amber-50 text-amber-600 border-amber-100';
+                                                else if (diag.status === 'not_supported') badgeColor = 'bg-slate-50 text-slate-400 border-slate-200';
+                                                else if (diag.status === 'testing') badgeColor = 'bg-violet-50 text-violet-600 border-violet-100 animate-pulse';
+                                                else if (diag.status === 'error') badgeColor = 'bg-rose-50 text-rose-600 border-rose-100';
+
+                                                return (
+                                                  <div key={modelName} className="flex items-center justify-between text-[10px] py-1 border-b border-dashed border-slate-50 last:border-0">
+                                                    <span className="font-mono text-slate-500 font-semibold truncate">{modelName}</span>
+                                                    <span className={`px-2 py-0.5 rounded-lg border text-[8px] font-bold shrink-0 shadow-sm ${badgeColor}`}>
+                                                      {diag.message}
+                                                    </span>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
                                 </div>
                               </motion.div>
                             )}
@@ -1751,6 +2003,56 @@ OUTPUT WAJIB: KELUARKAN HANYA FORMAT JSON BERIKUT (TANPA RAW TEXT / BACKTICKS):
                                   }`}>
                                     {testGroqMsg}
                                   </div>
+
+                                  {/* Rincian Diagnosa Berbagai Model Groq */}
+                                  {Object.keys(groqDiagnostics).length > 0 && (
+                                    <div className="mt-2.5 space-y-2 bg-slate-50 border border-slate-150 p-3 rounded-2xl">
+                                      <div className="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center justify-between">
+                                        <span>Status Koneksi per Model</span>
+                                        <span className="text-violet-600 font-mono">Groq Engine</span>
+                                      </div>
+                                      
+                                      {Object.entries(groqDiagnostics).map(([slotIdxStr, modelsRecord]) => {
+                                        const slotIdx = parseInt(slotIdxStr);
+                                        const keySnippet = groqKeys[slotIdx]?.trim() || '';
+                                        const shortKey = keySnippet.length > 8 ? `${keySnippet.slice(0, 4)}...${keySnippet.slice(-4)}` : 'Sandi';
+
+                                        return (
+                                          <div key={`groq-dia-slot-${slotIdx}`} className="bg-white rounded-xl border border-slate-100 p-2.5 space-y-1.5 shadow-sm">
+                                            <div className="flex items-center justify-between border-b border-rose-100/10 pb-1">
+                                              <span className="text-[10px] font-extrabold text-slate-700 flex items-center">
+                                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-violet-500 mr-1.5"></span>
+                                                Kunci #{slotIdx + 1}
+                                              </span>
+                                              <span className="text-[9px] font-mono text-slate-400 font-semibold bg-slate-50 px-1.5 py-0.5 rounded border border-slate-150">
+                                                {shortKey}
+                                              </span>
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-1 gap-1">
+                                              {Object.entries(modelsRecord).map(([modelName, diag]) => {
+                                                let badgeColor = 'bg-slate-50 text-slate-500 border-slate-150';
+                                                if (diag.status === 'success') badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-100';
+                                                else if (diag.status === 'rate_limit') badgeColor = 'bg-amber-50 text-amber-600 border-amber-100';
+                                                else if (diag.status === 'not_supported') badgeColor = 'bg-slate-50 text-slate-400 border-slate-200';
+                                                else if (diag.status === 'testing') badgeColor = 'bg-violet-50 text-violet-600 border-violet-100 animate-pulse';
+                                                else if (diag.status === 'error') badgeColor = 'bg-rose-50 text-rose-600 border-rose-100';
+
+                                                return (
+                                                  <div key={modelName} className="flex items-center justify-between text-[10px] py-1 border-b border-dashed border-slate-50 last:border-0">
+                                                    <span className="font-mono text-slate-500 font-semibold truncate">{modelName}</span>
+                                                    <span className={`px-2 py-0.5 rounded-lg border text-[8px] font-bold shrink-0 shadow-sm ${badgeColor}`}>
+                                                      {diag.message}
+                                                    </span>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
                                 </div>
                               </motion.div>
                             )}
