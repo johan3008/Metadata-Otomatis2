@@ -874,6 +874,218 @@
     let currentProgress = 0;
 
     
+    // ===== KATEGORI RESMI PER PLATFORM MICROSTOCK =====
+    // Sumber: Halaman resmi masing-masing platform (2024-2026)
+    const PLATFORM_CATEGORIES = {
+
+      // Shutterstock — 25 kategori resmi
+      // Sumber: submit.shutterstock.com/help/en/articles/10617427-content-publishing-standards-contextual-metadata
+      shutterstock: [
+        "Abstract",
+        "Animals/Wildlife",
+        "Arts",
+        "Backgrounds/Textures",
+        "Beauty/Fashion",
+        "Buildings/Landmarks",
+        "Business/Finance",
+        "Celebrities",
+        "Education",
+        "Food and Drink",
+        "Healthcare/Medical",
+        "Holidays",
+        "Industrial",
+        "Interiors",
+        "Miscellaneous",
+        "Nature",
+        "Objects",
+        "Parks/Outdoor",
+        "People",
+        "Religion",
+        "Science",
+        "Signs/Symbols",
+        "Sports/Recreation",
+        "Technology",
+        "Transportation/Vehicles"
+      ],
+
+      // Adobe Stock — 15 kategori resmi (Contributor Portal)
+      // Sumber: helpx.adobe.com/stock/contributor/help/categories.html
+      adobeStock: [
+        "Animals",
+        "Buildings and Architecture",
+        "Business",
+        "Drinks",
+        "The Environment",
+        "States of Mind",
+        "Food",
+        "Graphic Resources",
+        "Hobbies and Leisure",
+        "Industry",
+        "Landscape",
+        "Lifestyle",
+        "People",
+        "Plants and Flowers",
+        "Culture and Religion",
+        "Science and Technology",
+        "Travel",
+        "Sports",
+        "Education",
+        "Healthcare and Medicine"
+      ],
+
+      // Freepik — kategori populer (tidak ada kategori wajib di CSV, opsional)
+      freepik: [
+        "Business",
+        "Technology",
+        "People",
+        "Nature",
+        "Abstract",
+        "Backgrounds",
+        "Architecture",
+        "Food and Drink",
+        "Animals",
+        "Travel",
+        "Sports",
+        "Fashion and Beauty",
+        "Education",
+        "Healthcare",
+        "Objects",
+        "Icons",
+        "Patterns",
+        "Social Media",
+        "Marketing",
+        "Art and Culture"
+      ],
+
+      // iStock / Getty Images — kategori utama
+      istock: [
+        "Abstract",
+        "Animals",
+        "Architecture",
+        "Arts and Entertainment",
+        "Backgrounds and Textures",
+        "Beauty and Fashion",
+        "Business and Finance",
+        "Education",
+        "Food and Drink",
+        "Healthcare and Medicine",
+        "Holidays and Celebrations",
+        "Industrial",
+        "Nature",
+        "Objects",
+        "People",
+        "Science and Technology",
+        "Sports and Recreation",
+        "Transportation",
+        "Travel",
+        "Vintage"
+      ],
+
+      // Vecteezy — kategori resmi
+      // Sumber: vecteezy.com/contributor
+      vecteezy: [
+        "Abstract",
+        "Animals",
+        "Art and Design",
+        "Backgrounds",
+        "Business",
+        "Education",
+        "Fashion",
+        "Food and Drink",
+        "Healthcare",
+        "Holidays",
+        "Icons",
+        "Industry",
+        "Nature",
+        "Objects",
+        "People",
+        "Patterns",
+        "Sports",
+        "Technology",
+        "Transportation",
+        "Travel"
+      ],
+
+      // Canva — tema / kategori elemen
+      canva: [
+        "Abstract",
+        "Animals",
+        "Architecture",
+        "Arts",
+        "Backgrounds",
+        "Business",
+        "Education",
+        "Fashion",
+        "Food and Drink",
+        "Healthcare",
+        "Holidays",
+        "Icons",
+        "Illustrations",
+        "Nature",
+        "Objects",
+        "Patterns",
+        "People",
+        "Social Media",
+        "Sports",
+        "Technology",
+        "Travel",
+        "Watercolor"
+      ],
+
+      // Dreamstime — kategori resmi
+      // Sumber: dreamstime.com/photo-categories
+      dreamstime: [
+        "Abstract",
+        "Animals",
+        "Architecture",
+        "Arts and Entertainment",
+        "Backgrounds and Textures",
+        "Beauty and Fashion",
+        "Business and Finance",
+        "Education",
+        "Food and Drink",
+        "Healthcare and Medicine",
+        "Holidays and Celebrations",
+        "Industrial",
+        "Landscapes",
+        "Nature",
+        "Objects",
+        "People",
+        "Science and Technology",
+        "Signs and Symbols",
+        "Sports and Recreation",
+        "Travel and Landmarks",
+        "Transportation",
+        "Vintage and Retro"
+      ]
+    };
+
+    // Helper: Cari kategori terdekat dari daftar resmi
+    function findClosestOfficialCategory(aiValue, platformKey) {
+      const list = PLATFORM_CATEGORIES[platformKey] || [];
+      if (!aiValue || list.length === 0) return list[0] || "";
+      const aiLower = aiValue.toLowerCase().trim();
+      // Cari exact match dulu
+      const exact = list.find(c => c.toLowerCase() === aiLower);
+      if (exact) return exact;
+      // Cari partial match (AI value mengandung kata kunci kategori)
+      const partial = list.find(c => {
+        const cLower = c.toLowerCase();
+        const words = cLower.split(/[\s\/]+/);
+        return words.some(w => w.length > 3 && aiLower.includes(w));
+      });
+      if (partial) return partial;
+      // Cari reverse partial (kategori mengandung kata dari AI value)
+      const aiWords = aiLower.split(/[\s\/\-]+/).filter(w => w.length > 3);
+      const reverse = list.find(c => {
+        const cLower = c.toLowerCase();
+        return aiWords.some(w => cLower.includes(w));
+      });
+      if (reverse) return reverse;
+      // Fallback ke kategori pertama
+      return list[0];
+    }
+
     // VIDEO MICROSTOCK SEO
     const VIDEO_SEO_PRIORITY = [
       "motion",
@@ -1847,48 +2059,48 @@
 
       const seoMetrics = measureSEOQuality(item);
 
-      // Render Kategori Per Platform yang dipilih dengan penyesuaian multi-kategori Shutterstock secara eksplisit
+      // Render Kategori Per Platform — Dropdown yang bisa diedit, hanya platform aktif
       let categoriesHTML = '';
-      if (item.metadata.categories && Object.keys(item.metadata.categories).length > 0) {
-        let cards = '';
-        
-        Object.entries(item.metadata.categories).forEach(([platform, val]) => {
-          if (!val) return;
-          let displayPlatformName = platform;
-          let shouldRender = false;
+      {
+        const activePlatformCategoryMap = [
+          { key: 'shutterstock1', platformCheck: 'shutterstock', label: 'Shutterstock – Kategori 1', listKey: 'shutterstock' },
+          { key: 'shutterstock2', platformCheck: 'shutterstock', label: 'Shutterstock – Kategori 2', listKey: 'shutterstock' },
+          { key: 'adobeStock',   platformCheck: 'adobeStock',   label: 'Adobe Stock',               listKey: 'adobeStock'   },
+          { key: 'freepik',      platformCheck: 'freepik',      label: 'Freepik',                   listKey: 'freepik'      },
+          { key: 'istock',       platformCheck: 'istock',       label: 'iStock / Getty',            listKey: 'istock'       },
+          { key: 'vecteezy',     platformCheck: 'vecteezy',     label: 'Vecteezy',                  listKey: 'vecteezy'     },
+          { key: 'canva',        platformCheck: 'canva',        label: 'Canva',                     listKey: 'canva'        },
+          { key: 'dreamstime',   platformCheck: 'dreamstime',   label: 'Dreamstime',                listKey: 'dreamstime'   },
+        ];
 
-          // Memisahkan penayangan Kategori 1 dan Kategori 2 Shutterstock secara eksplisit di UI
-          if (platform === 'shutterstock1' && targetPlatforms.shutterstock) {
-            displayPlatformName = 'Shutterstock Cat 1';
-            shouldRender = true;
-          } else if (platform === 'shutterstock2' && targetPlatforms.shutterstock) {
-            displayPlatformName = 'Shutterstock Cat 2';
-            shouldRender = true;
-          } else if (platform === 'adobeStock' && targetPlatforms.adobeStock) {
-            displayPlatformName = 'Adobe Stock';
-            shouldRender = true;
-          } else if (platform !== 'shutterstock1' && platform !== 'shutterstock2' && targetPlatforms[platform]) {
-            displayPlatformName = platform.charAt(0).toUpperCase() + platform.slice(1);
-            shouldRender = true;
-          }
-
-          if (shouldRender) {
-            cards += `
-              <div class="bg-white border border-purple-100/60 p-3.5 rounded-2xl text-left shadow-sm">
-                <span class="block text-[8px] font-extrabold text-purple-700 capitalize tracking-wider">${displayPlatformName}</span>
-                <span class="block text-[10px] font-extrabold text-slate-800 truncate mt-1.5" title="${val}">${val}</span>
-              </div>
-            `;
-          }
+        let dropdowns = '';
+        activePlatformCategoryMap.forEach(({ key, platformCheck, label, listKey }) => {
+          // Hanya tampilkan jika platform diaktifkan
+          if (!targetPlatforms[platformCheck]) return;
+          const currentVal = item.metadata.categories?.[key] || '';
+          const options = (PLATFORM_CATEGORIES[listKey] || [])
+            .map(cat => `<option value="${cat}" ${cat === currentVal ? 'selected' : ''}>${cat}</option>`)
+            .join('');
+          dropdowns += `
+            <div class="space-y-1">
+              <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">${label}</label>
+              <select
+                onchange="updateItemCategory('${item.id}', '${key}', this.value)"
+                class="w-full text-[11px] font-semibold p-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 text-slate-700 cursor-pointer transition-colors"
+              >
+                ${options}
+              </select>
+            </div>
+          `;
         });
 
-        if (cards) {
+        if (dropdowns) {
           categoriesHTML = `
-            <div class="space-y-2 pt-4 border-t border-slate-100">
+            <div class="space-y-3 pt-4 border-t border-slate-100">
               <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center">
-                <i data-lucide="layers" class="w-4 h-4 mr-2 text-purple-500"></i> Kategori Berdasarkan Platform Terpilih
+                <i data-lucide="layers" class="w-4 h-4 mr-2 text-purple-500"></i> Kategori Resmi Per Platform
               </label>
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${cards}</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${dropdowns}</div>
             </div>
           `;
         }
@@ -1981,6 +2193,26 @@
           items[idx].metadata.keywords = value.split(',').map(k => k.trim()).filter(Boolean);
         } else {
           items[idx].metadata[field] = value;
+        }
+      }
+    }
+
+    // Update satu key kategori di metadata item
+    function updateItemCategory(itemId, categoryKey, value) {
+      const idx = items.findIndex(i => i.id === itemId);
+      if (idx !== -1) {
+        if (!items[idx].metadata.categories) items[idx].metadata.categories = {};
+        items[idx].metadata.categories[categoryKey] = value;
+        // Jika Shutterstock Cat 2 sama dengan Cat 1 setelah user ubah Cat 1, reset Cat 2
+        if (categoryKey === 'shutterstock1') {
+          const cat2 = items[idx].metadata.categories.shutterstock2;
+          if (cat2 === value) {
+            const list = PLATFORM_CATEGORIES.shutterstock;
+            const idx2 = list.indexOf(value);
+            items[idx].metadata.categories.shutterstock2 = list[(idx2 + 1) % list.length];
+            // Re-render untuk update dropdown Cat 2
+            renderQueueList();
+          }
         }
       }
     }
@@ -2258,8 +2490,30 @@ ${assetKeywordGuide}
   iPhone→"modern smartphone", Nike→"athletic footwear", BMW→"luxury sedan"
   Disney→"animated character", LEGO→"building blocks toy", Canon→"mirrorless camera"
 
-▌ATURAN #5 — CATEGORIES:
-  Shutterstock: 2 kategori BERBEDA | Adobe Stock: 1 | Dreamstime: 1 | Vecteezy: 1 | Canva: 1
+▌ATURAN #5 — CATEGORIES (WAJIB DARI DAFTAR RESMI BERIKUT):
+
+  SHUTTERSTOCK (pilih 2 BERBEDA dari daftar ini):
+  Abstract | Animals/Wildlife | Arts | Backgrounds/Textures | Beauty/Fashion | Buildings/Landmarks | Business/Finance | Celebrities | Education | Food and Drink | Healthcare/Medical | Holidays | Industrial | Interiors | Miscellaneous | Nature | Objects | Parks/Outdoor | People | Religion | Science | Signs/Symbols | Sports/Recreation | Technology | Transportation/Vehicles
+
+  ADOBE STOCK (pilih 1 dari daftar ini):
+  Animals | Buildings and Architecture | Business | Drinks | The Environment | States of Mind | Food | Graphic Resources | Hobbies and Leisure | Industry | Landscape | Lifestyle | People | Plants and Flowers | Culture and Religion | Science and Technology | Travel | Sports | Education | Healthcare and Medicine
+
+  FREEPIK (pilih 1):
+  Business | Technology | People | Nature | Abstract | Backgrounds | Architecture | Food and Drink | Animals | Travel | Sports | Fashion and Beauty | Education | Healthcare | Objects | Icons | Patterns | Social Media | Marketing | Art and Culture
+
+  ISTOCK (pilih 1):
+  Abstract | Animals | Architecture | Arts and Entertainment | Backgrounds and Textures | Beauty and Fashion | Business and Finance | Education | Food and Drink | Healthcare and Medicine | Holidays and Celebrations | Industrial | Nature | Objects | People | Science and Technology | Sports and Recreation | Transportation | Travel | Vintage
+
+  VECTEEZY (pilih 1):
+  Abstract | Animals | Art and Design | Backgrounds | Business | Education | Fashion | Food and Drink | Healthcare | Holidays | Icons | Industry | Nature | Objects | People | Patterns | Sports | Technology | Transportation | Travel
+
+  CANVA (pilih 1):
+  Abstract | Animals | Architecture | Arts | Backgrounds | Business | Education | Fashion | Food and Drink | Healthcare | Holidays | Icons | Illustrations | Nature | Objects | Patterns | People | Social Media | Sports | Technology | Travel | Watercolor
+
+  DREAMSTIME (pilih 1):
+  Abstract | Animals | Architecture | Arts and Entertainment | Backgrounds and Textures | Beauty and Fashion | Business and Finance | Education | Food and Drink | Healthcare and Medicine | Holidays and Celebrations | Industrial | Landscapes | Nature | Objects | People | Science and Technology | Signs and Symbols | Sports and Recreation | Travel and Landmarks | Transportation | Vintage and Retro
+
+  ⚠️ HANYA gunakan nilai persis dari daftar di atas. Jangan buat kategori sendiri.
 
 ═══════════════════════════════════════════════════════════════════════════════════
 OUTPUT FORMAT — HANYA JSON, TANPA APAPUN DI LUAR JSON:
@@ -2270,12 +2524,14 @@ OUTPUT FORMAT — HANYA JSON, TANPA APAPUN DI LUAR JSON:
   "description": "string — ${minDesc}-${maxDesc} chars — jelaskan isi, alur, dan makna aset",
   "keywords": ["singlekeyword1", "singlekeyword2", "singlekeyword3", "singlekeyword4", "singlekeyword5", ... TEPAT ${settings.keywordsCount} ITEM UNIK TANPA SPASI / SINGLE KEYWORD ONLY],
   "categories": {
-    "shutterstock1": "kategori valid",
-    "shutterstock2": "kategori BERBEDA dari shutterstock1",
-    "adobeStock": "kategori valid",
-    "dreamstime": "kategori valid",
-    "vecteezy": "kategori valid",
-    "canva": "kategori valid"
+    "shutterstock1": "SATU NILAI PERSIS dari daftar Shutterstock di atas",
+    "shutterstock2": "NILAI BERBEDA dari shutterstock1, dari daftar Shutterstock",
+    "adobeStock": "SATU NILAI PERSIS dari daftar Adobe Stock di atas",
+    "freepik": "SATU NILAI PERSIS dari daftar Freepik di atas",
+    "istock": "SATU NILAI PERSIS dari daftar iStock di atas",
+    "vecteezy": "SATU NILAI PERSIS dari daftar Vecteezy di atas",
+    "canva": "SATU NILAI PERSIS dari daftar Canva di atas",
+    "dreamstime": "SATU NILAI PERSIS dari daftar Dreamstime di atas"
   }
 }
 
@@ -2449,6 +2705,65 @@ CHECKLIST FINAL SEBELUM OUTPUT (FORMULA AI AUTO KEYWORD):
       // Final validation
       if (!parsed.categories || typeof parsed.categories !== "object") {
         parsed.categories = {};
+      }
+
+      // ✅ SNAP KATEGORI KE DAFTAR RESMI PER PLATFORM
+      // Shutterstock Cat 1 & Cat 2
+      if (parsed.categories.shutterstock1) {
+        parsed.categories.shutterstock1 = findClosestOfficialCategory(parsed.categories.shutterstock1, 'shutterstock');
+      } else {
+        parsed.categories.shutterstock1 = findClosestOfficialCategory(parsed.title, 'shutterstock');
+      }
+      if (parsed.categories.shutterstock2) {
+        // Pastikan Cat 2 berbeda dari Cat 1
+        let cat2 = findClosestOfficialCategory(parsed.categories.shutterstock2, 'shutterstock');
+        if (cat2 === parsed.categories.shutterstock1) {
+          // Pilih yang berikutnya
+          const list = PLATFORM_CATEGORIES.shutterstock;
+          const idx = list.indexOf(cat2);
+          cat2 = list[(idx + 1) % list.length];
+        }
+        parsed.categories.shutterstock2 = cat2;
+      } else {
+        const list = PLATFORM_CATEGORIES.shutterstock;
+        const idx = list.indexOf(parsed.categories.shutterstock1);
+        parsed.categories.shutterstock2 = list[(idx + 1) % list.length];
+      }
+      // Adobe Stock
+      if (parsed.categories.adobeStock) {
+        parsed.categories.adobeStock = findClosestOfficialCategory(parsed.categories.adobeStock, 'adobeStock');
+      } else {
+        parsed.categories.adobeStock = findClosestOfficialCategory(parsed.title, 'adobeStock');
+      }
+      // Freepik
+      if (parsed.categories.freepik) {
+        parsed.categories.freepik = findClosestOfficialCategory(parsed.categories.freepik, 'freepik');
+      } else {
+        parsed.categories.freepik = findClosestOfficialCategory(parsed.title, 'freepik');
+      }
+      // iStock
+      if (parsed.categories.istock) {
+        parsed.categories.istock = findClosestOfficialCategory(parsed.categories.istock, 'istock');
+      } else {
+        parsed.categories.istock = findClosestOfficialCategory(parsed.title, 'istock');
+      }
+      // Vecteezy
+      if (parsed.categories.vecteezy) {
+        parsed.categories.vecteezy = findClosestOfficialCategory(parsed.categories.vecteezy, 'vecteezy');
+      } else {
+        parsed.categories.vecteezy = findClosestOfficialCategory(parsed.title, 'vecteezy');
+      }
+      // Canva
+      if (parsed.categories.canva) {
+        parsed.categories.canva = findClosestOfficialCategory(parsed.categories.canva, 'canva');
+      } else {
+        parsed.categories.canva = findClosestOfficialCategory(parsed.title, 'canva');
+      }
+      // Dreamstime
+      if (parsed.categories.dreamstime) {
+        parsed.categories.dreamstime = findClosestOfficialCategory(parsed.categories.dreamstime, 'dreamstime');
+      } else {
+        parsed.categories.dreamstime = findClosestOfficialCategory(parsed.title, 'dreamstime');
       }
 
       console.log("✅ [Validation] Output normalized:", { titleLen: parsed.title.length, descLen: parsed.description.length, keywordCount: parsed.keywords.length });
@@ -3133,7 +3448,7 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
               `"${i.metadata.description.replace(/"/g, '""')}"`,
               `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
               `"${(i.metadata.categories?.shutterstock1 || 'Abstract').replace(/"/g, '""')}"`,
-              `"${(i.metadata.categories?.shutterstock2 || '').replace(/"/g, '""')}"`
+              `"${(i.metadata.categories?.shutterstock2 || 'Nature').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `shutterstock_batch_${Date.now()}.csv`;
           break;
@@ -3144,28 +3459,30 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
               i.name,
               `"${i.metadata.title.replace(/"/g, '""')}"`,
               `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
-              `"${(i.metadata.categories?.adobeStock || 'Graphics').replace(/"/g, '""')}"`
+              `"${(i.metadata.categories?.adobeStock || 'Graphic Resources').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `adobe_stock_batch_${Date.now()}.csv`;
           break;
 
         case 'freepik':
-          csvContent = "Filename,Title,Keywords\n" + 
+          csvContent = "Filename,Title,Keywords,Category\n" + 
             successItems.map(i => [
               i.name,
               `"${i.metadata.title.replace(/"/g, '""')}"`,
-              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.freepik || 'Business').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `freepik_batch_${Date.now()}.csv`;
           break;
 
         case 'istock':
-          csvContent = "Filename,Title,Description,Keywords\n" + 
+          csvContent = "Filename,Title,Description,Keywords,Category\n" + 
             successItems.map(i => [
               i.name,
               `"${i.metadata.title.replace(/"/g, '""')}"`,
               `"${i.metadata.description.replace(/"/g, '""')}"`,
-              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`
+              `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
+              `"${(i.metadata.categories?.istock || 'Business and Finance').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `istock_getty_batch_${Date.now()}.csv`;
           break;
@@ -3177,7 +3494,7 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
               `"${i.metadata.title.replace(/"/g, '""')}"`,
               `"${i.metadata.description.replace(/"/g, '""')}"`,
               `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
-              `"${(i.metadata.categories?.vecteezy || 'Backgrounds').replace(/"/g, '""')}"`
+              `"${(i.metadata.categories?.vecteezy || 'Abstract').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `vecteezy_batch_${Date.now()}.csv`;
           break;
@@ -3189,7 +3506,7 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
               `"${i.metadata.title.replace(/"/g, '""')}"`,
               `"${i.metadata.description.replace(/"/g, '""')}"`,
               `"${i.metadata.keywords.join(',').replace(/"/g, '""')}"`,
-              `"${(i.metadata.categories?.canva || 'Elements').replace(/"/g, '""')}"`
+              `"${(i.metadata.categories?.canva || 'Backgrounds').replace(/"/g, '""')}"`
             ].join(",")).join("\n");
           fileName = `canva_batch_${Date.now()}.csv`;
           break;
@@ -3439,13 +3756,38 @@ Then combine all 3 layers into the title. Keywords must be grounded in the actua
 
     function autoDetectCategories(title = "") {
       title = title.toLowerCase();
-      if (title.includes("business")) {
-        return { shutterstock1: "Business", shutterstock2: "Technology", adobe: "Business" };
+      if (title.includes("business") || title.includes("finance") || title.includes("office") || title.includes("corporate")) {
+        return { shutterstock1: "Business/Finance", shutterstock2: "Technology", adobeStock: "Business", freepik: "Business", istock: "Business and Finance", vecteezy: "Business", canva: "Business", dreamstime: "Business and Finance" };
       }
-      if (title.includes("nature")) {
-        return { shutterstock1: "Nature", shutterstock2: "Travel", adobe: "Nature" };
+      if (title.includes("nature") || title.includes("landscape") || title.includes("forest") || title.includes("mountain")) {
+        return { shutterstock1: "Nature", shutterstock2: "Backgrounds/Textures", adobeStock: "The Environment", freepik: "Nature", istock: "Nature", vecteezy: "Nature", canva: "Nature", dreamstime: "Nature" };
       }
-      return { shutterstock1: "Commercial", shutterstock2: "Lifestyle", adobe: "Business" };
+      if (title.includes("people") || title.includes("person") || title.includes("woman") || title.includes("man") || title.includes("child")) {
+        return { shutterstock1: "People", shutterstock2: "Lifestyle", adobeStock: "People", freepik: "People", istock: "People", vecteezy: "People", canva: "People", dreamstime: "People" };
+      }
+      if (title.includes("technology") || title.includes("tech") || title.includes("digital") || title.includes("ai") || title.includes("computer")) {
+        return { shutterstock1: "Technology", shutterstock2: "Business/Finance", adobeStock: "Science and Technology", freepik: "Technology", istock: "Science and Technology", vecteezy: "Technology", canva: "Technology", dreamstime: "Science and Technology" };
+      }
+      if (title.includes("food") || title.includes("drink") || title.includes("cuisine") || title.includes("meal")) {
+        return { shutterstock1: "Food and Drink", shutterstock2: "Objects", adobeStock: "Food", freepik: "Food and Drink", istock: "Food and Drink", vecteezy: "Food and Drink", canva: "Food and Drink", dreamstime: "Food and Drink" };
+      }
+      if (title.includes("animal") || title.includes("wildlife") || title.includes("bird") || title.includes("dog") || title.includes("cat")) {
+        return { shutterstock1: "Animals/Wildlife", shutterstock2: "Nature", adobeStock: "Animals", freepik: "Animals", istock: "Animals", vecteezy: "Animals", canva: "Animals", dreamstime: "Animals" };
+      }
+      if (title.includes("medical") || title.includes("health") || title.includes("doctor") || title.includes("hospital")) {
+        return { shutterstock1: "Healthcare/Medical", shutterstock2: "Science", adobeStock: "Healthcare and Medicine", freepik: "Healthcare", istock: "Healthcare and Medicine", vecteezy: "Healthcare", canva: "Healthcare", dreamstime: "Healthcare and Medicine" };
+      }
+      if (title.includes("travel") || title.includes("tourism") || title.includes("landmark") || title.includes("city")) {
+        return { shutterstock1: "Buildings/Landmarks", shutterstock2: "Parks/Outdoor", adobeStock: "Travel", freepik: "Travel", istock: "Travel", vecteezy: "Travel", canva: "Travel", dreamstime: "Travel and Landmarks" };
+      }
+      if (title.includes("abstract") || title.includes("pattern") || title.includes("texture") || title.includes("background")) {
+        return { shutterstock1: "Abstract", shutterstock2: "Backgrounds/Textures", adobeStock: "Graphic Resources", freepik: "Abstract", istock: "Abstract", vecteezy: "Abstract", canva: "Abstract", dreamstime: "Abstract" };
+      }
+      if (title.includes("education") || title.includes("school") || title.includes("learn") || title.includes("student")) {
+        return { shutterstock1: "Education", shutterstock2: "People", adobeStock: "Education", freepik: "Education", istock: "Education", vecteezy: "Education", canva: "Education", dreamstime: "Education" };
+      }
+      // Default fallback
+      return { shutterstock1: "Abstract", shutterstock2: "Objects", adobeStock: "Graphic Resources", freepik: "Abstract", istock: "Abstract", vecteezy: "Abstract", canva: "Abstract", dreamstime: "Abstract" };
     }
 
     function injectTrendingKeywords(keywords = []) {
