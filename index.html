@@ -7,7 +7,7 @@
   <!-- Semantic & Technical SEO Meta Tags (Google Indexing & High CTR Optimization) -->
   <title>Metazo Ai - Free Batch Metadata Generator</title>
   <meta name="description" content="Sistem otomatis penata metadata microstock berbasis visi AI. Hasilkan judul SEO komersial, klasifikasi kategori ganda Shutterstock &amp; tag kata kunci bebas trademark secara massal untuk Adobe Stock, Freepik, dan Canva gratis." />
-  <meta name="keywords" content="microstock metadata generator" />
+  <meta name="keywords" content="microstock keyword generator, adobe stock metadata tool, shutterstock keyword generator, ai stock metadata, stock image seo, batch metadata generator, stock image keywords, freepik metadata ai, canva stock keyword tool" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Metazo Ai Enterprise" />
   
@@ -594,7 +594,7 @@
               <!-- Key Concepts -->
               <div class="space-y-1.5">
                 <label class="text-xs font-bold text-slate-600">Prioritas Konsep SEO Microstock</label><p class="text-[10px] text-slate-400 font-semibold mt-1">Gunakan niche buyer intent & keyword volume tinggi agar ranking lebih kuat di Shutterstock, Adobe Stock, Freepik, dan Canva.</p>
-                <input type="text" id="key-concepts-input" placeholder="misal: business, luxury, medical, technology, ai, finance, lifestyle" class="ui-input" />
+                <input type="text" id="key-concepts-input" placeholder="misal: business, technology, healthcare, finance, lifestyle, innovation, corporate" class="ui-input" />
               </div>
 
               <div class="p-3 bg-gradient-to-r from-violet-50 to-fuchsia-50 rounded-2xl border border-violet-200 mt-3">
@@ -602,6 +602,17 @@
                   <i data-lucide="search" class="w-4 h-4 text-violet-600 mt-0.5"></i>
                   <div>
                     <p class="text-[11px] font-extrabold text-violet-800">SEO Microstock (3 lapisan)</p>
+                    <div class="mt-3 p-3 bg-white/70 rounded-xl border border-violet-200">
+                      <p class="text-[10px] font-extrabold text-violet-700 uppercase tracking-wide mb-1">
+                        Safe Single Keyword Mode
+                      </p>
+                      <p class="text-[10px] text-slate-600 font-semibold leading-relaxed">
+                        Gunakan keyword tunggal relevan tanpa brand, trademark, karakter, atau keyword spam.
+                        Sistem otomatis memprioritaskan commercial buyer intent untuk Adobe Stock,
+                        Shutterstock, Freepik, dan Canva.
+                      </p>
+                    </div>
+
                     <p class="text-[10px] text-violet-700 font-semibold mt-1 leading-relaxed">
                       <strong>Judul wajib:</strong> Apa yang ada di aset + Alur + Konsep.
                       Panjang judul, deskripsi, dan jumlah keyword <strong>tepat</strong> sesuai slider (tidak kurang, tidak lebih).
@@ -4862,5 +4873,29 @@ Return ONLY raw JSON. Verify: title.length===${settings.titleLength}, descriptio
     }
   </script>
 
+
+<script>
+function normalizeKeywords(input) {
+  const bannedTerms = [
+    "nike","adidas","iphone","apple","tesla",
+    "disney","marvel","pokemon","youtube",
+    "instagram","tiktok","netflix"
+  ];
+
+  return [...new Set(
+    input
+      .toLowerCase()
+      .split(',')
+      .map(k => k.trim())
+      .flatMap(k => k.split(' '))
+      .map(k => k.replace(/[^a-z0-9]/gi, '').trim())
+      .filter(k =>
+        k.length > 2 &&
+        !bannedTerms.some(b => k.includes(b))
+      )
+  )].join(', ');
+}
+</script>
 </body>
+
 </html>
