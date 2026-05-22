@@ -626,7 +626,28 @@
                 <div class="flex items-start space-x-2">
                   <i data-lucide="film" class="w-4 h-4 text-blue-600 mt-0.5"></i>
                   <div>
-                    <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis</p>
+                    <p class="text-[11px] font-extrabold text-blue-800">AI Video Story Analysis
+<div class="mt-4 p-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-2xl">
+  <div class="flex items-start gap-2">
+    <div class="text-red-600 font-extrabold text-xs uppercase tracking-wide">
+      Strict Single Keyword Policy
+    </div>
+  </div>
+  <p class="text-[10px] text-slate-700 font-semibold leading-relaxed mt-2">
+    Semua provider AI wajib menghasilkan keyword tunggal (single keyword only).
+    Dilarang membuat keyword berbentuk frase seperti:
+    "business meeting", "happy team", "office worker".
+  </p>
+  <div class="mt-2 p-2 bg-white rounded-xl border border-red-100">
+    <p class="text-[10px] font-bold text-emerald-700">
+      Format benar:
+    </p>
+    <p class="text-[10px] text-slate-600">
+      business, meeting, team, office, worker, corporate, startup
+    </p>
+  </div>
+</div>
+</p>
                     <p class="text-[10px] text-blue-700 font-semibold leading-relaxed mt-1">
                       Sistem mengambil frame awal, tengah, dan akhir video untuk membaca alur footage,
                       motion, cinematic context, serta buyer intent microstock.
@@ -4896,6 +4917,58 @@ function normalizeKeywords(input) {
   )].join(', ');
 }
 </script>
+
+<script>
+window.SINGLE_KEYWORD_POLICY = `
+Generate ONLY single-word commercial microstock keywords.
+
+STRICT RULES:
+- Single keyword only
+- No keyword phrases
+- No trademark
+- No brand names
+- No celebrity names
+- No duplicate meaning
+- No spam
+- No irrelevant words
+- Sort by importance
+- Adobe Stock safe
+- Shutterstock safe
+- Freepik safe
+- Canva safe
+
+BAD:
+business meeting
+happy team
+office worker
+
+GOOD:
+business, meeting, office, worker, team
+
+Return comma-separated keywords only.
+`;
+
+function enforceSingleKeywords(keywords) {
+  const bannedTerms = [
+    "nike","adidas","iphone","apple","tesla",
+    "disney","marvel","pokemon","youtube",
+    "instagram","tiktok","netflix"
+  ];
+
+  return [...new Set(
+    keywords
+      .toLowerCase()
+      .split(',')
+      .flatMap(k => k.trim().split(/\s+/))
+      .map(k => k.replace(/[^a-z0-9]/g, '').trim())
+      .filter(k =>
+        k.length > 2 &&
+        !bannedTerms.includes(k)
+      )
+  )].join(', ');
+}
+</script>
 </body>
+
 
 </html>
