@@ -237,6 +237,29 @@
       transform: scale(0.98);
     }
 
+    
+    /* SEO Title Output Fix */
+    .seo-title-output,
+    .metadata-title,
+    textarea.title-output {
+      width: 100%;
+      min-height: 90px !important;
+      resize: vertical;
+      overflow-y: auto;
+      white-space: normal !important;
+      word-break: break-word;
+      line-height: 1.6;
+      padding-right: 1rem;
+    }
+
+    .result-card textarea,
+    .result-card input[type="text"] {
+      overflow: visible !important;
+      text-overflow: unset !important;
+      white-space: normal !important;
+    }
+
+
     /* Toast */
     #toast-container {
       position: fixed;
@@ -4968,7 +4991,46 @@ function enforceSingleKeywords(keywords) {
   )].join(', ');
 }
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const labels = [...document.querySelectorAll('*')];
+
+    labels.forEach(el => {
+      const text = (el.textContent || '').toLowerCase();
+
+      if (
+        text.includes('judul seo') ||
+        text.includes('seo title') ||
+        text.includes('title')
+      ) {
+        const container = el.closest('div');
+
+        if (!container) return;
+
+        const input = container.querySelector('input[type="text"]');
+
+        if (input && !container.querySelector('textarea')) {
+          const textarea = document.createElement('textarea');
+
+          textarea.value = input.value;
+          textarea.className = input.className + ' seo-title-output';
+          textarea.readOnly = true;
+
+          textarea.style.minHeight = '90px';
+          textarea.style.whiteSpace = 'normal';
+          textarea.style.wordBreak = 'break-word';
+
+          input.parentNode.replaceChild(textarea, input);
+        }
+      }
+    });
+  }, 1200);
+});
+</script>
 </body>
+
 
 
 </html>
