@@ -2398,6 +2398,14 @@
       'amazing', 'stunning', 'nice', 'cool', 'awesome', 'perfect', 'quality', 'clipart',
       'generic', 'misc', 'miscellaneous', 'various', 'abstract', 'object', 'objects'
     ]);
+    
+    // Multi-word phrases that should also be banned
+    const GENERIC_PHRASE_BAN = new Set([
+      'high quality', 'high resolution', '4k resolution', 'ultra hd', '8k uhd',
+      'shot on', 'made with', 'created with', 'designed for', 'perfect for',
+      'ideal for', 'great for', 'good for', 'best for', 'top quality',
+      'premium quality', 'professional quality', 'studio quality'
+    ]);
 
     function tokenizeForSEO(text) {
       return [...new Set(
@@ -2435,10 +2443,27 @@
       const k = String(kw || '').toLowerCase().trim();
       if (!k || k.length < 2 || GENERIC_KEYWORD_BAN.has(k)) return false;
 
-      const titleArr = [...titleTokens];
-      const descArr = [...descTokens];
+      // Direct match for single-word keywords
       if (titleTokens.has(k) || descTokens.has(k)) return true;
 
+      // For multi-word keywords, check if all words appear in title/description
+      if (k.includes(' ')) {
+        const kwWords = k.split(/\s+/);
+        const allWordsFound = kwWords.every(w => 
+          w.length >= 3 && (titleTokens.has(w) || descTokens.has(w))
+        );
+        if (allWordsFound) return true;
+        
+        // Or at least majority of words found
+        const wordsFound = kwWords.filter(w => 
+          w.length >= 3 && (titleTokens.has(w) || descTokens.has(w))
+        ).length;
+        if (wordsFound >= Math.ceil(kwWords.length * 0.6)) return true;
+      }
+
+      // Fallback: partial match
+      const titleArr = [...titleTokens];
+      const descArr = [...descTokens];
       for (const t of [...titleArr, ...descArr]) {
         if (t.length >= 3 && (t.includes(k) || k.includes(t))) return true;
       }
@@ -2446,9 +2471,34 @@
     }
 
     function extractGroundedKeywords(title, description, limit = 30) {
-      const tokens = tokenizeForSEO(`${title} ${description}`);
-      return tokens
-        .filter(t => !GENERIC_KEYWORD_BAN.has(t) && t.length >= 3)
+      // Extract multi-word phrases from title and description for grounded keywords
+      const text = `${title} ${description}`.toLowerCase();
+      const phrases = [];
+      
+      // Extract 2-3 word phrases that are meaningful
+      const words = text.replace(/[^a-z0-9\s-]/g, ' ').split(/\s+/).filter(w => w.length >= 3 && !SEO_STOPWORDS.has(w));
+      
+      // Add single words
+      phrases.push(...words);
+      
+      // Add 2-word phrases
+      for (let i = 0; i < words.length - 1; i++) {
+        const phrase = `${words[i]} ${words[i+1]}`;
+        if (phrase.length >= 6 && phrase.length <= 40) {
+          phrases.push(phrase);
+        }
+      }
+      
+      // Add 3-word phrases
+      for (let i = 0; i < words.length - 2; i++) {
+        const phrase = `${words[i]} ${words[i+1]} ${words[i+2]}`;
+        if (phrase.length >= 10 && phrase.length <= 50) {
+          phrases.push(phrase);
+        }
+      }
+      
+      return [...new Set(phrases)]
+        .filter(p => !GENERIC_KEYWORD_BAN.has(p) && p.length >= 3)
         .slice(0, limit);
     }
 
@@ -2465,11 +2515,23 @@
 
       const scored = unique.map((kw, idx) => {
         let score = 80 - idx;
-        if (titleTokens.has(kw)) score += 45;
+        
+        // Check if keyword or parts of it match title/description tokens
+        const kwTokens = kw.toLowerCase().split(/\s+/);
+        const hasTokenMatch = kwTokens.some(t => titleTokens.has(t) || descTokens.has(t));
+        const hasFullMatch = titleTokens.has(kw) || descTokens.has(kw);
+        
+        if (hasFullMatch) score += 45;
+        else if (hasTokenMatch) score += 25;
+        
         if (descTokens.has(kw)) score += 25;
         if (concepts.some(c => kw.includes(c) || c.includes(kw))) score += 35;
         if (GENERIC_KEYWORD_BAN.has(kw)) score -= 120;
         if (!keywordMatchesAsset(kw, titleTokens, descTokens)) score -= 70;
+        
+        // Boost multi-word keywords (more specific, better for SEO)
+        if (kw.includes(' ')) score += 15;
+        
         return { kw, score };
       });
 
@@ -2566,12 +2628,13 @@
       const titleTokens = new Set(tokenizeForSEO(title));
       const descTokens = new Set(tokenizeForSEO(description));
 
+      // Keep keywords as-is (multi-word intact), just normalize and dedupe
       let list = rankKeywordsByAssetRelevance(
         [...new Set((keywords || []).map(k => String(k).toLowerCase().trim()).filter(k => k.length > 1))],
         title,
         description,
         settings.keyConcepts,
-        target
+        target * 2  // Get more candidates for better selection
       );
 
       if (list.length > target) list = list.slice(0, target);
@@ -2587,11 +2650,27 @@
           }
         }
         if (!added) {
-          for (const w of tokenizeForSEO(title)) {
-            if (list.length >= target) break;
-            if (!list.includes(w) && !GENERIC_KEYWORD_BAN.has(w)) {
-              list.push(w);
+          // Try adding multi-word phrases from title/description
+          const text = `${title} ${description}`.toLowerCase();
+          const words = text.replace(/[^a-z0-9\s-]/g, ' ').split(/\s+/).filter(w => w.length >= 3 && !SEO_STOPWORDS.has(w));
+          
+          // Add 2-word phrases
+          for (let i = 0; i < words.length - 1 && list.length < target; i++) {
+            const phrase = `${words[i]} ${words[i+1]}`;
+            if (phrase.length >= 6 && phrase.length <= 40 && !list.includes(phrase) && !GENERIC_KEYWORD_BAN.has(phrase)) {
+              list.push(phrase);
               added = true;
+            }
+          }
+          
+          // Fallback to single words
+          if (!added) {
+            for (const w of words) {
+              if (list.length >= target) break;
+              if (!list.includes(w) && !GENERIC_KEYWORD_BAN.has(w)) {
+                list.push(w);
+                added = true;
+              }
             }
           }
         }
@@ -2650,9 +2729,9 @@
       const descTokens = new Set(tokenizeForSEO(parsed.description));
 
       let keywords = Array.isArray(parsed.keywords) ? parsed.keywords : [];
+      // Keep multi-word keywords intact - only clean special chars, don't split by spaces
       keywords = keywords
-        .flatMap(kw => String(kw).toLowerCase().replace(/[^a-z0-9,\s-]/gi, '').split(/[\s,]+/))
-        .map(k => k.trim())
+        .map(kw => String(kw).toLowerCase().replace(/[^a-z0-9\s-]/gi, '').trim())
         .filter(k => k.length > 1 && !GENERIC_KEYWORD_BAN.has(k));
 
       keywords = rankKeywordsByAssetRelevance(
@@ -3554,7 +3633,7 @@ OUTPUT FORMAT — HANYA JSON, TANPA APAPUN DI LUAR JSON:
 {
   "title": "string — TEPAT ${exactTitle} karakter — berisi: Apa yang Ada di Aset + Alur + Konsep",
   "description": "string — TEPAT ${exactDesc} karakter — jelaskan isi, alur, dan makna aset",
-  "keywords": ["kw1", "kw2", ... ARRAY LENGTH TEPAT ${exactKw} — SINGLE KEYWORD ONLY, TANPA SPASI],
+  "keywords": ["kw1", "kw2", ... ARRAY LENGTH TEPAT ${exactKw} — MULTI-WORD KEYWORDS ALLOWED, buyer-friendly phrases],
   "categories": {
     "shutterstock1": "SATU NILAI PERSIS dari daftar Shutterstock di atas",
     "shutterstock2": "NILAI BERBEDA dari shutterstock1, dari daftar Shutterstock",
@@ -3571,7 +3650,7 @@ CHECKLIST FINAL SEBELUM OUTPUT (FORMULA AI AUTO KEYWORD):
   ✓ title mengandung "Apa yang Ada di Aset" + "Alur" + "Konsep" (3 lapisan)?
   ✓ title.length === ${exactTitle} karakter (TEPAT, bukan perkiraan)?
   ✓ description.length === ${exactDesc} karakter (TEPAT)?
-  ✓ keywords.length === ${exactKw} (TEPAT ${exactKw} item, SINGLE KEYWORD ONLY)?
+  ✓ keywords.length === ${exactKw} (TEPAT ${exactKw} item, MULTI-WORD KEYWORDS ALLOWED)?
       ✓ Keyword paling penting wajib berada di urutan awal seperti algoritma microstock SEO ranking
   ✓ keywords Layer "Apa yang Ada di Aset" (posisi 1-10) menyebut elemen yang benar-benar ada di aset?
   ✓ tidak ada spesifikasi kamera/teknis di mana pun?
@@ -3597,21 +3676,25 @@ CHECKLIST FINAL SEBELUM OUTPUT (FORMULA AI AUTO KEYWORD):
         throw new Error("Keywords must be an array");
       }
       
-      // Remove duplicates, paksa SINGLE KEYWORD ONLY, dan hapus keyword kosong
-      parsed.keywords = [...new Set(
-        parsed.keywords
-          .flatMap(kw => {
-            if (!kw) return [];
-
-            // Ubah jadi lowercase dan pecah berdasarkan spasi / koma
-            return String(kw)
-              .toLowerCase()
-              .replace(/[^a-z0-9,\s-]/gi, "")
-              .split(/[\s,]+/)
-              .map(k => k.trim())
-              .filter(k => k.length > 1);
-          })
-      )];
+      // Normalize keywords: trim, lowercase, remove empty, keep multi-word keywords intact
+      parsed.keywords = parsed.keywords
+        .map(kw => {
+          if (!kw) return "";
+          // Clean special chars but keep spaces for multi-word keywords
+          return String(kw)
+            .replace(/[^a-z0-9\s-]/gi, "")
+            .trim()
+            .toLowerCase();
+        })
+        .filter(kw => kw.length > 1 && !/^\s+$/.test(kw)); // Filter out too short or whitespace-only
+      
+      // Remove exact duplicates only (keep first occurrence for relevance ranking)
+      const seen = new Set();
+      parsed.keywords = parsed.keywords.filter(kw => {
+        if (seen.has(kw)) return false;
+        seen.add(kw);
+        return true;
+      });
       
       const keywordCount = parsed.keywords.length;
       const expectedCount = settings.keywordsCount;
